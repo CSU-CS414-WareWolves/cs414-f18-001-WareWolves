@@ -1,4 +1,4 @@
-package messages;
+package client.presenter.network.messages;
 
 public enum MESSAGE_TYPE {
 	LOGIN(1),

@@ -1,4 +1,4 @@
-package messages;
+package client.presenter.network.messages;
 
 //Abstract class for messages, shared functionality
 public abstract class Message {

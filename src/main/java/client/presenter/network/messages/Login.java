@@ -1,4 +1,4 @@
-package messages;
+package client.presenter.network.messages;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -21,11 +21,11 @@ public class Login extends Message{
 	
 	//Expected: username:password:IP:port
 	public Login(String data) throws UnknownHostException {
-		String[] splt = data.split(":");
-		username = splt[0];
-		passwordAttempt = splt[1];
-		userIP = InetAddress.getByName(splt[2]);
-		userPort = Integer.parseInt(splt[3]);
+		String[] spilt = data.split(":");
+		username = spilt[0];
+		passwordAttempt = spilt[1];
+		userIP = InetAddress.getByName(spilt[2]);
+		userPort = Integer.parseInt(spilt[3]);
 	}
 	
 	//Writes out as username:password:IP:port
