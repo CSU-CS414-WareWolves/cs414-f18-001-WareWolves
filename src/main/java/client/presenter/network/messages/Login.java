@@ -3,13 +3,13 @@ package messages;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-public class Login {
+public class Login extends Message{
 	//Clas vars
 	private String username;
 	private String passwordAttempt;
 	private InetAddress userIP;
 	private int userPort;
-	protected MESSAGE_TYPE type = MESSAGE_TYPE.LOGIN;
+	public static final MESSAGE_TYPE type = MESSAGE_TYPE.LOGIN;
 	
 	
 	public Login(String user, String password, InetAddress ip, int port) {
