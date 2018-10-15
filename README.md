@@ -1,5 +1,5 @@
 # CS414-F18-001-WareWolves
-
+[![Build Status](https://travis-ci.org/CSU-CS414-WareWolves/cs414-f18-001-WareWolves.svg?branch=master)](https://travis-ci.org/CSU-CS414-WareWolves/cs414-f18-001-WareWolves) [![Maintainability](https://api.codeclimate.com/v1/badges/7a779a96cdaee19a6f08/maintainability)](https://codeclimate.com/github/CSU-CS414-WareWolves/cs414-f18-001-WareWolves/maintainability)
 
 ## P1:
 Presentation 1: [PDF](https://github.com/CSU-CS414-WareWolves/cs414-f18-001-WareWolves/raw/master/P1/WareWolves%20Project%20Presentation%201.pdf)
