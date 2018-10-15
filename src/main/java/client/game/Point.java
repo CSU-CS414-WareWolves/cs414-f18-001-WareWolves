@@ -1,5 +1,7 @@
 package client.game;
 
+import java.util.Objects;
+
 public class Point {
   private int col;
   private int row;
@@ -68,5 +70,24 @@ public class Point {
   public String toString() {
     char c = (char)('a' + col);
     return ("" + c) + row;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Point point = (Point) o;
+    return col == point.col &&
+        row == point.row;
+  }
+
+  @Override
+  public int hashCode() {
+
+    return Objects.hash(col, row);
   }
 }

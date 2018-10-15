@@ -2,6 +2,7 @@ package client.game.pieces;
 
 import client.game.GameBoard;
 import client.game.Point;
+import java.util.Objects;
 
 public abstract class Piece {
 
@@ -34,7 +35,7 @@ public abstract class Piece {
    * @param board A GameBoard that contains this piece.
    * @return A set of Points that this Piece can move to legally.
    */
-  public abstract Point[] GetValidMoves(GameBoard board);
+  public abstract Point[] getValidMoves(GameBoard board);
 
   /**
    * Moves the Piece to its new position.
@@ -42,6 +43,24 @@ public abstract class Piece {
    * @param board A GameBoard that contains this piece.
    * @return True if the move was successful, False otherwise.
    */
-  public abstract boolean Move(String move, GameBoard board);
+  public abstract boolean move(String move, GameBoard board);
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Piece piece = (Piece) o;
+    return color == piece.color &&
+        Objects.equals(boardLocation, piece.boardLocation);
+  }
+
+  @Override
+  public int hashCode() {
+
+    return Objects.hash(boardLocation, color);
+  }
 }

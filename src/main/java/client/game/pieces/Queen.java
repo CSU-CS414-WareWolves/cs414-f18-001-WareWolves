@@ -10,12 +10,12 @@ public class Queen extends Piece {
   }
 
   @Override
-  public Point[] GetValidMoves(GameBoard board) {
+  public Point[] getValidMoves(GameBoard board) {
     return new Point[0];
   }
 
   @Override
-  public boolean Move(String move, GameBoard board) {
+  public boolean move(String move, GameBoard board) {
     return false;
   }
 }

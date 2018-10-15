@@ -7,28 +7,35 @@ import org.junit.jupiter.api.Test;
 class PointTest {
 
   @Test
-  void TestConstructor1(){
+  void testConstructor1(){
     Point p = new Point(0,0);
     assertEquals(0, p.getCol(), "Column was set wrong");
     assertEquals(0, p.getRow(), "Row was set wrong");
   }
 
   @Test
-  void TestConstructor2(){
+  void testConstructor2(){
     Point p = new Point('a',0);
     assertEquals(0, p.getCol(), "Column was set wrong");
     assertEquals(0, p.getRow(), "Row was set wrong");
   }
 
   @Test
-  void TestConstructor3(){
+  void testConstructor3(){
     Point p = new Point("a0");
     assertEquals(0, p.getCol(), "Column was set wrong");
     assertEquals(0, p.getRow(), "Row was set wrong");
   }
 
   @Test
-  void TestToString() {
+  void testConstructor99(){
+    Point p = new Point("j9");
+    assertEquals(9, p.getCol(), "Column was set wrong");
+    assertEquals(9, p.getRow(), "Row was set wrong");
+  }
+
+  @Test
+  void testToString() {
     Point p = new Point(0,0);
     assertEquals("a0", p.toString());
   }
