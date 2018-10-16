@@ -30,7 +30,7 @@ public class Point {
    * @param point String representing the Point to be constructed.
    */
   public Point(String point) {
-    this( (point.charAt(0) - 'a'), (point.charAt(1) - '0'));
+    this( (point.charAt(0) - 'a'), (point.charAt(1) - 'A'));
 
   }
 
@@ -38,7 +38,7 @@ public class Point {
    * Gets the column value of the Point.
    * @return Column represented by the Point.
    */
-  public int getCol() {
+  public int getArrayCol() {
     return col;
   }
 
@@ -54,7 +54,7 @@ public class Point {
    * Gets the Row value of the Point.
    * @return Row represented by the Point.
    */
-  public int getRow() {
+  public int getArrayRow() {
     return row;
   }
 
@@ -66,10 +66,12 @@ public class Point {
     this.row = row;
   }
 
+
+
   @Override
   public String toString() {
     char c = (char)('a' + col);
-    return ("" + c) + row;
+    return ("" + c) + (row+1);
   }
 
   @Override

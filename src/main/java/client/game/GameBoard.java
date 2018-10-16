@@ -10,9 +10,7 @@ public class GameBoard {
     for (int i = 0; i < pieces.length(); i = i + 3){
       String type = pieces.substring(i,i+1);
       Point pos = new Point(pieces.substring(i+1, i+3));
-      //System.out.println(type + " " + pos);
-      board[pos.getCol()][pos.getRow()] = makePiece(type, pos);
-      //System.out.println(board[pos.getCol()][pos.getRow()]);
+      board[pos.getArrayCol()][pos.getArrayRow()] = makePiece(type, pos);
     }
   }
 
@@ -52,7 +50,7 @@ public class GameBoard {
    * @return A Piece if there is a piece at the Point, null otherwise.
    */
   public Piece getPieceAt(Point tile){
-    return this.getPieceAt(tile.getCol(), tile.getRow());
+    return this.getPieceAt(tile.getArrayCol(), tile.getArrayRow());
   }
 
   //TODO: implement MovePiece
