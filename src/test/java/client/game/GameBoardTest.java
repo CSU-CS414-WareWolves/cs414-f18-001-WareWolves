@@ -4,11 +4,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import client.game.pieces.King;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class GameBoardTest {
 
-  GameBoard board;
+  private GameBoard board;
 
   @BeforeEach
   void setUp() {
@@ -43,5 +46,20 @@ class GameBoardTest {
     assertTrue(true);
   }
 
+  @DisplayName("isWall")
+  @ParameterizedTest(name="({0}) should be {1}")
+  @CsvSource({ "aA, false", "lL, false", "dD, false", "aL, false", "bC, true", "bE, true",
+      "fD, true", "dF, true", "gI, true", "iG, true", "kJ, true", "hK, true", "hI, false"})
+  void testIsWall(String point, boolean expected){
+    assertEquals(GameBoard.isWall(new Point(point)), expected);
+  }
 
-}
+
+  @DisplayName("isCastle")
+  @ParameterizedTest(name="({0}) should be {1}")
+  @CsvSource({ "aA, false", "lL, false", "bC, false" , "fD, false" , "dD, true" , "iI, true",
+      "dD, true" , "jJ, true", "cE, true" , "iH, true"})
+  void testIsCastle(String point, boolean expected){
+    assertEquals(GameBoard.isCastle(new Point(point)), expected);
+  }
+  }

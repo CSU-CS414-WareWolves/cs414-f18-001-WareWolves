@@ -53,9 +53,45 @@ public class GameBoard {
     return this.getPieceAt(tile.getArrayCol(), tile.getArrayRow());
   }
 
+  //TODO: Implement a return for the gameBoard.
+  public String getBoard(){
+    return "";
+  }
+
   //TODO: implement MovePiece
   public boolean MovePiece(Point from, Point to){
     return false;
+  }
+
+
+  /**
+   * Calculates if a Point is on a wall.
+   * @param point The Point to test.
+   * @return True if the point is on a wall, false otherwise.
+   */
+  static boolean isWall(Point point){
+    return (//vertical walls
+        ((point.getArrayCol() == 1) && (point.getArrayRow() >= 2 && point.getArrayRow() <= 4)) ||
+        ((point.getArrayCol() == 5) && (point.getArrayRow() >= 2 && point.getArrayRow() <= 4)) ||
+        ((point.getArrayCol() == 6) && (point.getArrayRow() >= 7 && point.getArrayRow() <= 9)) ||
+        ((point.getArrayCol() == 10) && (point.getArrayRow() >= 7 && point.getArrayRow() <= 9)) ||
+        //horizontal walls
+        ((point.getArrayCol() >= 2 && point.getArrayCol() <= 4) && (point.getArrayRow() == 1)) ||
+        ((point.getArrayCol() >= 2 && point.getArrayCol() <= 4) && (point.getArrayRow() == 5)) ||
+        ((point.getArrayCol() >= 7 && point.getArrayCol() <= 9) && (point.getArrayRow() == 6)) ||
+        ((point.getArrayCol() >= 7 && point.getArrayCol() <= 9) && (point.getArrayRow() == 10)));
+  }
+
+  /**
+   * Calculates if a Point is inside one of the castles.
+   * @param point the Point to test.
+   * @return True if the point is inside a castle, false otherwise.
+   */
+  static boolean isCastle(Point point){
+    return (((point.getArrayCol() >= 2 && point.getArrayCol() <= 4) &&
+        (point.getArrayRow() >= 2 && point.getArrayRow() <= 4)) ||
+        ((point.getArrayCol() >= 7 && point.getArrayCol() <= 9) &&
+            (point.getArrayRow() >= 7 && point.getArrayRow() <= 9)));
   }
 
   /**
