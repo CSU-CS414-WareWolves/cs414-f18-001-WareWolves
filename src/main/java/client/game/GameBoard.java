@@ -1,5 +1,130 @@
 package client.game;
 
-public class GameBoard {
+import client.game.pieces.*;
 
+public class GameBoard {
+  private Piece[][] board;
+
+  public GameBoard(String pieces){
+    board = new Piece[12][12];
+    for (int i = 0; i < pieces.length(); i = i + 3){
+      String type = pieces.substring(i,i+1);
+      Point pos = new Point(pieces.substring(i+1, i+3));
+      board[pos.getArrayCol()][pos.getArrayRow()] = makePiece(type, pos);
+    }
+  }
+
+  /**
+   * Creates the correct type of Piece from a Point and a type.
+   * @param type [RrQqKk] representing the color and type of the Piece to be created.
+   * @param pos Point of where the Piece exists on a GameBoard.
+   * @return The new Piece.
+   */
+  private Piece makePiece(String type, Point pos){
+    boolean color = "RQK".contains(type);
+    if ("Rr".contains(type)){//Rook
+      return new Rook(pos, color);
+    }
+    if ("Qq".contains(type)){//Queen
+      return new Queen(pos, color);
+    }
+    if ("Kk".contains(type)) {//King
+      return new King(pos, color);
+    }
+    throw new IllegalArgumentException("Piece type must be one of: [RrQqKk]; got: " + type);
+  }
+
+  /**
+   * Get a piece from (col, row) on this GameBoard.
+   * @param col Column to get the Piece from.
+   * @param row Row to get the Piece from.
+   * @return A Piece at (col, row) on this GameBoard, null if no Piece exists there.
+   */
+  public Piece getPieceAt(int col, int row){
+    return board[col][row];
+  }
+
+  /**
+   * Get a Piece form the given Point on this GameBoard.
+   * @param tile The Point to get a piece from.
+   * @return A Piece if there is a piece at the Point, null otherwise.
+   */
+  public Piece getPieceAt(Point tile){
+    return this.getPieceAt(tile.getArrayCol(), tile.getArrayRow());
+  }
+
+  //TODO: Implement a return for the gameBoard.
+  public String getBoard(){
+    return "";
+  }
+
+  //TODO: implement MovePiece
+  public boolean MovePiece(Point from, Point to){
+    return false;
+  }
+
+
+  /**
+   * Calculates if a Point is on a wall.
+   * @param point The Point to test.
+   * @return True if the point is on a wall, false otherwise.
+   */
+  static boolean isWall(Point point){
+    return (//vertical walls
+        ((point.getArrayCol() == 1) && (point.getArrayRow() >= 2 && point.getArrayRow() <= 4)) ||
+        ((point.getArrayCol() == 5) && (point.getArrayRow() >= 2 && point.getArrayRow() <= 4)) ||
+        ((point.getArrayCol() == 6) && (point.getArrayRow() >= 7 && point.getArrayRow() <= 9)) ||
+        ((point.getArrayCol() == 10) && (point.getArrayRow() >= 7 && point.getArrayRow() <= 9)) ||
+        //horizontal walls
+        ((point.getArrayCol() >= 2 && point.getArrayCol() <= 4) && (point.getArrayRow() == 1)) ||
+        ((point.getArrayCol() >= 2 && point.getArrayCol() <= 4) && (point.getArrayRow() == 5)) ||
+        ((point.getArrayCol() >= 7 && point.getArrayCol() <= 9) && (point.getArrayRow() == 6)) ||
+        ((point.getArrayCol() >= 7 && point.getArrayCol() <= 9) && (point.getArrayRow() == 10)));
+  }
+
+  /**
+   * Calculates if a Point is inside one of the castles.
+   * @param point the Point to test.
+   * @return True if the point is inside a castle, false otherwise.
+   */
+  static boolean isCastle(Point point){
+    return (((point.getArrayCol() >= 2 && point.getArrayCol() <= 4) &&
+        (point.getArrayRow() >= 2 && point.getArrayRow() <= 4)) ||
+        ((point.getArrayCol() >= 7 && point.getArrayCol() <= 9) &&
+            (point.getArrayRow() >= 7 && point.getArrayRow() <= 9)));
+  }
+
+  /**
+   * Get a letter representation of a Piece, for use in toString.
+   * @param p The Piece to stringify
+   * @return One of [RrQqKk-], based on the Piece.
+   */
+  private String pieceToLetter(Piece p){
+    if (p == null)
+      return "-";
+    if (p.getClass() == Rook.class){
+      return p.getColor() ? "R" : "r";
+    }
+    if (p.getClass() == King.class){
+      return p.getColor() ? "K" : "k";
+    }
+    if (p.getClass() == Queen.class){
+      return p.getColor() ? "Q" : "q";
+    }
+    throw new IllegalArgumentException("Piece must be a Rook, Queen, King, or null. Was a: " + p.getClass());
+
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder res = new StringBuilder();
+    for (int i = 11; i >=0; --i){
+      Piece[] r = board[i];
+      for (Piece p : r){
+        res.append(pieceToLetter(p)).append(" ");
+      }
+      res.append("\n");
+    }
+    return res.toString();
+  }
 }
