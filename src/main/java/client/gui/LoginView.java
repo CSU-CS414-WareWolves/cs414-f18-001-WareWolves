@@ -1,8 +1,10 @@
 package client.gui;
 
+import java.io.IOException;
+
 public interface LoginView {
   // Print a nice splash title for our game
-  void showSplash();
+  void showSplash() throws IOException;
 
   // Log in an existing user
   void login(String email, String password);
