@@ -5,9 +5,6 @@ public interface MenuView {
   void showMenu();
 
   //
-  void handleMenu();
-
-  //
   void resumeGame();
 
   //

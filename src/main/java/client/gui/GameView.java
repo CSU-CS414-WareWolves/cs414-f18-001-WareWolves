@@ -1,12 +1,11 @@
 package client.gui;
 
-public interface GameView {
-  //
-  public void getGameState();
+import client.game.GameBoard;
+import client.game.Point;
+import java.util.Collection;
 
-  //
-//  void getValidMove(Point p);
-//
-//  //
-//  void makeMove(Point from, Point to);
+public interface GameView {
+  // Prints the board from the given state
+  public void showGameBoard(GameBoard gb);
+  public void showValidMoves(Collection<Point> list);
 }
