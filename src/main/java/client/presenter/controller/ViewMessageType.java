@@ -1,4 +1,4 @@
-package client.presenter;
+package client.presenter.controller;
 
 public enum ViewMessageType {
   REGISTER,
