@@ -65,6 +65,7 @@ public class RecieveThread extends Thread{
 			case INVITE_REQUEST:
 			case INVITE_RESPONSE:
 			case RESIGN:
+			case REGISTER_RESPONSE:
 		}
 	}
 	

@@ -13,7 +13,8 @@ public enum NET_MESSAGE_TYPE {
 	ACTIVE_GAMES_RESPONSE(10),
 	INVITE_REQUEST(11),
 	INVITE_RESPONSE(12),
-	RESIGN(13);
+	RESIGN(13),
+	REGISTER_RESPONSE(14);
 	
 	/**
 	 * int representation of the NET_MESSAGE_TYPE
@@ -48,6 +49,7 @@ public enum NET_MESSAGE_TYPE {
 			case 11: return NET_MESSAGE_TYPE.INVITE_REQUEST;
 			case 12: return NET_MESSAGE_TYPE.INVITE_RESPONSE;
 			case 13: return NET_MESSAGE_TYPE.RESIGN;
+			case 14: return NET_MESSAGE_TYPE.REGISTER_RESPONSE;
 		}
 		return null;
 	}
