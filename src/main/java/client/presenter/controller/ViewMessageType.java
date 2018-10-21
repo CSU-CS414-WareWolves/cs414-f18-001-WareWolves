@@ -1,5 +1,8 @@
 package client.presenter.controller;
 
+/**
+ * These are the types of message that the View can send and receive
+ */
 public enum ViewMessageType {
   REGISTER,
   LOGIN,
