@@ -15,12 +15,14 @@ public enum NET_MESSAGE_TYPE {
 	INVITE_RESPONSE(12),
 	RESIGN(13);
 	
-	//Int representation of types
+	/**
+	 * int representation of the NET_MESSAGE_TYPE
+	 */
 	protected final int typeCode;
 	
 	/**
-	 * 
-	 * @param type type code for NET_MESSAGE_TYPE
+	 * Constructor, binds int type to NET_MESSAGE_TYPE
+	 * @param type Type code for NET_MESSAGE_TYPE
 	 */
 	NET_MESSAGE_TYPE(int type) {
 		this.typeCode = type;
@@ -28,7 +30,7 @@ public enum NET_MESSAGE_TYPE {
 	
 	/**
 	 * 
-	 * @param i integer to convert to NET_MESSAGE_TYPE
+	 * @param i Integer to convert to NET_MESSAGE_TYPE
 	 * @return NET_MESSAGE_TYPE of the integer i
 	 */
 	public static NET_MESSAGE_TYPE fromInt(int i) {
