@@ -38,9 +38,6 @@ public class NetworkManager {
 	public boolean sendMessage(NetworkMessage msg) {
 		return send.sendToServer(msg);
 	}
-	
-	
-	
-	
+
 	
 }

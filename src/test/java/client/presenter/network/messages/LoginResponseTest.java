@@ -17,7 +17,6 @@ public class LoginResponseTest {
 		  testResponse2 = new LoginResponse("2:True:testUser");
 	  }
 
-
 	  @Test
 	  public void getDataString() {
 	    assertEquals(testResponseString, testResponse1.getDataString());

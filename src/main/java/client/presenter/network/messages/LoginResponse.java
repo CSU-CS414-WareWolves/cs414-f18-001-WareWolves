@@ -1,7 +1,6 @@
 package client.presenter.network.messages;
 
 public class LoginResponse extends NetworkMessage {
-	
 	private boolean success;
 	private String nickname;
 	
