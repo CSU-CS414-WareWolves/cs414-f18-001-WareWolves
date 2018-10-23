@@ -1,5 +1,6 @@
 package client.presenter.controller.messages;
 
+import client.presenter.controller.ViewMessageType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,5 +21,8 @@ class ViewValidMovesTest {
   public void testRow(){
     assertEquals(rowTest, testValidMove.location.getArrayRow());
   }
+
+  @Test
+  public void testType() {assertEquals(ViewMessageType.SHOW_VALID_MOVES, testValidMove.messageType);}
 
 }
