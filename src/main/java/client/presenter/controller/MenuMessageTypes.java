@@ -1,6 +1,6 @@
 package client.presenter.controller;
 
-public enum MenuTypes {
+public enum MenuMessageTypes {
   LOGOUT,
   PLAYER_STATS,
   ACTIVE_GAMES,

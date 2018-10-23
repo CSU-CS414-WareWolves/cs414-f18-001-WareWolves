@@ -2,6 +2,7 @@ package client.presenter.controller.messages;
 
 import client.game.Point;
 import client.presenter.controller.ViewMessageType;
+import java.util.Objects;
 
 /**
  * Message to the controller to move a piece from a location to another location
@@ -23,6 +24,21 @@ public class MovePieceMessage extends ViewMessage {
     super(ViewMessageType.MOVE_PIECE);
     this.fromLocation = new Point(fromCol, fromRow);
     this.toLocation = new Point(toCol, toRow);
+  }
+
+  @Override
+  public boolean equals(Object o){
+    if (o == null || !(o instanceof MovePieceMessage)) {
+      return false;
+    }
+    MovePieceMessage other = (MovePieceMessage) o;
+    return fromLocation.equals(other.fromLocation) && toLocation.equals(other.toLocation);
+  }
+
+  @Override
+  public int hashCode() {
+
+    return Objects.hash(fromLocation, toLocation);
   }
 
 }

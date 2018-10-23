@@ -3,6 +3,7 @@ package client.presenter.controller.messages;
 import client.presenter.controller.ViewMessageType;
 import client.presenter.controller.util.HashPasswords;
 import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
 
 /**
  * A message from the view with the email and password for a login attempt
@@ -29,5 +30,20 @@ public class LoginMessage extends ViewMessage{
 
     this.email = email;
     this.password = HashPasswords.SHA1FromString(password);
+  }
+
+  @Override
+  public boolean equals(Object o){
+    if (o == null || !(o instanceof LoginMessage)) {
+      return false;
+    }
+    LoginMessage other = (LoginMessage) o;
+    return email.equals(other.email) && password.equals(other.password);
+  }
+
+  @Override
+  public int hashCode() {
+
+    return Objects.hash(email, password);
   }
 }
