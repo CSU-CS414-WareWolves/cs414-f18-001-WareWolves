@@ -6,6 +6,7 @@ package client.presenter.network.messages;
  *
  */
 public abstract class NetworkMessage {
+	
 	/**
 	 * Message type
 	 */

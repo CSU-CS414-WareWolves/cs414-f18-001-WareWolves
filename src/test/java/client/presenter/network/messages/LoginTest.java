@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 public class LoginTest {
 
   private static Login testLogin, testLogin2;
-
   private final String testUserString = "1:TestUser:TestPassword";
 
 	@BeforeAll

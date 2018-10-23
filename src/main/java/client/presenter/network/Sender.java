@@ -7,7 +7,6 @@ import java.net.Socket;
 import client.presenter.network.messages.*;
 
 public class Sender {
-	
 	private Socket sock;
 	private DataOutputStream outToServer;
 	

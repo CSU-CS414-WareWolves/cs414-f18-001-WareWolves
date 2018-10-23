@@ -21,6 +21,7 @@ public enum NET_MESSAGE_TYPE {
 	 */
 	protected final int typeCode;
 	
+	
 	/**
 	 * Constructor, binds int type to NET_MESSAGE_TYPE
 	 * @param type Type code for NET_MESSAGE_TYPE

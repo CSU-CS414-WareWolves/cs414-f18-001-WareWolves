@@ -1,7 +1,6 @@
 package client.presenter.network.messages;
 
 public class Login extends NetworkMessage{
-
 	private String email;
 	private String passwordAttempt;
 	

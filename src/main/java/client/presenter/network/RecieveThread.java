@@ -7,7 +7,6 @@ import java.net.Socket;
 import client.presenter.network.messages.NET_MESSAGE_TYPE;
 
 public class RecieveThread extends Thread{
-
 	private Socket sock;
 	private DataInputStream din;
 	private NetworkManager mgmt;
