@@ -37,6 +37,6 @@ class PointTest {
   @Test
   void testToString() {
     Point p = new Point(0,0);
-    assertEquals("a1", p.toString());
+    assertEquals("aA", p.toString());
   }
 }
