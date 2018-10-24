@@ -1,0 +1,39 @@
+package client.game.pieces;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import client.game.GameBoard;
+import client.game.Point;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+@DisplayName("Test King")
+class KingTest {
+
+  private GameBoard board;
+
+  @BeforeEach
+  void setUp() {
+    board = new GameBoard("RlARlBRkARhDRgErgJRaLRbLraKRiJkdDKhHQdAQcGqkHRbARaBqaARbBRcC");
+  }
+
+  @DisplayName("ValidMoves")
+  @ParameterizedTest(name = "({0})")
+  @CsvSource({"dD,false,eCeDeEdCdEcCcDcE", "hH, true, iHiIhIjI"})
+  void getValidMoves(String point, boolean color, String expectedPoints) {
+    King testKing = new King(new Point(point), color);
+    Set<Point> points = new HashSet<>();
+    for (int i = 0; i < expectedPoints.length(); i = i + 2) {
+      points.add(new Point(expectedPoints.substring(i, i + 2)));
+    }
+    Point[] result = testKing.getValidMoves(board.getPieces());
+    Set<Point> resSet = new HashSet<>(Arrays.asList(result));
+    assertEquals(points, resSet, "Expected and Actual moves do not match.");
+  }
+}
