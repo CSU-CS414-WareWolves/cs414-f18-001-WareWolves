@@ -9,19 +9,21 @@ public class Unregister extends NetworkMessage {
 	/**
 	 * Constructor for presenter
 	 * A user must know all of the information about an account to unregister
-	 * @param Email User email keyed in
-	 * @param Nickname User email keyed in
-	 * @param Password Hash of password keyed in
+	 * @param email User email keyed in
+	 * @param nickname User email keyed in
+	 * @param password Hash of password keyed in
 	 */
-	public Unregister(String Email, String Nickname, String Password) {
+	public Unregister(String email, String nickname, String password) {
 		super(NET_MESSAGE_TYPE.UNREGISTER);
-		email = Email;
-		nickname = Nickname;
-		password = Password;
+		this.email = email;
+		this.nickname = nickname;
+		this.password = password;
+		length = this.getDataString().getBytes().length;
 	}
 
 	/**
 	 * Constructor for server
+	 * Expected: "5:email:nickname:password"
 	 * @param data string read in from RecieveThread
 	 */
 	public Unregister(String data) {
@@ -30,6 +32,7 @@ public class Unregister extends NetworkMessage {
 		email = splt[1];
 		nickname = splt[2];
 		password = splt[3];
+		length = getDataString().getBytes().length;
 	}
 	
 	

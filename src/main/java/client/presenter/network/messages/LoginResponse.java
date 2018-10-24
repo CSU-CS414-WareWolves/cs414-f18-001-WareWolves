@@ -7,18 +7,18 @@ public class LoginResponse extends NetworkMessage {
 	/**
 	 * Constructor for server
 	 * @param status True for login success, false for failure
-	 * @param Nickname the nickname of the request login if success, null if failure
+	 * @param nickname the nickname of the request login if success, null if failure
 	 */
-	public LoginResponse(boolean status, String Nickname) {
+	public LoginResponse(boolean status, String nickname) {
 		super(NET_MESSAGE_TYPE.LOGIN_RESPONSE);
 		success = status;
-		nickname = Nickname;
-		length = getDataString().getBytes().length;
+		this.nickname = nickname;
+		length = this.getDataString().getBytes().length;
 	}
 	
 	/**
 	 * Constructor for RecieveThread
-	 * Expected 2:(True/False):nickname
+	 * Expected 2:(true/false):nickname
 	 * @param data Data String read from socket
 	 */
 	public LoginResponse(String data) {

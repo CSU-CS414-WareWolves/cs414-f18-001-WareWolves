@@ -2,7 +2,6 @@ package client.presenter.network;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.Socket;
 import client.presenter.network.messages.*;
 
@@ -21,6 +20,7 @@ public class Sender {
 		try {
 			outToServer.writeInt(msg.length);
 			outToServer.write(msg.getDataString().getBytes());
+			outToServer.flush();
 			return true;
 		} catch (IOException e) {
 			System.err.println("Failed to send message: "+msg.getDataString());

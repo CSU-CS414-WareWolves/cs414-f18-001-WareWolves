@@ -13,7 +13,7 @@ public class Login extends NetworkMessage{
 		super(NET_MESSAGE_TYPE.LOGIN);
 		email = userEmail;
 		passwordAttempt = passwordHash;
-		length = getDataString().getBytes().length;
+		length = this.getDataString().getBytes().length;
 	}
 	
 	/**

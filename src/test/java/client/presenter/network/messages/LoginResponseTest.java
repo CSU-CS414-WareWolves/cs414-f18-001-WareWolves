@@ -14,7 +14,7 @@ public class LoginResponseTest {
 	  @BeforeAll
 	  public static void setup() {
 		  testResponse1 = new LoginResponse(true, "testUser");
-		  testResponse2 = new LoginResponse("2:True:testUser");
+		  testResponse2 = new LoginResponse("2:true:testUser");
 	  }
 
 	  @Test

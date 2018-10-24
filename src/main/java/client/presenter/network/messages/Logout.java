@@ -6,16 +6,17 @@ public class Logout extends NetworkMessage {
 	
 	/**
 	 * Constructor for presenter
-	 * @param Nickname the nickname of the currently logged in user
+	 * @param nickname the nickname of the currently logged in user
 	 */
-	public Logout(String Nickname) {
+	public Logout(String nickname) {
 		super(NET_MESSAGE_TYPE.LOGOUT);
-		nickname = Nickname;
-		length = getDataString().getBytes().length;
+		this.nickname = nickname;
+		length = this.getDataString().getBytes().length;
 	}
 	
 	/**
 	 * Constructor for server
+	 * Expected: "3:nickname"
 	 * @param data data string read from RecieveThread 
 	 * @param off dummy variable to differentiate constructors
 	 */

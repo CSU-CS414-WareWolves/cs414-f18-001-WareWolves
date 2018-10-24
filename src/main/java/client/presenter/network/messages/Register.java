@@ -7,20 +7,21 @@ public class Register extends NetworkMessage{
 	
 	/**
 	 * Constructor for the presenter
-	 * @param Email email keyed in by user
-	 * @param Nickname chosen nickname
-	 * @param HashedPass Hashed password entered in by user
+	 * @param email email keyed in by user
+	 * @param nickname chosen nickname
+	 * @param hashedPass Hashed password entered in by user
 	 */
-	public Register(String Email, String Nickname, String HashedPass) {
+	public Register(String email, String nickname, String hashedPass) {
 		super(NET_MESSAGE_TYPE.REGISTER);
-		email = Email;
-		nickname = Nickname;
-		password = HashedPass;
-		length = getDataString().getBytes().length;
+		this.email = email;
+		this.nickname = nickname;
+		password = hashedPass;
+		length = this.getDataString().getBytes().length;
 	}
 	
 	/**
 	 * Constructor for server
+	 * Expected: "4:email:nickname:password"
 	 * @param data String representation of message from RecieveThread
 	 */
 	public Register(String data) {
