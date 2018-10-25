@@ -19,7 +19,7 @@ public class MenuMessageResponse extends ViewMessage {
    * @param menuType the menu type
    * @param information the menu information
    */
-  protected MenuMessageResponse(MenuMessageTypes menuType, String[] information) {
+  public MenuMessageResponse(MenuMessageTypes menuType, String[] information) {
     super(ViewMessageType.MENU_RESPONSE);
 
     this.menuType = menuType;

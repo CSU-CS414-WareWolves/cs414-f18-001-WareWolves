@@ -18,7 +18,7 @@ public class LoginResponseMessage extends ViewMessage {
    * @param success success of the login request
    * @param nickname nickname of the user logging in
    */
-  protected LoginResponseMessage(boolean success, String nickname) {
+  public LoginResponseMessage(boolean success, String nickname) {
     super(ViewMessageType.LOGIN_RESPONSE);
 
     this.success = success;

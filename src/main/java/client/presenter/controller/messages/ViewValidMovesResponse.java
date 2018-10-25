@@ -13,7 +13,7 @@ public class ViewValidMovesResponse extends ViewMessage {
    * Sets the valid move locations
    * @param locations the valid moves in response to the view valid moves request
    */
-  protected ViewValidMovesResponse(String[] locations) {
+  public ViewValidMovesResponse(String[] locations) {
     super(ViewMessageType.SHOW_VALID_MOVES_RESPONSE);
     this.locations = locations;
   }

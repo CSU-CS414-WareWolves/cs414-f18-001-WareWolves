@@ -18,7 +18,7 @@ public class UnregisterResponseMessage extends ViewMessage{
    * @param success success of the unregister request
    * @param messages response messages to the register request
    */
-  protected UnregisterResponseMessage(boolean success, String[] messages) {
+  public UnregisterResponseMessage(boolean success, String[] messages) {
     super(ViewMessageType.UNREGISTER_RESPONSE);
 
     this.success = success;

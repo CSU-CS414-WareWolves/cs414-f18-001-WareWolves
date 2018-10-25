@@ -18,7 +18,7 @@ public class RegisterResponseMessage extends ViewMessage {
    * @param success success of the register request
    * @param messages response messages to the register request
    */
-  protected RegisterResponseMessage(boolean success, String[] messages) {
+  public RegisterResponseMessage(boolean success, String[] messages) {
     super(ViewMessageType.REGISTER_RESPONSE);
 
     this.success = success;
