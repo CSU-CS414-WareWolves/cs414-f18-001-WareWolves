@@ -3,11 +3,13 @@ package client.game;
 import java.util.Objects;
 
 public class Point {
-  private int col;
-  private int row;
+
+  private final int col;
+  private final int row;
 
   /**
    * Constructs a Point from two int position markers.
+   *
    * @param col Column int for the point to represent.
    * @param row Row int for the point to represent.
    */
@@ -18,6 +20,7 @@ public class Point {
 
   /**
    * Constructs a Point form a char representing the column and an int
+   *
    * @param col Column char a-l for the point to represent
    * @param row Row int for the point to represent
    */
@@ -27,51 +30,39 @@ public class Point {
 
   /**
    * Constructs a Point from a String containing a col,row pair where the col is a char a-l
+   *
    * @param point String representing the Point to be constructed.
    */
   public Point(String point) {
-    this( (point.charAt(0) - 'a'), (point.charAt(1) - 'A'));
+    this((point.charAt(0) - 'a'), (point.charAt(1) - 'A'));
 
   }
 
   /**
    * Gets the column value of the Point.
+   *
    * @return Column represented by the Point.
    */
   public int getArrayCol() {
     return col;
   }
 
-  /**
-   * Sets the value of the column represented by the Point.
-   * @param col The new value for the column that the point represents.
-   */
-  public void setCol(int col) {
-    this.col = col;
-  }
 
   /**
    * Gets the Row value of the Point.
+   *
    * @return Row represented by the Point.
    */
   public int getArrayRow() {
     return row;
   }
 
-  /**
-   * Sets the value of the row represented by the Point.
-   * @param row The new value for the row that the point represents.
-   */
-  public void setRow(int row) {
-    this.row = row;
-  }
-
-
 
   @Override
   public String toString() {
-    char c = (char)('a' + col);
-    return ("" + c) + (row+1);
+    char c = (char) ('a' + col);
+    char r = (char) ('A' + row);
+    return ("" + c) + ("" + r);
   }
 
   @Override
