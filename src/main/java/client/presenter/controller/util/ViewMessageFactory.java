@@ -26,8 +26,9 @@ public class ViewMessageFactory {
 
   /**
    * View Message creator. The info[] must be in the same order as the constructor for the message
-   * The exception to this is Menu messages. The first index should be the string value of
-   * the MenuMessageType enum
+   * The exception to this is Menu messages. The first index should be the string value of the
+   * MenuMessageType enum
+   *
    * @param type the type of message to create
    * @param info the info to construct the message
    * @return the constructed message
@@ -35,7 +36,7 @@ public class ViewMessageFactory {
    */
   public ViewMessage createViewMessage(ViewMessageType type, String[] info)
       throws NoSuchAlgorithmException {
-    switch (type){
+    switch (type) {
       case REGISTER:
         return new RegisterMessage(info[0], info[1], info[2]);
       case LOGIN:
@@ -50,6 +51,20 @@ public class ViewMessageFactory {
       case MOVE_PIECE:
         return new MovePieceMessage(Integer.parseInt(info[0]), Integer.parseInt(info[1]),
             Integer.parseInt(info[2]), Integer.parseInt(info[3]));
+      case MOVE_PIECE_RESPONSE:
+        boolean success = true;
+        if (info[0].equals("false"))
+          success = false;
+        return new MovePieceResponse(success, info[1]);
+      default:
+        throw new IllegalArgumentException("The messageType of " + type.name() + " is not valid");
+    }
+  }
+
+
+  public ViewMessage createViewMessageFromServer() {
+    ;
+      /*
       case REGISTER_RESPONSE:
         //not implemented;
       case LOGIN_RESPONSE:
@@ -60,14 +75,7 @@ public class ViewMessageFactory {
         //not implemented;
       case MENU_RESPONSE:
         //not implemented;
-      case MOVE_PIECE_RESPONSE:
-        boolean success = true;
-        if(info[0].equals("false"))
-          success = false;
-        return new MovePieceResponse(success, info[1]);
-      default:
-        throw new IllegalArgumentException("The messageType of " + type.name() + " is not valid");
-    }
-
+      */
+    return null;
   }
 }

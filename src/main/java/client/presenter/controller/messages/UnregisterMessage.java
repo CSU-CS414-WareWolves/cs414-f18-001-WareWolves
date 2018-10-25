@@ -40,6 +40,10 @@ public class UnregisterMessage extends ViewMessage{
     if (o == null || !(o instanceof UnregisterMessage)) {
       return false;
     }
+
+    if(!(o instanceof UnregisterMessage)) {
+      return false;
+    }
     UnregisterMessage other = (UnregisterMessage) o;
     return email.equals(other.email) && password.equals(other.password)
         && nickname.equals(other.nickname);
