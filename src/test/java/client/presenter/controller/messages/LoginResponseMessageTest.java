@@ -9,12 +9,12 @@ import org.junit.jupiter.api.Test;
 class LoginResponseMessageTest {
 
   private static final boolean success = true;
-  private static final String[] messages = {"Successfully Registered User"};
-  private static RegisterResponseMessage testMessage;
+  private static final String nickname = "Frodo";
+  private static LoginResponseMessage testMessage;
 
   @BeforeEach
   public void setup() {
-    testMessage = new RegisterResponseMessage(success, messages);
+    testMessage = new LoginResponseMessage(success, nickname);
   }
 
   @Test
@@ -29,6 +29,6 @@ class LoginResponseMessageTest {
 
   @Test
   public void testMessages() {
-    assertEquals(messages, testMessage.messages);
+    assertEquals(nickname, testMessage.nickname);
   }
 }
