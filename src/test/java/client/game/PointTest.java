@@ -1,6 +1,6 @@
 package client.game;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -37,6 +37,6 @@ class PointTest {
   @Test
   void testToString() {
     Point p = new Point(0,0);
-    assertEquals("a1", p.toString());
+    assertEquals("aA", p.toString());
   }
 }
