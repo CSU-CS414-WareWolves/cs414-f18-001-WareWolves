@@ -1,5 +1,6 @@
 package client.presenter.controller.messages;
 
+import static client.presenter.SharedTestAttributes.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import client.presenter.controller.ViewMessageType;
@@ -7,18 +8,13 @@ import java.security.NoSuchAlgorithmException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class RegisterMessageTest {
-
-  private static final String loginEmail = "test@cs.csu.edu";
-  private static final String loginPassword = "IamABadpassword";
-  private static final String hashedPassword = "5f4f8b99d5cd5ccd665ae5d57296b16cad7aaadc";
-  private static final String testNickname = "Chad Player";
+class RegisterMessageTest{
 
   private static RegisterMessage testMessage;
 
   @BeforeEach
   public void setup() throws NoSuchAlgorithmException {
-    testMessage = new RegisterMessage(loginEmail, loginPassword, testNickname);
+    testMessage = new RegisterMessage(TEST_LOGIN_EMAIL, TEST_LOGIN_PASSWORD, TEST_NICKNAME);
   }
 
   @Test
@@ -28,16 +24,28 @@ class RegisterMessageTest {
 
   @Test
   public void testPassword(){
-    assertEquals(hashedPassword, testMessage.password);
+    assertEquals(TEST_HASHED_PASSWORD, testMessage.password);
   }
 
   @Test
   public void testEmail(){
-    assertEquals(loginEmail, testMessage.email);
+    assertEquals(TEST_LOGIN_EMAIL, testMessage.email);
   }
 
   @Test
-  public void testNickname(){ assertEquals(testNickname, testMessage.nickname);
+  public void testNickname(){ assertEquals(TEST_NICKNAME, testMessage.nickname);
+  }
+
+  @Test
+  public void testNotEqualNull(){
+    assertNotEquals( testMessage, null);
+  }
+
+  @Test
+  public void testHashCode() throws NoSuchAlgorithmException {
+    RegisterMessage testHash =
+        new RegisterMessage(TEST_LOGIN_EMAIL, TEST_LOGIN_PASSWORD, TEST_NICKNAME);
+    assertEquals(testMessage.hashCode(), testHash.hashCode());
   }
 
 }

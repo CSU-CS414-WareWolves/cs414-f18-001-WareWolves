@@ -1,13 +1,16 @@
 package client.presenter.controller.util;
 
+import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.ViewMessageType;
 import client.presenter.controller.messages.LoginMessage;
+import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.UnregisterMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMoves;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 public class ViewMessageFactory {
 
@@ -20,6 +23,15 @@ public class ViewMessageFactory {
   private ViewMessageFactory() {
   }
 
+  /**
+   * View Message creator. The info[] must be in the same order as the constructor for the message
+   * The exception to this is Menu messages. The first index should be the string value of
+   * the MenuMessageType enum
+   * @param type the type of message to create
+   * @param info the info to construct the message
+   * @return the constructed message
+   * @throws NoSuchAlgorithmException could not find SHA1 Hash
+   */
   public ViewMessage createViewMessage(ViewMessageType type, String[] info)
       throws NoSuchAlgorithmException {
     switch (type){
@@ -32,7 +44,8 @@ public class ViewMessageFactory {
       case SHOW_VALID_MOVES:
         return new ViewValidMoves(Integer.parseInt(info[0]), Integer.parseInt(info[1]));
       case MENU:
-        //not implemented;
+        return new MenuMessage(MenuMessageTypes.valueOf(info[0]),
+            Arrays.copyOfRange(info, 1, info.length));
       case MOVE_PIECE:
         return new MovePieceMessage(Integer.parseInt(info[0]), Integer.parseInt(info[1]),
             Integer.parseInt(info[2]), Integer.parseInt(info[3]));

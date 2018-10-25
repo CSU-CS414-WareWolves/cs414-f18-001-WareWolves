@@ -3,15 +3,20 @@ package client.presenter.controller.util;
 import static org.junit.jupiter.api.Assertions.*;
 
 import client.presenter.SharedTestAttributes;
+import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.ViewMessageType;
 import client.presenter.controller.messages.LoginMessage;
+import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.UnregisterMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMoves;
 import java.security.NoSuchAlgorithmException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 class ViewMessageFactoryTest implements SharedTestAttributes{
 
@@ -65,6 +70,21 @@ class ViewMessageFactoryTest implements SharedTestAttributes{
     String[] info = {Integer.toString(FROM_COL), Integer.toString(FROM_ROW),
         Integer.toString(TO_COL), Integer.toString(TO_COL)};
     testMessageEquals(expected, info, ViewMessageType.MOVE_PIECE);
+  }
+
+  @DisplayName("testMenuMessages")
+  @ParameterizedTest(name = "Menu type ({0}) should be {0}")
+  @EnumSource(
+      value = MenuMessageTypes.class,
+      names = {"LOGOUT", "PLAYER_STATS", "ACTIVE_GAMES", "INVITES", "SELECT_GAME", "SEND_INVITE"})
+  public void testMenuMessageTypes(MenuMessageTypes menuMessageTypes)
+      throws NoSuchAlgorithmException {
+    String[] expectInfo = {"TestInfo"};
+    MenuMessage expected = new MenuMessage(menuMessageTypes, expectInfo);
+
+    String[] info = {menuMessageTypes.name(), "TestInfo"};
+
+    testMessageEquals(expected, info, ViewMessageType.MENU);
   }
 
   /**

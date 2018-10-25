@@ -10,5 +10,6 @@ public interface SharedTestAttributes {
   int FROM_COL = 7;
   int TO_ROW = 8;
   int TO_COL = 10;
+  String[] TEST_MENU_OPTIONS_INT_STRING = {"123456", "PLAYER: NAME"};
 
 }
