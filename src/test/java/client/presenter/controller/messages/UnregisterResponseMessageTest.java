@@ -19,7 +19,7 @@ class UnregisterResponseMessageTest {
 
   @Test
   public void testType() {
-    assertEquals(ViewMessageType.REGISTER_RESPONSE, testMessage.messageType);
+    assertEquals(ViewMessageType.UNREGISTER_RESPONSE, testMessage.messageType);
   }
 
   @Test

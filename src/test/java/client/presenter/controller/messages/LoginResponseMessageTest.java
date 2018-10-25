@@ -19,7 +19,7 @@ class LoginResponseMessageTest {
 
   @Test
   public void testType() {
-    assertEquals(ViewMessageType.REGISTER_RESPONSE, testMessage.messageType);
+    assertEquals(ViewMessageType.LOGIN_RESPONSE, testMessage.messageType);
   }
 
   @Test
@@ -28,7 +28,7 @@ class LoginResponseMessageTest {
   }
 
   @Test
-  public void testMessages() {
+  public void testNickname() {
     assertEquals(nickname, testMessage.nickname);
   }
 }
