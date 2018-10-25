@@ -23,6 +23,16 @@ class QueenTest {
     board = new GameBoard("RlARlBRkARhDRgErgJRaLRbLraKRiJkdDKhHQdAQcGqkHRbARaBqaARbBRcC");
   }
 
+  @DisplayName("Equals")
+  @ParameterizedTest
+  @CsvSource({"aA, true, aA, true, true", "aA, true, aA, false, false", "aB, true, aA, true, false"})
+  void testEquals(String p1, boolean c1, String p2, Boolean c2, boolean expected){
+    Queen testQueen1 = new Queen(new Point(p1), c1);
+    Queen testQueen2 = new Queen(new Point(p2), c2);
+    boolean equal = testQueen1.equals(testQueen2);
+    assertEquals(equal, expected, "Queen.equals did not give the expected result.");
+  }
+
   @DisplayName("ValidMoves")
   @ParameterizedTest(name = "({0})")
   @CsvSource({"aA,false,''", "dA, true, cAeAfAgAhAiAjAdBdCdDcBbCaDeBfCgDhEiFjG",
@@ -36,5 +46,23 @@ class QueenTest {
     Point[] result = testQueen.getValidMoves(board.getPieces());
     Set<Point> resSet = new HashSet<>(Arrays.asList(result));
     assertEquals(points, resSet, "Expected and Actual moves do not match.");
+  }
+
+  @DisplayName("Move")
+  @ParameterizedTest(name = "({0})")
+  @CsvSource({"aA,false,bA,false", "dA, true,dD, true", "dA, true,gD, true", "dA, true,dH, false",
+      "kH, false,iJ, true", "kH, false,hH, true"})
+  void testMove(String point, boolean color, String move, boolean expected) {
+    Queen testQueen = new Queen(new Point(point), color);
+
+    boolean result = testQueen.move(move, board.getPieces());
+
+    assertEquals(expected, result, "The Queen moved or did not move when expected");
+
+    if (expected) {
+      assertEquals(testQueen.boardLocation, new Point(move), "Queen should be in the new position");
+    } else {
+      assertEquals(testQueen.boardLocation, new Point(point), "Queen should not have moved");
+    }
   }
 }

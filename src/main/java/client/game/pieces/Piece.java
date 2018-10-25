@@ -2,6 +2,7 @@ package client.game.pieces;
 
 import client.game.GameBoard;
 import client.game.Point;
+import java.util.Arrays;
 import java.util.Objects;
 
 public abstract class Piece {
@@ -41,13 +42,22 @@ public abstract class Piece {
   public abstract Point[] getValidMoves(Piece[][] board);
 
   /**
-   * Moves the Piece to its new position.
+   * Moves the Piece to its new position if that position is valid for the Piece.
    *
-   * @param move String ([a-l][0-11]) representing the new position to move to.
-   * @param board A GameBoard that contains this piece.
+   * @param move String ([a-l][A-L]) representing the new position to move to.
+   * @param board A Piece[][] that contains this piece.
    * @return True if the move was successful, False otherwise.
    */
-  public abstract boolean move(String move, GameBoard board);
+  public boolean move(String move, Piece[][] board){
+    Point moveTo = new Point(move);
+    if(Arrays.stream(this.getValidMoves(board)).anyMatch(moveTo::equals)){
+      this.boardLocation = moveTo;
+      return true;
+    }
+    return false;
+  }
+
+
 
 
   /**

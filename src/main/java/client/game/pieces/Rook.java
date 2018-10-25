@@ -54,9 +54,4 @@ public class Rook extends Piece {
     }
     return result;
   }
-
-  @Override
-  public boolean move(String move, GameBoard board) {
-    return false;
-  }
 }
