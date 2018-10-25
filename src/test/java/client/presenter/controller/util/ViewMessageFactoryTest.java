@@ -1,8 +1,8 @@
 package client.presenter.controller.util;
 
+import static client.presenter.SharedTestAttributes.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import client.presenter.SharedTestAttributes;
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.ViewMessageType;
 import client.presenter.controller.messages.LoginMessage;
@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
-class ViewMessageFactoryTest implements SharedTestAttributes{
+class ViewMessageFactoryTest {
 
   private final ViewMessageFactory factory = ViewMessageFactory.getInstance();
 

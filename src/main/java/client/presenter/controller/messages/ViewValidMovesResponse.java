@@ -14,7 +14,7 @@ public class ViewValidMovesResponse extends ViewMessage {
    * @param locations the valid moves in response to the view valid moves request
    */
   protected ViewValidMovesResponse(String[] locations) {
-    super(ViewMessageType.MOVE_PIECE_RESPONSE);
+    super(ViewMessageType.SHOW_VALID_MOVES_RESPONSE);
     this.locations = locations;
   }
 }
