@@ -1,24 +1,20 @@
 package client.gui;
 
+import java.util.ArrayList;
+
 public interface MenuView {
   // Print out menu for user to select
   void showMenu();
 
   //
-  void resumeGame();
+  void viewInvites(ArrayList<String> mail);
 
   //
-  void viewInvite();
+  void requestUsername();
 
-  //
-  void sendInvites();
-
-  //
-  void viewProfile();
+  // Shows the current users profile
+  void showStats(String username, int total, int wgames, int tgames, int lgames);
 
   //
   void unregisterUser();
-
-  //
-  void logout();
 }

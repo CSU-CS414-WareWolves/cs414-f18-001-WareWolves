@@ -25,14 +25,18 @@ public class CLGameView implements GameView {
    * @return void
    */
   public void showGameBoard(GameBoard gb) {
-    //System.out.println(gb);
+    char row = 'a';
     StringBuilder res = new StringBuilder();
     for(int i=11; i>=0; --i){
-        for (int j=0; j>=0; --j){
-          res.append("[").append(pieceToCharacter(gb.getPieceAt(j,i))).append("]");
+      res.append(row++).append(" {");
+        for (int j=11; j>=0; --j) {
+          res.append(" ").append(pieceToCharacter(gb.getPieceAt(j, i)));
+          if(j==0){
+            res.append(" }\n");
+          }
         }
-        res.append("\n");
     }
+    res.append("  { 1  2 3  4 5 6  7 8 9 10 11 12}");
     System.out.println(res);
   }
 
@@ -43,7 +47,7 @@ public class CLGameView implements GameView {
    */
   public static String pieceToCharacter(Piece p){
     if (p == null)
-      return " ";
+      return "\u2610";
     if (p.getClass() == Rook.class){
       return p.getColor() ? BROOK : WROOK;
     }

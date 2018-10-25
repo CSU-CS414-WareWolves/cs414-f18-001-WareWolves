@@ -1,45 +1,80 @@
 package client.gui.cl;
 
 import client.gui.MenuView;
+import java.util.ArrayList;
 import java.util.Scanner;
+import jdk.nashorn.internal.parser.JSONParser;
 
 public class CLMenu implements MenuView {
-  public static void clearScreen() {
-    System.out.println("\n-----------------------------------------------------------\n");
-  }
-  // Print out menu for user to select
+  /**
+   * Print out menu for user to select an option from
+   */
   public void showMenu(){
-    clearScreen();
-    System.out.println("+++ SELECT OPTION +++");
-    System.out.println("1.[ Resume  Game ]");
-    System.out.println("2.[ View Invites ]");
-    System.out.println("3.[ Send Invites ]");
-    System.out.println("4.[ View Profile ]");
-    System.out.println("5.[  Unregister  ]");
-    System.out.println("6.[    Logout    ]");
+    StringBuilder res = new StringBuilder();
+    res.append("+++ SELECT OPTION +++\n");
+    res.append("1.[ Resume  Game ]\n");
+    res.append("2.[ View Invites ]\n");
+    res.append("3.[ Send Invites ]\n");
+    res.append("4.[ View Profile ]\n");
+    res.append("5.[  Unregister  ]\n");
+    res.append("6.[    Logout    ]\n");
+    System.out.println(res);
   }
-  //
-  public void resumeGame(){
 
+  /**
+   * Print out all the invites that are currently in the user's inbox
+   * @param mail a collection of invites
+   */
+  public void viewInvites(ArrayList<String> mail){
+    if(mail.isEmpty()){
+      System.out.println("No invites found!\nSend a game invite from the main menu!");
+      return;
+    } else {
+      StringBuilder res = new StringBuilder();
+      for (int i = 0; i < 0; i++) {
+        res.append("[" + i + "]: " + mail.get(i) + " has invited you to a game!\n");
+      }
+      System.out.println(res);
+    }
   }
-  //
-  public void viewInvite(){
 
+  /**
+   * Request a player's stats after providing a their username
+   */
+  public void requestUsername(){
+    System.out.print("Please enter player's username: ");
   }
-  //
-  public void sendInvites(){
 
+  /**
+   * Print the profile of the player selected,
+   * @param username
+   * @param total
+   * @param wgames
+   * @param tgames
+   * @param lgames
+   */
+  public void showStats(String username, int total, int wgames, int tgames, int lgames){
+    //This is the format that it will be printed as
+    StringBuilder res = new StringBuilder();
+    res.append("| - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
+    res.append("| Username: "+username+"\n");
+    res.append("| - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
+    res.append("| Games  : "+total+"\n");
+    res.append("| Wins   : "+wgames+"\n");
+    res.append("| Ties   : "+tgames+"\n");
+    res.append("| Losses : "+lgames+"\n");
+    res.append("| - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+    System.out.println(res);
   }
-  //
-  public void viewProfile(){
 
-  }
-  //
+  /**
+   * Allows a user to unregister their account after a warning prompt
+   */
   public void unregisterUser(){
-
-  }
-  //
-  public void logout(){
-
+    StringBuilder res = new StringBuilder();
+    res.append(">>> Are you sure you want to UNREGISTER?\n>>> Your game record will be deleted\n");
+    res.append("1.[      YES!     ]\n");
+    res.append("2.[      NO!!     ]\n");
+    System.out.println(res);
   }
 }

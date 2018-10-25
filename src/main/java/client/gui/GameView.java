@@ -6,6 +6,8 @@ import java.util.Collection;
 
 public interface GameView {
   // Prints the board from the given state
-  public void showGameBoard(GameBoard gb);
-  public void showValidMoves(Collection<Point> list);
+  void showGameBoard(GameBoard gb);
+
+  // Prints the valid moves for the current player
+  void showValidMoves(Collection<Point> list);
 }
