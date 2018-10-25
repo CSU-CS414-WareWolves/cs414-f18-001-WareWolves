@@ -5,6 +5,7 @@ import client.presenter.controller.ViewMessageType;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceMessage;
+import client.presenter.controller.messages.MovePieceResponse;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.UnregisterMessage;
 import client.presenter.controller.messages.ViewMessage;
@@ -60,7 +61,10 @@ public class ViewMessageFactory {
       case MENU_RESPONSE:
         //not implemented;
       case MOVE_PIECE_RESPONSE:
-        //not implemented;
+        boolean success = true;
+        if(info[0].equals("false"))
+          success = false;
+        return new MovePieceResponse(success, info[1]);
       default:
         throw new IllegalArgumentException("The messageType of " + type.name() + " is not valid");
     }

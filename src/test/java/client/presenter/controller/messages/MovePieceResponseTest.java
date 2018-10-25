@@ -1,5 +1,6 @@
 package client.presenter.controller.messages;
 
+import static client.presenter.SharedTestAttributes.TEST_GAME_BOARD;
 import static org.junit.jupiter.api.Assertions.*;
 
 import client.presenter.controller.ViewMessageType;
@@ -13,7 +14,7 @@ class MovePieceResponseTest {
 
   @BeforeEach
   public void setup() {
-    testMessage = new MovePieceResponse(success);
+    testMessage = new MovePieceResponse(success, TEST_GAME_BOARD);
   }
 
   @Test

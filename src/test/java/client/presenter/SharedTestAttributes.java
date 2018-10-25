@@ -11,5 +11,7 @@ public abstract class SharedTestAttributes {
   public static final int TO_ROW = 8;
   public static final int TO_COL = 10;
   public static final String[] TEST_MENU_OPTIONS_INT_STRING = {"123456", "PLAYER: NAME"};
+  public static final String TEST_GAME_BOARD = "RlARlBRkARhDRgErgJRaLRbLraKRiJkdDKhHQdAQcGqkHRbARaBqaARbBRcC";
+
 
 }

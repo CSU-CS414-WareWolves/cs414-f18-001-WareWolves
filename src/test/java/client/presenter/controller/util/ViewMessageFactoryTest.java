@@ -8,11 +8,13 @@ import client.presenter.controller.ViewMessageType;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceMessage;
+import client.presenter.controller.messages.MovePieceResponse;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.UnregisterMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMoves;
 import java.security.NoSuchAlgorithmException;
+import javax.print.DocFlavor.STRING;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -85,6 +87,17 @@ class ViewMessageFactoryTest {
     String[] info = {menuMessageTypes.name(), "TestInfo"};
 
     testMessageEquals(expected, info, ViewMessageType.MENU);
+  }
+
+  @Test
+  void createMovePieceResponse() throws NoSuchAlgorithmException {
+
+
+    MovePieceResponse expected =
+        new MovePieceResponse(true, TEST_GAME_BOARD);
+
+    String[] info = {String.valueOf(true), TEST_GAME_BOARD};
+    testMessageEquals(expected, info, ViewMessageType.MOVE_PIECE_RESPONSE);
   }
 
   /**
