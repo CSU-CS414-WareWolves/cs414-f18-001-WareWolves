@@ -2,7 +2,7 @@ package client.presenter.network.messages;
 
 public class GameRequest extends NetworkMessage {
 
-	private int gameID;
+	public final int gameID;
 	
 	/**
 	 * Constructor for presenter

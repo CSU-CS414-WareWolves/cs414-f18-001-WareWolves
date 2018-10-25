@@ -2,9 +2,9 @@ package client.presenter.network.messages;
 
 public class GameInfo extends NetworkMessage {
 
-	private int gameID;
-	private String gameBoard;
-	private boolean turn;
+	public final int gameID;
+	public final String gameBoard;
+	public final boolean turn;
 	
 	/**
 	 * Constructor for server, params from DB fetch

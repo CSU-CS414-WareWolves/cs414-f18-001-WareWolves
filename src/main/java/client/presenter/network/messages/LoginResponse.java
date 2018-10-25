@@ -1,8 +1,8 @@
 package client.presenter.network.messages;
 
 public class LoginResponse extends NetworkMessage {
-	private boolean success;
-	private String nickname;
+	public final boolean success;
+	public final String nickname;
 	
 	/**
 	 * Constructor for server

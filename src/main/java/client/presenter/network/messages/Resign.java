@@ -2,8 +2,8 @@ package client.presenter.network.messages;
 
 public class Resign extends NetworkMessage {
 
-	private int gameID;
-	private String nickname;
+	public final int gameID;
+	public final String nickname;
 	
 	/**
 	 * Constructor for presenter.

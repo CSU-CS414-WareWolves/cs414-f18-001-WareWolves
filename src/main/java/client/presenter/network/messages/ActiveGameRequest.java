@@ -2,7 +2,7 @@ package client.presenter.network.messages;
 
 public class ActiveGameRequest extends NetworkMessage {
 
-	private String nickname;
+	public final String nickname;
 	
 	/**
 	 * Constructor for presenter

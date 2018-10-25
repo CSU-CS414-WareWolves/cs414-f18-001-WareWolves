@@ -1,7 +1,7 @@
 package client.presenter.network.messages;
 
 public class Logout extends NetworkMessage {
-	private String nickname;
+	public final String nickname;
 	
 	
 	/**

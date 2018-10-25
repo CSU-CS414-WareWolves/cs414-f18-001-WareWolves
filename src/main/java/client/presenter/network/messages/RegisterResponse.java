@@ -2,8 +2,8 @@ package client.presenter.network.messages;
 
 public class RegisterResponse extends NetworkMessage {
 
-	private boolean success;
-	private boolean reason;//True=nickname taken, False=email taken
+	public final boolean success;
+	public final boolean reason;//True=nickname taken, False=email taken
 	
 	/**
 	 * Constructor for server

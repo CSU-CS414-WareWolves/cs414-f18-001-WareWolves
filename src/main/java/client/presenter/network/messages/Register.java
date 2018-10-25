@@ -1,9 +1,9 @@
 package client.presenter.network.messages;
 
 public class Register extends NetworkMessage{
-	private String email;
-	private String nickname;
-	private String password;
+	public final String email;
+	public final String nickname;
+	public final String password;
 	
 	/**
 	 * Constructor for the presenter

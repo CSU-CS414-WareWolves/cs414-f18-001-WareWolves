@@ -2,8 +2,8 @@ package client.presenter.network.messages;
 
 public class InviteRequest extends NetworkMessage {
 
-	private String sender;
-	private String recipient;
+	public final String sender;
+	public final String recipient;
 	
 	/**
 	 * Constructor for presenter

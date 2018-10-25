@@ -2,9 +2,9 @@ package client.presenter.network.messages;
 
 public class Move extends NetworkMessage {
 
-	private int gameID;
-	private String move;
-	private boolean ending;
+	public final int gameID;
+	public final String move;
+	public final boolean ending;
 	
 	/**
 	 * Constructor for mover
