@@ -4,8 +4,8 @@ import java.util.Objects;
 
 public class Point {
 
-  private int col;
-  private int row;
+  private final int col;
+  private final int row;
 
   /**
    * Constructs a Point from two int position markers.
@@ -47,14 +47,6 @@ public class Point {
     return col;
   }
 
-  /**
-   * Sets the value of the column represented by the Point.
-   *
-   * @param col The new value for the column that the point represents.
-   */
-  private void setCol(int col) {
-    this.col = col;
-  }
 
   /**
    * Gets the Row value of the Point.
@@ -63,15 +55,6 @@ public class Point {
    */
   public int getArrayRow() {
     return row;
-  }
-
-  /**
-   * Sets the value of the row represented by the Point.
-   *
-   * @param row The new value for the row that the point represents.
-   */
-  private void setRow(int row) {
-    this.row = row;
   }
 
 

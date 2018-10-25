@@ -30,9 +30,4 @@ public class Queen extends Rook {
     result.addAll(this.search(board, -1, -1)); //SW
     return result.toArray(new Point[0]);
   }
-
-  @Override
-  public boolean move(String move, GameBoard board) {
-    return false;
-  }
 }

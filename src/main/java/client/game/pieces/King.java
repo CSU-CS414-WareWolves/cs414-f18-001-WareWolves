@@ -76,9 +76,4 @@ public class King extends Piece {
     }
     return result;
   }
-
-  @Override
-  public boolean move(String move, GameBoard board) {
-    return false;
-  }
 }
