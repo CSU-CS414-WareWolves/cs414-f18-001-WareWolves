@@ -1,6 +1,9 @@
 package client.game;
 
-import client.game.pieces.*;
+import client.game.pieces.King;
+import client.game.pieces.Piece;
+import client.game.pieces.Queen;
+import client.game.pieces.Rook;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

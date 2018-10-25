@@ -1,6 +1,5 @@
 package client.game.pieces;
 
-import client.game.GameBoard;
 import client.game.Point;
 import java.util.ArrayList;
 import java.util.Arrays;

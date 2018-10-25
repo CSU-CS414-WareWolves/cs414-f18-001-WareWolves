@@ -1,6 +1,6 @@
 package client.game.pieces;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import client.game.GameBoard;
 import client.game.Point;
@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -47,7 +46,7 @@ class KingTest {
     assertEquals(points, resSet, "Expected and Actual moves do not match.");
   }
 
-  @DisplayName("ValidMoves")
+  @DisplayName("Move")
   @ParameterizedTest(name = "({0} -> {2})")
   @CsvSource({"dD,false,dC,true", "dD,false,cC,true", "dD,false,fE,false", "hH, true, jI, true",
       "hH, true, iJ, false", "hH, true, hI, true", "hH, true, fI, false"})

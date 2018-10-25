@@ -48,17 +48,14 @@ public abstract class Piece {
    * @param board A Piece[][] that contains this piece.
    * @return True if the move was successful, False otherwise.
    */
-  public boolean move(String move, Piece[][] board){
+  public boolean move(String move, Piece[][] board) {
     Point moveTo = new Point(move);
-    if(Arrays.stream(this.getValidMoves(board)).anyMatch(moveTo::equals)){
+    if (Arrays.stream(this.getValidMoves(board)).anyMatch(moveTo::equals)) {
       this.boardLocation = moveTo;
       return true;
     }
     return false;
   }
-
-
-
 
   /**
    * Determines if another Piece is an eligible capture target.
@@ -70,16 +67,29 @@ public abstract class Piece {
     if (other == null) {
       return false;
     }
-    boolean otherInCastle = other.getColor() ?
-        GameBoard.isBlackCastle(other.getBoardLocation()) :
-        GameBoard.isWhiteCastle(other.getBoardLocation());
-    boolean inMyCastle = this.getColor() ?
-        GameBoard.isBlackCastle(this.getBoardLocation()) :
-        GameBoard.isWhiteCastle(this.getBoardLocation());
-    boolean isKing = other.getClass() == King.class && notSameColor(other);
-    return isKing || (otherInCastle && GameBoard.isWall(this.getBoardLocation()))
-        || (inMyCastle && GameBoard.isWall((other.getBoardLocation())));
+    boolean isKing = (other.getClass() == King.class) && notSameColor(other);
+    return isKing || (other.inOwnCastle() && GameBoard.isWall(this.getBoardLocation()))
+        || (this.inOwnCastle() && GameBoard.isWall((other.getBoardLocation())));
 
+  }
+
+  /**
+   * Determines if a Piece is in its own castle.
+   *
+   * @return True if the piece is in its own castle, false otherwise.
+   */
+  private boolean inOwnCastle() {
+    return inOwnCastle(this.getBoardLocation());
+  }
+
+  /**
+   * Determines if a Point is in this Pieces castle.
+   *
+   * @param p Point to check.
+   * @return True if p is in this Pieces castle, false otherwise.
+   */
+  boolean inOwnCastle(Point p) {
+    return this.getColor() ? GameBoard.isBlackCastle(p) : GameBoard.isWhiteCastle(p);
   }
 
   /**
