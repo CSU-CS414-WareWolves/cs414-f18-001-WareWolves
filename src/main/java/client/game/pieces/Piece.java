@@ -10,11 +10,14 @@ public abstract class Piece {
   Point boardLocation;
   private final boolean color; //Black == true, White == false
 
-  Piece(Point boardLocation, boolean color) {
+  public Piece(Point boardLocation, boolean color) {
     this.boardLocation = boardLocation;
     this.color = color;
   }
 
+  public Piece (String str){
+    this(new Point(str.substring(0,2)), Boolean.parseBoolean(str.substring(2)));
+  }
   /**
    * Get the color of this Piece.
    *

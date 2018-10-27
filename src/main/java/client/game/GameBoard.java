@@ -63,19 +63,34 @@ public class GameBoard {
     return this.getPieceAt(tile.getArrayCol(), tile.getArrayRow());
   }
 
-  public Piece[][] getPieces() {
-    return board;
+  /**
+   * Generates the String representation of this GameBoard.
+   *
+   * @return String representing the location and type of each Piece on the board.
+   */
+  public String getBoard() {
+    StringBuilder res = new StringBuilder();
+    for (Piece[] row : board) {
+      for (Piece p : row) {
+        if (p == null) {
+          continue;
+        }
+        res.append(pieceToLetter(p));
+        res.append(p.getBoardLocation().toString());
+      }
+    }
+    return res.toString();
   }
 
-  //TODO: Implement a return for the gameBoard.
-  public String getBoard() {
-    return "";
-  }
+
+  public Piece[][] getPieces(){return board;}
+
 
   //TODO: implement MovePiece
   public boolean MovePiece(Point from, Point to) {
     return false;
   }
+
 
   private static final Set<Point> WALLS = Stream.of(
       new Point(1, 2), new Point(1, 3), new Point(1, 4),
