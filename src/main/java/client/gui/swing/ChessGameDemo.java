@@ -13,7 +13,7 @@ public class ChessGameDemo extends JFrame implements MouseListener, MouseMotionL
   int yAdjustment;
 
   public ChessGameDemo(){
-    Dimension boardSize = new Dimension(600, 600);
+    Dimension boardSize = new Dimension(1000, 1000);
 
     //  Use a Layered Pane for this this application
     layeredPane = new JLayeredPane();
@@ -26,15 +26,15 @@ public class ChessGameDemo extends JFrame implements MouseListener, MouseMotionL
 
     chessBoard = new JPanel();
     layeredPane.add(chessBoard, JLayeredPane.DEFAULT_LAYER);
-    chessBoard.setLayout( new GridLayout(8, 8) );
+    chessBoard.setLayout( new GridLayout(12, 12) );
     chessBoard.setPreferredSize( boardSize );
     chessBoard.setBounds(0, 0, boardSize.width, boardSize.height);
 
-    for (int i = 0; i < 64; i++) {
+    for (int i = 0; i < 144; i++) {
       JPanel square = new JPanel( new BorderLayout() );
       chessBoard.add( square );
 
-      int row = (i / 8) % 2;
+      int row = (i / 12) % 2;
       if (row == 0)
         square.setBackground( i % 2 == 0 ? Color.blue : Color.white );
       else
@@ -43,11 +43,11 @@ public class ChessGameDemo extends JFrame implements MouseListener, MouseMotionL
 
     //Add a few pieces to the board
 
-    JLabel piece = new JLabel( new ImageIcon("C:\\CS414\\cs414-f18-001-WareWolves\\src\\main\\resources\\Chess_kdt60.png") );
+    JLabel piece = new JLabel( new ImageIcon(getClass().getClassLoader().getResource("Chess_klt60.png").getFile()));
     JPanel panel = (JPanel)chessBoard.getComponent(0);
     panel.add(piece);
-    piece = new JLabel(new ImageIcon("C:\\CS414\\cs414-f18-001-WareWolves\\src\\main\\resources\\Chess_qdt60.png"));
-    panel = (JPanel)chessBoard.getComponent(15);
+    piece = new JLabel(new ImageIcon(getClass().getClassLoader().getResource("Chess_kdt60.png").getFile()));
+    panel = (JPanel)chessBoard.getComponent(1);
     panel.add(piece);
     piece = new JLabel(new ImageIcon("/home/vinod/amarexamples/king.jpg"));
     panel = (JPanel)chessBoard.getComponent(16);
@@ -62,6 +62,7 @@ public class ChessGameDemo extends JFrame implements MouseListener, MouseMotionL
     chessPiece = null;
     Component c =  chessBoard.findComponentAt(e.getX(), e.getY());
 
+    System.out.println("X: " +e.getX() + " Y: " +e.getY());
     if (c instanceof JPanel)
       return;
 
