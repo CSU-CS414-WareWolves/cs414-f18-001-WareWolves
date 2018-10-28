@@ -40,8 +40,7 @@ public class CLMenu implements MenuView {
    * Request a player's stats after providing a their username
    */
   public void requestUsername(){
-    System.out.println("+++ Send an Invite +++");
-    System.out.print("Please enter player's username: ");
+    System.out.println("Please enter player's username: ");
   }
 
   /**
