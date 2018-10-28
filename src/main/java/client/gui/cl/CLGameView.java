@@ -7,7 +7,9 @@ import client.game.pieces.Piece;
 import client.game.pieces.Queen;
 import client.game.pieces.Rook;
 import client.gui.GameView;
+import java.util.ArrayList;
 import java.util.Collection;
+import javax.sound.midi.SysexMessage;
 
 public class CLGameView implements GameView {
 
@@ -65,8 +67,15 @@ public class CLGameView implements GameView {
    * @param list A collection of Points
    * @return void
    */
-  public void showValidMoves(Collection<Point> list){
+  public void showValidMoves(ArrayList<String> list){
     //Print the list in a nice fashion
-    System.out.println("From: A3 -->   To: A6");
+    StringBuilder res = new StringBuilder();
+
+    for(int i=0; i<list.size(); i++){
+      res.append(list.get(i).toString()).append(", ");
+    }
+    res.append("\n");
+
+    System.out.println(res);
   }
 }

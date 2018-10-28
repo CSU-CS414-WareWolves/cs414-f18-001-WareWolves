@@ -32,6 +32,7 @@ public class CLLogin implements LoginView {
     StringBuilder res = new StringBuilder();
     res.append("1.[     Login    ]\n");
     res.append("2.[    Register  ]\n");
+    res.append("3.[     Exit     ]\n");
     System.out.println(res);
   }
 }

@@ -2,6 +2,7 @@ package client.gui;
 
 import client.game.GameBoard;
 import client.game.Point;
+import java.util.ArrayList;
 import java.util.Collection;
 
 public interface GameView {
@@ -9,5 +10,5 @@ public interface GameView {
   void showGameBoard(GameBoard gb);
 
   // Prints the valid moves for the current player
-  void showValidMoves(Collection<Point> list);
+  void showValidMoves(ArrayList<String> list);
 }
