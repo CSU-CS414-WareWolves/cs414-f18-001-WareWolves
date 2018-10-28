@@ -8,7 +8,7 @@ public class Rook extends Piece {
   public Rook(Point boardLocation, boolean color) {
     super(boardLocation, color);
   }
-
+  public Rook(String rook){super(rook);}
   /**
    * Finds all the valid moves for a Rook in chad chess. A Rook moves along vertical and horizontal
    * lines. A Rook can only capture a enemy non-King piece if the Rook is on an enemy wall and the
