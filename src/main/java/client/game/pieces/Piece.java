@@ -51,10 +51,9 @@ public abstract class Piece {
    * @param board A Piece[][] that contains this piece.
    * @return True if the move was successful, False otherwise.
    */
-  public boolean move(String move, Piece[][] board) {
-    Point moveTo = new Point(move);
-    if (Arrays.stream(this.getValidMoves(board)).anyMatch(moveTo::equals)) {
-      this.boardLocation = moveTo;
+  public boolean move(Point move, Piece[][] board) {
+    if (Arrays.stream(this.getValidMoves(board)).anyMatch(move::equals)) {
+      this.boardLocation = move;
       return true;
     }
     return false;
