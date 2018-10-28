@@ -18,6 +18,25 @@ public class CLGameView implements GameView {
   public static final String BQUEEN = "\u265B";
   public static final String BROOK = "\u265C";
 
+
+  /**
+   * Prints all current games of the user
+   * @param games list of usernames the player has an active game with
+   */
+  public void showCurrentGames(ArrayList<String> games){
+    //Print the list in a nice fashion
+    StringBuilder res = new StringBuilder();
+
+    res.append("+++ Select the Game you wish to continue +++");
+    for(int i=0; i<games.size(); i++){
+      res.append("[").append(i+1).append("]: ");
+      res.append(games.get(i).toString());
+      res.append("\n");
+    }
+
+    System.out.println(res);
+  }
+
   /**
    * Prints the current state of the board
    * @param gb An instance of a GameBoard that will be printed with pieces
@@ -76,8 +95,12 @@ public class CLGameView implements GameView {
     System.out.println(res);
   }
 
+  /**
+   * Print in-game menu for player's benefit
+   */
   public void showIngameMenu(){
     StringBuilder res = new StringBuilder();
+    res.append("(you can type the below in-game options at any time)\n");
     res.append("~[    Exit    ]~~~~~[   Forfeit  ]~\n");
     System.out.println(res);
   }

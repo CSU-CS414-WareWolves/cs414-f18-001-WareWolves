@@ -9,7 +9,7 @@ public class CLMenu implements MenuView {
    */
   public void showMenu(){
     StringBuilder res = new StringBuilder();
-    res.append("+++ SELECT OPTION +++\n");
+    res.append("+++ Main Menu +++\n\n");
     res.append("1.[ Resume  Game ]\n");
     res.append("2.[ View Invites ]\n");
     res.append("3.[ Send Invites ]\n");
@@ -40,6 +40,7 @@ public class CLMenu implements MenuView {
    * Request a player's stats after providing a their username
    */
   public void requestUsername(){
+    System.out.println("+++ Send an Invite +++");
     System.out.print("Please enter player's username: ");
   }
 
@@ -54,6 +55,7 @@ public class CLMenu implements MenuView {
   public void showStats(String username, int total, int wgames, int tgames, int lgames){
     //This is the format that it will be printed as
     StringBuilder res = new StringBuilder();
+    res.append("+++ View Profile +++\n\n");
     res.append("| - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
     res.append("| Username: "+username+"\n");
     res.append("| - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
