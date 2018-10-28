@@ -59,7 +59,7 @@ public class CLDriver {
     String user = "";
     String pass = "";
     String aU = "admin";
-    String aP = "pswd";
+    String aP = "password";
 
     switch (option){
       case 1:
@@ -70,6 +70,7 @@ public class CLDriver {
         System.out.println("Password: ");
         pass = this.keys.nextLine();
         if(!(user.equals(aU) && pass.equals(aP))){
+          System.out.println("[!] Username does not exist/Password is incorrect");
           return 1979;
         }
         else
@@ -186,9 +187,7 @@ public class CLDriver {
   // Make a method for housing the
   // switch statement in Main below!
   //@TODO
-  // Remove the unnecessary debug
-  // print statements, and testing
-  // arraylists from methods
+  // Remove testing arraylists from methods
   public static void main(String[] args) {
     CLLogin login = new CLLogin();
     CLMenu menu = new CLMenu();
@@ -228,6 +227,7 @@ public class CLDriver {
           }
           //String s = G[opt].getGameboard()
           System.out.println("Loading game against player \""+G.get(opt-1)+"\"...");
+          opt = 0;
           //Pass this string s eventually
           transition = driver.handleGame();
           break;
@@ -239,6 +239,8 @@ public class CLDriver {
           transition = driver.handleOutbox();
           break;
         case 4:
+          //@TODO
+          // Receive input for profile
           driver.getMenu().requestUsername();
           driver.getMenu().showStats("L33tL0rD",10,7,2,1);
           transition = 0;
@@ -246,6 +248,10 @@ public class CLDriver {
         case 5:
           driver.getMenu().unregisterUser();
           transition = 0;
+          break;
+        case 6:
+          transition = 1979;
+          System.out.println("Good bye!");
           break;
         default:
           transition = 0;
