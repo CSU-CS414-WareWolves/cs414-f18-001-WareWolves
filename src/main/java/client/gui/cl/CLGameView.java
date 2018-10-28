@@ -27,7 +27,7 @@ public class CLGameView implements GameView {
     //Print the list in a nice fashion
     StringBuilder res = new StringBuilder();
 
-    res.append("+++ Select the Game you wish to continue +++");
+    res.append("+++ Select the Game you wish to continue +++\n\n");
     for(int i=0; i<games.size(); i++){
       res.append("[").append(i+1).append("]: ");
       res.append(games.get(i).toString());

@@ -247,9 +247,6 @@ public class CLDriver {
           driver.getMenu().unregisterUser();
           transition = 0;
           break;
-        case 6:
-          transition = 1;
-          break;
         default:
           transition = 0;
           break;
