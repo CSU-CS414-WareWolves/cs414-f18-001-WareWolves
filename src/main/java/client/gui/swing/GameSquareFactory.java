@@ -3,7 +3,9 @@ package client.gui.swing;
 import client.game.Point;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.swing.BorderFactory;
@@ -20,15 +22,15 @@ public class GameSquareFactory {
   private static final Color CASTLE_COLOR = new Color(196, 145, 46, 255);
 
 
+
   private static final Set<Integer> INDEX_OF_WALLS = Stream.of(
-      14, 15, 16, 25, 29, 37, 41, 49, 53,
-      62, 63, 64, 79, 80, 81, 90, 94, 102,
-      106, 114, 118, 127, 128, 129).collect(Collectors.toSet());
+      19, 20, 21, 30, 34, 42, 46, 54, 58, 67, 68, 69, 74, 75, 76, 85,
+      89, 97, 101, 109, 113, 122, 123, 124).collect(Collectors.toSet());
+
 
   private static final Set<Integer> INDEX_OF_CASTLES = Stream.of(
-      26, 27, 28, 38, 39, 40, 50, 51, 52,
-      91, 92, 93, 103, 104, 105, 115, 116,
-      117).collect(Collectors.toSet());
+      31, 32, 33, 43, 44, 45, 55, 56, 57, 86, 87, 88,
+      98, 99, 100, 110, 111, 112).collect(Collectors.toSet());
 
 
   public JPanel createdBoardSquare(int index, int squareSize){
@@ -64,16 +66,16 @@ public class GameSquareFactory {
   }
 
 
-  private static final Set<Point> WALLS = Stream.of(
-      new Point(1, 2), new Point(1, 3), new Point(1, 4),
-      new Point(2, 1), new Point(3, 1), new Point(4, 1),
-      new Point(5, 2), new Point(5, 3), new Point(5, 4),
-      new Point(2, 5), new Point(3, 5), new Point(4, 5),
+  private static final Set<Point> WHITE_CASTLE = Stream.of(
+      new Point(2, 2), new Point(2, 3), new Point(2, 4),
+      new Point(3, 2), new Point(3, 3), new Point(3, 4),
+      new Point(4, 2), new Point(4, 3), new Point(4, 4)
+  ).collect(Collectors.toSet());
 
-      new Point(6, 7), new Point(6, 8), new Point(6, 9),
-      new Point(10, 7), new Point(10, 8), new Point(10, 9),
-      new Point(7, 6), new Point(8, 6), new Point(9, 6),
-      new Point(7, 10), new Point(8, 10), new Point(9, 10)
+  private static final Set<Point> BLACK_CASTLE = Stream.of(
+      new Point(7, 7), new Point(7, 8), new Point(7, 9),
+      new Point(8, 7), new Point(8, 8), new Point(8, 9),
+      new Point(9, 7), new Point(9, 8), new Point(9, 9)
   ).collect(Collectors.toSet());
 
 
@@ -87,9 +89,19 @@ public class GameSquareFactory {
 
   public static void main(String[] args){
 
-    for (Point p : WALLS) {
-      System.out.println((p.getArrayCol() + p.getArrayRow()*12));
+    WHITE_CASTLE.addAll(BLACK_CASTLE);
+
+    TreeSet<Integer> sorted = new TreeSet<>();
+    for (Point p : WHITE_CASTLE) {
+
+      System.out.print(p);
+
+
     }
+
+
+    //Point index120 =  new Point("aB");
+    //System.out.println(144 - ((12 - index120.getArrayCol())  + index120.getArrayRow()* 12));
 
   }
 

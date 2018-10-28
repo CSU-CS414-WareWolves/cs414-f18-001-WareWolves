@@ -6,7 +6,8 @@ import javax.swing.JPanel;
 
 public class SwingChadDriver {
 
-
+  private static final String DEFAULT_GAME_BOARD =
+      "rdCreDriHrjIrcCkdDreErhHRiIRjJRcDRdERhIRiJRcERhJReCRjH";
 
 
 
@@ -17,7 +18,7 @@ public class SwingChadDriver {
 
 
     //Create and set up the content pane.
-    JPanel newContentPane = new LayeredPaneDemo();
+    JPanel newContentPane = new ChadGameBoard(DEFAULT_GAME_BOARD);
     newContentPane.setOpaque(true); //content panes must be opaque
     frame.setContentPane(newContentPane);
 

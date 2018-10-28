@@ -18,26 +18,75 @@ import javax.swing.JPanel;
 
 public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionListener {
 
+  /**
+   * Default positions for the start of the game
+   */
   private static final String DEFAULT_GAME_BOARD =
-      "rdCreDrcCkdDreErcDrdErcEreCRiHRjIRhHKiIRjJRhIRiJRhJRjH";
+      "rdCreDriHrjIrcCkdDreErhHRiIKjJRcDRdERhIRiJRcERhJReCRjH";
 
+  /**
+   * Size of the squares in pixels
+   */
   private int squareSize = 60;
+  /**
+   * Number of square per row
+   */
   private final int NUMBER_OF_SQUARES_PER_ROW = 12;
+
+  /**
+   * Panel used for dragging pieces around
+   */
   private JLayeredPane layeredPane;
+  /**
+   * Grid layout of 12*12 squares
+   */
   private JPanel chessBoard;
+  /**
+   * The icon of piece being moved
+   */
   private JLabel movingChessPiece;
+  /**
+   * The x offset for moving the piece by the mouse
+   */
   private int xAdjustment;
+  /**
+   * The y offset for moving the piece by the mouse
+   */
   private int yAdjustment;
-  private Container pieceStartSquare;
+
+  /**
+   * The square the piece being move is from
+   * This is used to reset the piece for invalid moves
+   */
+  private Container movingPieceStartSquare;
+
+  /**
+   * Our client.game.Point for the square the piece being moved
+   */
   private client.game.Point moveFromSquare;
+  /**
+   * Our client.game.Point for the square the piece being moved goes to
+   */
   private client.game.Point moveToPoint;
+
+  /**
+   * All the valid moves for the piece
+   */
   private HashSet<JPanel> validPieceMoves = new HashSet<>();
 
+  /**
+   * Sets up a game with given piece positions
+   * @param piecesLocations the piece locations
+   */
   public ChadGameBoard(String piecesLocations){
     this();
     setBoardPieces(piecesLocations);
   }
 
+  /**
+   * Sets up an empty board
+   * call setBoardPieces(String piecesLocations) to add pieces
+   */
   public ChadGameBoard(){
     Dimension boardSize = new Dimension(
         NUMBER_OF_SQUARES_PER_ROW * squareSize,
@@ -104,7 +153,7 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
    */
   private int convertGamePointToIndex(String location) {
     client.game.Point pieceLocation = new client.game.Point(location);
-    return pieceLocation.getArrayCol() + pieceLocation.getArrayRow()*12;
+    return (144 - ((12 - pieceLocation.getArrayCol())  + pieceLocation.getArrayRow()* 12));
   }
 
   /**
@@ -124,7 +173,7 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
   private void clearBoardOfPieces() {
     // Each square
     for(Component gameSquare: chessBoard.getComponents()){
-      // Find the Piece in the square
+      // Find the piece in the square
       for(Component label: ((JPanel) gameSquare).getComponents()){
         // Remove if piece found
         if("Piece".equals(label.getName())){
@@ -157,7 +206,7 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
     setValidMoves("dCeDcCdDeEcDdEcEeC", true);
 
 
-    pieceStartSquare = c.getParent();
+    movingPieceStartSquare = c.getParent();
 
     java.awt.Point parentLocation = c.getParent().getLocation();
     xAdjustment = parentLocation.x - e.getX();
@@ -224,7 +273,7 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
   }
 
   private void resetMove() {
-    pieceStartSquare.add(movingChessPiece);
+    movingPieceStartSquare.add(movingChessPiece);
     movingChessPiece.setVisible(true);
   }
 
@@ -270,17 +319,20 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
 
 
 
+  // MouseListener, MouseMotionListener methods implemented but not used
 
   public void mouseClicked(MouseEvent e) {
-
+    // Only care about press and hold
   }
   public void mouseMoved(MouseEvent e) {
+    // Only care about dragging
+
   }
   public void mouseEntered(MouseEvent e){
-
+    // Do nothing
   }
   public void mouseExited(MouseEvent e) {
-
+    // Do nothing
   }
 
   public static void main(String[] args) {
