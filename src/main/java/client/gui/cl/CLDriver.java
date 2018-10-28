@@ -56,10 +56,25 @@ public class CLDriver {
    * @return the option that was chosen
    */
   public int handleLoginMenu(int option){
+    String user = "";
+    String pass = "";
+    String aU = "admin";
+    String aP = "pswd";
+
     switch (option){
       case 1:
+        System.out.println("Username: ");
+        while(user.equals("")) {
+          user = this.keys.nextLine();
+        }
+        System.out.println("Password: ");
+        pass = this.keys.nextLine();
+        if(!(user.equals(aU) && pass.equals(aP))){
+          return 1979;
+        }
+        else
+          return 0;
         // Jump to main menu
-        return 0;
       case 2:
         System.out.println("Registered!");
         return 0;
@@ -97,8 +112,8 @@ public class CLDriver {
       switch(opt){
         case 1:
           this.clearScreen();
+          System.out.println("(you can type the below in-game options at any time)");
           this.game.showIngameMenu();
-          System.out.println("(you can type the above in-game options at any time)");
           this.game.showGameBoard(new GameBoard("RiIrdDKjJkeERcC"));
           opt = 2;
           break;
@@ -130,7 +145,6 @@ public class CLDriver {
           break;
       }
     }
-
     return 0;
   }
 
@@ -153,7 +167,6 @@ public class CLDriver {
     return 0;
   }
 
-
   /**
    * Handle outbox interactions
    * @return int back to main menu
@@ -165,66 +178,71 @@ public class CLDriver {
     while(rival.equals("")) {
       rival = this.keys.nextLine();
     }
-
-    //Look for rival
+    //Look for rival in database and send challenge
     System.out.println("Sending challenge to: \""+rival+"\"");
     return 0;
   }
 
   //@TODO
-  //cMake a method for housing the
+  // Make a method for housing the
   // switch statement in Main below!
+  //@TODO
+  // Remove the unnecessary debug
+  // print statements
   public static void main(String[] args) {
     CLLogin login = new CLLogin();
     CLMenu menu = new CLMenu();
     CLGameView game = new CLGameView();
+
     int opt = 0;
-    int transition = 0;
+    int transition = 1979;
 
     CLDriver driver = new CLDriver(login, menu, game);
 
     login.showSplash();
     driver.clearScreen();
 
-    login.showLogin();
-    opt = driver.keys.nextInt();
-    transition = driver.handleLoginMenu(opt);
+    while(transition == 1979) {
+      login.showLogin();
+      opt = driver.keys.nextInt();
+      transition = driver.handleLoginMenu(opt);
+    }
 
     while(transition != 1979) {
       driver.clearScreen();
 
       switch(transition){
         case 0:
-          System.out.println("~(jumping to Main Menu...)~");
+//          System.out.println("~(jumping to Main Menu...)~");
           driver.getMenu().showMenu();
           transition = driver.keys.nextInt();
           break;
         case 1:
-          System.out.println("~(jumping to Game Menu...)~");
+//          System.out.println("~(jumping to Game Menu...)~");
           transition = driver.handleGame();
           break;
         case 2:
-          System.out.println("~(jumping to Inbox Menu...)~");
+//          System.out.println("~(jumping to Inbox Menu...)~");
           transition = driver.handleInbox();
           break;
         case 3:
-          System.out.println("~(jumping to Outbox Menu)~");
+//          System.out.println("~(jumping to Outbox Menu)~");
           System.out.println("Send!");
           transition = driver.handleOutbox();
           break;
         case 4:
-          System.out.println("~(jumping to Profile Menu...)~");
+//          System.out.println("~(jumping to Profile Menu...)~");
           driver.getMenu().requestUsername();
           driver.getMenu().showStats("L33tL0rD",10,7,2,1);
           transition = 0;
           break;
         case 5:
-          System.out.println("~(jumping to Unregister Menu...)~");
+//          System.out.println("~(jumping to Unregister Menu...)~");
           driver.getMenu().unregisterUser();
           transition = 0;
           break;
         case 6:
-          System.out.println("~(logging off...)~");
+//          System.out.println("~(logging off...)~");
           transition = 1;
           break;
         default:
