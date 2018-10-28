@@ -2,8 +2,6 @@ package client.gui.cl;
 
 import client.gui.MenuView;
 import java.util.ArrayList;
-import java.util.Scanner;
-import jdk.nashorn.internal.parser.JSONParser;
 
 public class CLMenu implements MenuView {
   /**
@@ -31,7 +29,7 @@ public class CLMenu implements MenuView {
       return;
     } else {
       StringBuilder res = new StringBuilder();
-      for (int i = 0; i < 0; i++) {
+      for (int i = 0; i < mail.size(); i++) {
         res.append("[" + i + "]: " + mail.get(i) + " has invited you to a game!\n");
       }
       System.out.println(res);

@@ -3,7 +3,6 @@ package client.gui.cl;
 import client.game.GameBoard;
 import java.util.ArrayList;
 import java.util.Scanner;
-import javax.sound.midi.SysexMessage;
 
 public class CLDriver {
 
@@ -62,77 +61,138 @@ public class CLDriver {
         // Jump to main menu
         return 0;
       case 2:
-        System.out.println("Register!");
+        System.out.println("Registered!");
+        return 0;
+      case 3:
         return 1979;
       default:
         System.out.println("Please enter a valid option");
-        return 1979;
+        return 0;
     }
   }
 
+  /**
+   * Handle in-game interactions
+   * @return int back to main menu
+   */
   public int handleGame(){
     //-------create temp array for quick tests-------
     ArrayList<String> moves = new ArrayList<String>();
-    moves.add("D4 -> L4");
-    moves.add("C3 -> C2");
+    moves.add("D4");
+    moves.add("C3");
     //--------------
-
-    int opt = 0;
+    int opt = 1;
+    String piece = "";
     String move = "";
+    boolean turn = true;
+    // Have some sort of check to make sure
+    // the player can't make a move unless
+    // it's their turn.
 
-    while(opt!=0){
-      this.game.showGameBoard(new GameBoard("RiIrdDKjJkeERcC"));
-      this.game.showValidMoves(moves);
-      System.out.println("Enter a valid move (format: D4 L4), or type EXIT to leave game:\n");
-      move = this.keys.nextLine();
-      if(move.toUpperCase().equals("EXIT")){
-        opt = 0;
-        break;
+    if(!turn){
+      opt = 5;
+      System.out.println("[!] Your opponent has not made their move yet.");
+    }
+    while(opt!=0 && turn){
+      switch(opt){
+        case 1:
+          this.clearScreen();
+          this.game.showIngameMenu();
+          System.out.println("(you can type the above in-game options at any time)");
+          this.game.showGameBoard(new GameBoard("RiIrdDKjJkeERcC"));
+          opt = 2;
+          break;
+        case 2:
+          System.out.println("Select a piece (format: D4): ");
+          while(piece.equals("")) {
+            piece = this.keys.nextLine();
+          }
+          opt = 3;
+          break;
+        case 3:
+          System.out.println("Enter a valid move (format: L4): ");
+          move = this.keys.nextLine();
+          // Move is applied and sent to other player
+          System.out.println("Submitting move: { "+piece+" -> "+move+" }");
+          opt = 0;
+          turn = false;
+          break;
+        case 4:
+          System.out.println("Leaving game...");
+          opt = 0;
+          break;
+        case 5:
+          opt = 0;
+          break;
+        default:
+          System.out.println("Please enter a valid option/piece/move");
+          opt = 1;
+          break;
       }
-      System.out.println("Chosen move: "+move);
     }
 
     return 0;
   }
 
-  public int handleInbox(int option){
+  /**
+   * Handle inbox interactions
+   * @return int back to main menu
+   */
+  public int handleInbox(){
     //-------for quick testing purposes
     ArrayList<String> L = new ArrayList<String>();
     L.add("n00b1");
     L.add("DecentRival");
     //-------
 
+    //Show the invites
     this.getMenu().viewInvites(L);
-    System.out.println("Option chosen: "+option);
+    //Request option
+    int opt = this.keys.nextInt();
+    System.out.println("Option chosen: "+opt);
     return 0;
   }
 
+
+  /**
+   * Handle outbox interactions
+   * @return int back to main menu
+   */
   public int handleOutbox(){
     this.getMenu().requestUsername();
-    String rival = this.keys.nextLine();
+
+    String rival = "";
+    while(rival.equals("")) {
+      rival = this.keys.nextLine();
+    }
+
     //Look for rival
     System.out.println("Sending challenge to: \""+rival+"\"");
     return 0;
   }
 
+  //@TODO
+  //cMake a method for housing the
+  // switch statement in Main below!
   public static void main(String[] args) {
     CLLogin login = new CLLogin();
     CLMenu menu = new CLMenu();
     CLGameView game = new CLGameView();
+    int opt = 0;
+    int transition = 0;
 
     CLDriver driver = new CLDriver(login, menu, game);
 
     login.showSplash();
-    int opt = 1979;
-    int transition = 0;
-    do {
+    driver.clearScreen();
+
+    login.showLogin();
+    opt = driver.keys.nextInt();
+    transition = driver.handleLoginMenu(opt);
+
+    while(transition != 1979) {
       driver.clearScreen();
 
-      if(opt == 1979) {
-        login.showLogin();
-        opt = driver.keys.nextInt();
-        transition = driver.handleLoginMenu(opt);
-      }
       switch(transition){
         case 0:
           System.out.println("~(jumping to Main Menu...)~");
@@ -141,16 +201,14 @@ public class CLDriver {
           break;
         case 1:
           System.out.println("~(jumping to Game Menu...)~");
-          //showGame() -> showGameBoard() + showValidMoves()
-          driver.handleGame();
+          transition = driver.handleGame();
           break;
         case 2:
           System.out.println("~(jumping to Inbox Menu...)~");
-          opt = driver.keys.nextInt();
-          transition = driver.handleInbox(opt);
+          transition = driver.handleInbox();
           break;
         case 3:
-          System.out.println("~(jumping to Invite Menu)~");
+          System.out.println("~(jumping to Outbox Menu)~");
           System.out.println("Send!");
           transition = driver.handleOutbox();
           break;
@@ -167,12 +225,13 @@ public class CLDriver {
           break;
         case 6:
           System.out.println("~(logging off...)~");
-          opt = 1979;
+          transition = 1;
           break;
         default:
           transition = 0;
           break;
       }
-    }while(opt != 1979);
+    }
+    //end loop
   }
 }

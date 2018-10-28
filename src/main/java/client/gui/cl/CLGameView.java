@@ -1,15 +1,12 @@
 package client.gui.cl;
 
 import client.game.GameBoard;
-import client.game.Point;
 import client.game.pieces.King;
 import client.game.pieces.Piece;
 import client.game.pieces.Queen;
 import client.game.pieces.Rook;
 import client.gui.GameView;
 import java.util.ArrayList;
-import java.util.Collection;
-import javax.sound.midi.SysexMessage;
 
 public class CLGameView implements GameView {
 
@@ -76,6 +73,12 @@ public class CLGameView implements GameView {
     }
     res.append("\n");
 
+    System.out.println(res);
+  }
+
+  public void showIngameMenu(){
+    StringBuilder res = new StringBuilder();
+    res.append("~[    Exit    ]~~~~~[   Forfeit  ]~\n");
     System.out.println(res);
   }
 }
