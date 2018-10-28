@@ -7,19 +7,19 @@ public class CLLogin implements LoginView {
   public void showSplash() {
     StringBuilder res = new StringBuilder();
     res.append("{  W  E  L  C  O  M  E       T  O  }\n");
-    res.append("####################################\n");
-    res.append("##|  ____|| |##| | / __ \\ |  __ \\ ##\n");
-    res.append("##| |#####| |##| || |##| || |##\\ |##\n");
-    res.append("##| |#####|  __  ||  __  || |###||##\n");
-    res.append("##| |#####| |##| || |##| || |##/ /##\n");
-    res.append("##|______||_|##|_||_|##|_||_____/ ##\n");
-    res.append("####################################\n");
-    res.append("|  ____|| |##| ||  __|| ____||  ___|\n");
-    res.append("| |#####| |##| || |###| |####| |####\n");
-    res.append("| |#####|  __  ||  __||___  ||___  |\n");
-    res.append("| |#####| |##| || |#######| |####| |\n");
-    res.append("|______||_|##|_||____||_____||_____|\n");
-    res.append("####################################\n");
+    res.append("   ______  _    _   ____   _____\n");
+    res.append("  |  ____|| |  | | / __ \\ |  __ \\   \n");
+    res.append("  | |     | |__| || |__| || |  \\ |  \n");
+    res.append("  | |     |  __  ||  __  || |   ||  \n");
+    res.append("  | |____ | |  | || |  | || |__/ |  \n");
+    res.append("  |______||_|  |_||_|  |_||_____/   \n");
+    res.append(" ______  _    _  ____  _____  _____\n");
+    res.append("|  ____|| |  | ||  __|| ____||  ___|\n");
+    res.append("| |     | |__| || |__ | |___ | |___ \n");
+    res.append("| |     |  __  ||  __||___  ||___  |\n");
+    res.append("| |____ | |  | || |__  ___| | ___| |\n");
+    res.append("|______||_|  |_||____||_____||_____|\n");
+    res.append("                                    \n");
 
     res.append("\n\n{A Chess variant by Christian Freeling (1979)}\n");
     res.append("{     Implementation by WareWolves (2018)    }\n");
