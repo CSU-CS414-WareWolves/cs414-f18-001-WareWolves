@@ -12,6 +12,11 @@ public class GameBoard {
 
   private Piece[][] board;
 
+  /**
+   * Creates a GameBoard from a String representing a board.
+   * @param pieces String representation of a GameBoard.
+   * Form [[rRkKqQ][a-l][A-L]]*
+   */
   public GameBoard(String pieces) {
     board = new Piece[12][12];
     for (int i = 0; i < pieces.length(); i = i + 3) {
@@ -82,12 +87,46 @@ public class GameBoard {
     return res.toString();
   }
 
+  /**
+   * Gets the current Board
+   * @return The current Board.
+   */
+  public Piece[][] getPieces() {
+    return board;
+  }
 
-  public Piece[][] getPieces(){return board;}
+  /**
+   * Get all valid moves for a Piece.
+   *
+   * @param p A Point on the board to find valid moves for.
+   * @return String containing all valid moves from whatever Piece is at the Point. If there is no
+   * Piece, returns an empty String.
+   */
+  public String getMoves(Point p) {
+    if (this.getPieceAt(p) == null) {
+      return "";
+    }
+    Point[] result = board[p.getArrayCol()][p.getArrayRow()].getValidMoves(this.board);
+    StringBuilder res = new StringBuilder();
+    for (Point move : result) {
+      res.append(move.toString());
+    }
+    return res.toString();
+  }
 
-
-  //TODO: implement MovePiece
+  /**
+   * Moves a Piece from one Point to another, replacing whatever was there before.
+   *
+   * @param from The Point to move from.
+   * @param to The Point to move to.
+   * @return True if the move was completed, False if the move is not a valid move for this Piece.
+   */
   public boolean MovePiece(Point from, Point to) {
+    if (this.getPieceAt(from).move(to.toString(), board)) {
+      board[to.getArrayCol()][to.getArrayRow()] = board[from.getArrayCol()][from.getArrayRow()];
+      board[from.getArrayCol()][from.getArrayRow()] = null;
+      return true;
+    }
     return false;
   }
 

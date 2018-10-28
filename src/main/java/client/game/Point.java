@@ -19,16 +19,6 @@ public class Point {
   }
 
   /**
-   * Constructs a Point form a char representing the column and an int
-   *
-   * @param col Column char a-l for the point to represent
-   * @param row Row int for the point to represent
-   */
-  public Point(char col, int row) {
-    this((col - 'a'), row);
-  }
-
-  /**
    * Constructs a Point from a String containing a col,row pair where the col is a char a-l
    *
    * @param point String representing the Point to be constructed.

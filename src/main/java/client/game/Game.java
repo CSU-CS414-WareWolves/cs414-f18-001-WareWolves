@@ -1,7 +1,5 @@
 package client.game;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 public class Game {
   private Boolean turn;
   private GameBoard gameBoard;
@@ -9,16 +7,16 @@ public class Game {
   private static final String startingBoard = "rcCrcDrcErdCkdDrdEreCreDreERhHRhIRhJRiHKiIRiJRjHRjIRjJ";
 
   /**
-   * Creates a new Game with the default starting board and Whites turn.
+   * Creates a new Game with the default starting board and Whites getTurn.
    */
   public Game() {
     this(startingBoard, false);
   }
 
   /**
-   * Creates a Game from the given board string and turn.
+   * Creates a Game from the given board string and getTurn.
    * @param board A string representation of a game board.
-   * @param turn Which players turn it is. False for black, True for white.
+   * @param turn Which players getTurn it is. False for black, True for white.
    */
   public Game(String board, boolean turn){
     this.gameBoard = new GameBoard(board);
@@ -29,7 +27,7 @@ public class Game {
    * Which players turn it is.
    * @return True for black, False for white.
    */
-  public Boolean turn(){
+  public Boolean getTurn(){
     return turn;
   }
 
@@ -49,7 +47,7 @@ public class Game {
    * @return A String representation of the set of valid locations to move to.
    */
   public String validMoves(String location){
-    throw new NotImplementedException();
+    return gameBoard.getMoves(new Point(location));
   }
 
   /**

@@ -14,13 +14,6 @@ class PointTest {
   }
 
   @Test
-  void testConstructor2(){
-    Point p = new Point('a',0);
-    assertEquals(0, p.getArrayCol(), "Column was set wrong");
-    assertEquals(0, p.getArrayRow(), "Row was set wrong");
-  }
-
-  @Test
   void testConstructor3(){
     Point p = new Point("aA");
     assertEquals(0, p.getArrayCol(), "Column was set wrong");
