@@ -112,7 +112,6 @@ public class CLDriver {
       switch(opt){
         case 1:
           this.clearScreen();
-          System.out.println("(you can type the below in-game options at any time)");
           this.game.showIngameMenu();
           this.game.showGameBoard(new GameBoard("RiIrdDKjJkeERcC"));
           opt = 2;
@@ -188,7 +187,8 @@ public class CLDriver {
   // switch statement in Main below!
   //@TODO
   // Remove the unnecessary debug
-  // print statements
+  // print statements, and testing
+  // arraylists from methods
   public static void main(String[] args) {
     CLLogin login = new CLLogin();
     CLMenu menu = new CLMenu();
@@ -196,6 +196,11 @@ public class CLDriver {
 
     int opt = 0;
     int transition = 1979;
+    //-------for quick testing purposes
+    ArrayList<String> G = new ArrayList<String>();
+    G.add("theGameMASTER");
+    G.add("n00b1");
+    //-------
 
     CLDriver driver = new CLDriver(login, menu, game);
 
@@ -213,36 +218,36 @@ public class CLDriver {
 
       switch(transition){
         case 0:
-//          System.out.println("~(jumping to Main Menu...)~");
           driver.getMenu().showMenu();
           transition = driver.keys.nextInt();
           break;
         case 1:
-//          System.out.println("~(jumping to Game Menu...)~");
+          driver.getGame().showCurrentGames(G);
+          while(opt > 0 && opt < G.size()) {
+            opt = driver.keys.nextInt();
+          }
+          //String s = G[opt].getGameboard()
+          System.out.println("Loading game against player \""+G.get(opt-1)+"\"...");
+          //Pass this string s eventually
           transition = driver.handleGame();
           break;
         case 2:
-//          System.out.println("~(jumping to Inbox Menu...)~");
           transition = driver.handleInbox();
           break;
         case 3:
-//          System.out.println("~(jumping to Outbox Menu)~");
           System.out.println("Send!");
           transition = driver.handleOutbox();
           break;
         case 4:
-//          System.out.println("~(jumping to Profile Menu...)~");
           driver.getMenu().requestUsername();
           driver.getMenu().showStats("L33tL0rD",10,7,2,1);
           transition = 0;
           break;
         case 5:
-//          System.out.println("~(jumping to Unregister Menu...)~");
           driver.getMenu().unregisterUser();
           transition = 0;
           break;
         case 6:
-//          System.out.println("~(logging off...)~");
           transition = 1;
           break;
         default:
