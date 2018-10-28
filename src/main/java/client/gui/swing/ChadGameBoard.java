@@ -22,7 +22,7 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
    * Default positions for the start of the game
    */
   private static final String DEFAULT_GAME_BOARD =
-      "rdCreDriHrjIrcCkdDreErhHRiIKjJRcDRdERhIRiJRcERhJReCRjH";
+      "rdCreDRiHRjIrcCkdDreERhHKiIRjJrcDrdERhIRiJrcERhJreCRjH";
 
   /**
    * Size of the squares in pixels
@@ -163,7 +163,7 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
    * @return the point used in game logic
    */
   public java.awt.Point findArrayIndex(int colX, int rowY){
-    return new java.awt.Point(colX/squareSize, rowY/squareSize);
+    return new java.awt.Point(Math.abs(colX/squareSize - 11), rowY/squareSize);
   }
 
 

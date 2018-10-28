@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 public class SwingChadDriver {
 
   private static final String DEFAULT_GAME_BOARD =
-      "rdCreDriHrjIrcCkdDreErhHRiIRjJRcDRdERhIRiJRcERhJReCRjH";
+      "rdCreDRiHRjIrcCkdDreERhHKiIRjJrcDrdERhIRiJrcERhJreCRjH";
 
 
 
