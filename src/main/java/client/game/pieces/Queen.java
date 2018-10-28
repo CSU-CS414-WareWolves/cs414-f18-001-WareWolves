@@ -9,7 +9,7 @@ public class Queen extends Rook {
   public Queen(Point boardLocation, boolean color) {
     super(boardLocation, color);
   }
-
+  public Queen(String queen){super(queen);}
   /**
    * Finds all the valid moves for a Queen in chad chess. A Queen moves along vertical, horizontal,
    * and diagonal lines. A Queen can only capture a enemy non-King piece if the Queen is on an enemy
