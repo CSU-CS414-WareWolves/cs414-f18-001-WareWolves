@@ -3,6 +3,7 @@ package client.gui.cl;
 import client.game.GameBoard;
 import java.util.ArrayList;
 import java.util.Scanner;
+import javax.sound.midi.SysexMessage;
 
 public class CLDriver {
 
@@ -18,53 +19,36 @@ public class CLDriver {
     keys = new Scanner(System.in);
   }
 
+  /**
+   * Gets CLDriver's CLLogin instance
+   * @return
+   */
   public CLLogin getLogin() {
     return login;
   }
 
+  /**
+   * Gets CLDriver's CLMenu instance
+   * @return
+   */
   public CLMenu getMenu() {
     return menu;
   }
 
+  /**
+   * Gets CLDriver's CLGameView instance
+   * @return
+   */
   public CLGameView getGame() {
     return game;
   }
 
   /**
    * Creates space for readability of the command-line
+   * (returns nothing, but prints a long line)
    */
   public void clearScreen() {
     System.out.println("\n-----------------------------------------------------------\n");
-  }
-
-  /**
-   * Handle main menu interactions
-   * @param option the option chosen by the user
-   * @return void
-   */
-  public int handleMainMenuOption(int option){
-    switch(option){
-      case 1:
-        return 2;
-      case 2:
-        return 3;
-      case 3:
-        System.out.println("Send!");
-        return option;
-      case 4:
-        menu.requestUsername();
-        menu.showStats("L33tL0rD",10,7,2,1);
-        return option;
-      case 5:
-        menu.unregisterUser();
-        return option;
-      case 6:
-        System.out.println("Good bye!");
-        return 0;
-      default:
-        System.out.println("Please enter valid option");
-        return 1979;
-    }
   }
 
   /**
@@ -75,20 +59,61 @@ public class CLDriver {
   public int handleLoginMenu(int option){
     switch (option){
       case 1:
-        System.out.println("Login!");
-        return 1;
+        // Jump to main menu
+        return 0;
       case 2:
         System.out.println("Register!");
         return 1979;
-      case 3:
-        return 1980;
       default:
         System.out.println("Please enter a valid option");
         return 1979;
     }
   }
 
+  public int handleGame(){
+    //-------create temp array for quick tests-------
+    ArrayList<String> moves = new ArrayList<String>();
+    moves.add("D4 -> L4");
+    moves.add("C3 -> C2");
+    //--------------
 
+    int opt = 0;
+    String move = "";
+
+    while(opt!=0){
+      this.game.showGameBoard(new GameBoard("RiIrdDKjJkeERcC"));
+      this.game.showValidMoves(moves);
+      System.out.println("Enter a valid move (format: D4 L4), or type EXIT to leave game:\n");
+      move = this.keys.nextLine();
+      if(move.toUpperCase().equals("EXIT")){
+        opt = 0;
+        break;
+      }
+      System.out.println("Chosen move: "+move);
+    }
+
+    return 0;
+  }
+
+  public int handleInbox(int option){
+    //-------for quick testing purposes
+    ArrayList<String> L = new ArrayList<String>();
+    L.add("n00b1");
+    L.add("DecentRival");
+    //-------
+
+    this.getMenu().viewInvites(L);
+    System.out.println("Option chosen: "+option);
+    return 0;
+  }
+
+  public int handleOutbox(){
+    this.getMenu().requestUsername();
+    String rival = this.keys.nextLine();
+    //Look for rival
+    System.out.println("Sending challenge to: \""+rival+"\"");
+    return 0;
+  }
 
   public static void main(String[] args) {
     CLLogin login = new CLLogin();
@@ -97,48 +122,57 @@ public class CLDriver {
 
     CLDriver driver = new CLDriver(login, menu, game);
 
-    //-------for quick testing purposes
-    ArrayList<String> L = new ArrayList<String>();
-    L.add("n00b1");
-    L.add("DecentRival");
-    //-------
-
     login.showSplash();
     int opt = 1979;
     int transition = 0;
     do {
       driver.clearScreen();
-      
+
       if(opt == 1979) {
         login.showLogin();
         opt = driver.keys.nextInt();
         transition = driver.handleLoginMenu(opt);
       }
-
-      if(transition == 0){
-        switch(transition){
-          case 1:
-            System.out.println("~(jumping to Main Menu...)~");
-            driver.getMenu().showMenu();
-            opt = driver.keys.nextInt();
-            transition = driver.handleMainMenuOption(opt);
-            break;
-          case 2:
-            System.out.println("~(jumping to Game Menu...)~");
-            driver.getGame().showGameBoard(new GameBoard("RiIrdDKjJkeERcC"));
-            break;
-          case 3:
-            System.out.println("~(jumping to Invite Menu...)~");
-            driver.getMenu().viewInvites(L);
-            break;
-          case 4:
-            System.out.println("~(jumping to Invite Menu...)~");
-            break;
-          default:
-              opt = 0;
-              break;
-        }
+      switch(transition){
+        case 0:
+          System.out.println("~(jumping to Main Menu...)~");
+          driver.getMenu().showMenu();
+          transition = driver.keys.nextInt();
+          break;
+        case 1:
+          System.out.println("~(jumping to Game Menu...)~");
+          //showGame() -> showGameBoard() + showValidMoves()
+          driver.handleGame();
+          break;
+        case 2:
+          System.out.println("~(jumping to Inbox Menu...)~");
+          opt = driver.keys.nextInt();
+          transition = driver.handleInbox(opt);
+          break;
+        case 3:
+          System.out.println("~(jumping to Invite Menu)~");
+          System.out.println("Send!");
+          transition = driver.handleOutbox();
+          break;
+        case 4:
+          System.out.println("~(jumping to Profile Menu...)~");
+          driver.getMenu().requestUsername();
+          driver.getMenu().showStats("L33tL0rD",10,7,2,1);
+          transition = 0;
+          break;
+        case 5:
+          System.out.println("~(jumping to Unregister Menu...)~");
+          driver.getMenu().unregisterUser();
+          transition = 0;
+          break;
+        case 6:
+          System.out.println("~(logging off...)~");
+          opt = 1979;
+          break;
+        default:
+          transition = 0;
+          break;
       }
-    }while(opt != 1980);
+    }while(opt != 1979);
   }
 }
