@@ -1,6 +1,6 @@
 package client.game.pieces;
 
-import client.game.Point;
+import client.Point;
 import java.util.ArrayList;
 
 public class King extends Piece {

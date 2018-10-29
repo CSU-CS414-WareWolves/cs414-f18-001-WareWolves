@@ -1,8 +1,7 @@
 package client.presenter.controller.messages;
 
-import client.game.Point;
+import client.Point;
 import client.presenter.controller.ViewMessageType;
-import java.util.Objects;
 
 /**
  * The message asks for the valid moves of a piece on a given row and column

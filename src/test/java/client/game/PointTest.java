@@ -2,6 +2,7 @@ package client.game;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import client.Point;
 import org.junit.jupiter.api.Test;
 
 class PointTest {

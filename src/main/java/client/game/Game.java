@@ -1,5 +1,7 @@
 package client.game;
 
+import client.Point;
+
 public class Game {
   private Boolean turn;
   private GameBoard gameBoard;

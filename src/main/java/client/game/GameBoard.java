@@ -1,5 +1,6 @@
 package client.game;
 
+import client.Point;
 import client.game.pieces.King;
 import client.game.pieces.Piece;
 import client.game.pieces.Queen;
