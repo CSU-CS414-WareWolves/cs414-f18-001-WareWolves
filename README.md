@@ -13,3 +13,20 @@ Presentation 2: [PDF](https://github.com/CSU-CS414-WareWolves/cs414-f18-001-Ware
 Domain Model Document: [PDF](https://github.com/CSU-CS414-WareWolves/cs414-f18-001-WareWolves/raw/master/P2/Warewolves%20Domain%20Model%20Document_10-07-18.pdf)
 
 Updated Use Case Document: [PDF](https://github.com/CSU-CS414-WareWolves/cs414-f18-001-WareWolves/raw/master/P2/Warewolves%20Use%20Case%20Document_10-07-18.pdf)
+
+
+## P3:
+Presentation 3: 
+
+Design Document:
+
+Design Class Diagram:
+
+Testing Document:
+
+Development Manual:
+
+Traceability Link Matrix: 
+
+Updated Use Case Document: 
+
