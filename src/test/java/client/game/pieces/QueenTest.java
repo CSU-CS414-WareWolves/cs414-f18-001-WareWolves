@@ -3,7 +3,7 @@ package client.game.pieces;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import client.game.GameBoard;
-import client.game.Point;
+import client.Point;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
