@@ -54,7 +54,7 @@ class QueenTest {
   void testMove(String point, boolean color, String move, boolean expected) {
     Queen testQueen = new Queen(new Point(point), color);
 
-    boolean result = testQueen.move(move, board.getPieces());
+    boolean result = testQueen.move(new Point(move), board.getPieces());
 
     assertEquals(expected, result, "The Queen moved or did not move when expected");
 
