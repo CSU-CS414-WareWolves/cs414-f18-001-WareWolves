@@ -121,8 +121,9 @@ public class GameBoard {
    * @param to The Point to move to.
    * @return True if the move was completed, False if the move is not a valid move for this Piece.
    */
-  public boolean MovePiece(Point from, Point to) {
-    if (this.getPieceAt(from).move(to, board)) {
+  public boolean MovePiece(Point from, Point to, boolean turn) {
+    Piece piece = this.getPieceAt(from);
+    if (piece.getColor() == turn && piece.move(to, board)) {
       board[to.getArrayCol()][to.getArrayRow()] = board[from.getArrayCol()][from.getArrayRow()];
       board[from.getArrayCol()][from.getArrayRow()] = null;
       return true;

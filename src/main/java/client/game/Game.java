@@ -38,7 +38,11 @@ public class Game {
    * @return True if the piece was moved, false otherwise.
    */
   public Boolean move(String from, String to){
-    return gameBoard.MovePiece(new Point(from), new Point(to));
+    if(gameBoard.MovePiece(new Point(from), new Point(to), turn)){
+      this.turn = !turn;
+      return true;
+    }
+    return false;
   }
 
   /**
