@@ -3,7 +3,7 @@ package client.game.pieces;
 import static org.junit.jupiter.api.Assertions.*;
 
 import client.game.GameBoard;
-import client.game.Point;
+import client.Point;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -55,7 +55,7 @@ class RookTest {
   void testMove(String point, boolean color, String move, boolean expected) {
     Rook testRook = new Rook(new Point(point), color);
 
-    boolean result = testRook.move(move, board.getPieces());
+    boolean result = testRook.move(new Point(move), board.getPieces());
 
     assertEquals(expected, result, "The Rook moved or did not move when expected");
 

@@ -3,7 +3,7 @@ package client.game.pieces;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import client.game.GameBoard;
-import client.game.Point;
+import client.Point;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -54,7 +54,7 @@ class QueenTest {
   void testMove(String point, boolean color, String move, boolean expected) {
     Queen testQueen = new Queen(new Point(point), color);
 
-    boolean result = testQueen.move(move, board.getPieces());
+    boolean result = testQueen.move(new Point(move), board.getPieces());
 
     assertEquals(expected, result, "The Queen moved or did not move when expected");
 
