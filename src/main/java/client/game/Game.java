@@ -53,7 +53,7 @@ public class Game {
    * @return A String representation of the set of valid locations to move to.
    */
   public String validMoves(String location){
-    return gameBoard.getMoves(new Point(location));
+    return gameBoard.getMoves(new Point(location), turn);
   }
 
   /**

@@ -103,8 +103,8 @@ public class GameBoard {
    * @return String containing all valid moves from whatever Piece is at the Point. If there is no
    * Piece, returns an empty String.
    */
-  public String getMoves(Point p) {
-    if (this.getPieceAt(p) == null) {
+  public String getMoves(Point p, boolean turn) {
+    if (this.getPieceAt(p) == null || this.getPieceAt(p).getColor() != turn) {
       return "";
     }
     Point[] result = board[p.getArrayCol()][p.getArrayRow()].getValidMoves(this.board);
