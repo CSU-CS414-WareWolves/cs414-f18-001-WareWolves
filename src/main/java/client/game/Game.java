@@ -61,7 +61,6 @@ public class Game {
    * @return String representation of the current GameBoard.
    */
   public String getBoard(){
-    System.out.println(this.gameover());
     return gameBoard.getBoard();
 
   }
