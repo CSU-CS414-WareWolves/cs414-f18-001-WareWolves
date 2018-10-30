@@ -86,22 +86,5 @@ public class GameSquareFactory {
     return ourInstance;
   }
 
-  public static void main(String[] args){
-
-    WHITE_CASTLE.addAll(BLACK_CASTLE);
-
-    TreeSet<Integer> sorted = new TreeSet<>();
-    for (Point p : WHITE_CASTLE) {
-
-      System.out.print(p);
-
-
-    }
-
-
-    //Point index120 =  new Point("aB");
-    //System.out.println(144 - ((12 - index120.getArrayCol())  + index120.getArrayRow()* 12));
-
-  }
 
 }

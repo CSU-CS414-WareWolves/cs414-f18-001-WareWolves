@@ -139,7 +139,6 @@ public class SwingChadDriver {
 
   public void start(){
 
-
     javax.swing.SwingUtilities.invokeLater(new Runnable() {
       public void run() {
           createAndShowGUI();
