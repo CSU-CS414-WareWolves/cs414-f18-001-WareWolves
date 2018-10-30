@@ -124,12 +124,7 @@ public class GameBoard {
    */
   public boolean MovePiece(Point from, Point to, boolean turn) {
     Piece piece = this.getPieceAt(from);
-    if (piece.getColor() == turn && piece.move(to, board)) {
-      board[to.getArrayCol()][to.getArrayRow()] = board[from.getArrayCol()][from.getArrayRow()];
-      board[from.getArrayCol()][from.getArrayRow()] = null;
-      return true;
-    }
-    return false;
+    return piece.getColor() == turn && piece.move(to, board);
   }
 
 
@@ -223,5 +218,18 @@ public class GameBoard {
       res.append("\n");
     }
     return res.toString();
+  }
+
+  public boolean gameover() {
+    boolean white = false, black = false;
+    for (Piece[] row : board){
+      for (Piece p : row){
+        if (p != null && p.getClass() == King.class && p.getColor())
+          black = true;
+        if (p != null && p.getClass() == King.class && !p.getColor())
+          white = true;
+      }
+    }
+    return !black || !white;
   }
 }
