@@ -21,9 +21,13 @@ public class MovePieceMessage extends ViewMessage {
    * @param toRow the move to row
    */
   public MovePieceMessage(int fromCol, int fromRow, int toCol, int toRow ){
+    this( new Point(fromCol, fromRow),new Point(toCol, toRow));
+  }
+
+  public MovePieceMessage(Point fromPoint, Point toPoint){
     super(ViewMessageType.MOVE_PIECE);
-    this.fromLocation = new Point(fromCol, fromRow);
-    this.toLocation = new Point(toCol, toRow);
+    this.fromLocation = fromPoint;
+    this.toLocation = toPoint;
   }
 
   @Override

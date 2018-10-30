@@ -3,6 +3,8 @@ package client.gui.swing;
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 
 
+import client.presenter.controller.messages.MovePieceMessage;
+import client.presenter.controller.messages.ViewValidMoves;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -63,23 +65,25 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
   /**
    * Our client.game.Point for the square the piece being moved
    */
-  private client.game.Point moveFromSquare;
+  private client.Point moveFromSquare;
   /**
    * Our client.game.Point for the square the piece being moved goes to
    */
-  private client.game.Point moveToPoint;
+  private client.Point moveToPoint;
 
   /**
    * All the valid moves for the piece
    */
   private HashSet<JPanel> validPieceMoves = new HashSet<>();
 
+  private SwingChadDriver appDriver;
+
   /**
    * Sets up a game with given piece positions
    * @param piecesLocations the piece locations
    */
-  public ChadGameBoard(String piecesLocations){
-    this();
+  public ChadGameBoard(SwingChadDriver swingChadDriver, String piecesLocations){
+    this(swingChadDriver);
     setBoardPieces(piecesLocations);
   }
 
@@ -87,7 +91,10 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
    * Sets up an empty board
    * call setBoardPieces(String piecesLocations) to add pieces
    */
-  public ChadGameBoard(){
+  public ChadGameBoard(SwingChadDriver swingChadDriver){
+
+    appDriver = swingChadDriver;
+
     Dimension boardSize = new Dimension(
         NUMBER_OF_SQUARES_PER_ROW * squareSize,
         NUMBER_OF_SQUARES_PER_ROW * squareSize);
@@ -114,6 +121,7 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
     }
 
   }
+
 
   /**
    * Removes all the prevous peices and sets up the new pieces
@@ -152,7 +160,7 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
    * @return the index of the location
    */
   private int convertGamePointToIndex(String location) {
-    client.game.Point pieceLocation = new client.game.Point(location);
+    client.Point pieceLocation = new client.Point(location);
     return (144 - ((12 - pieceLocation.getArrayCol())  + pieceLocation.getArrayRow()* 12));
   }
 
@@ -163,7 +171,7 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
    * @return the point used in game logic
    */
   public java.awt.Point findArrayIndex(int colX, int rowY){
-    return new java.awt.Point(Math.abs(colX/squareSize - 11), rowY/squareSize);
+    return new java.awt.Point(rowY/squareSize, Math.abs(colX/squareSize - 11));
   }
 
 
@@ -193,7 +201,7 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
     Component c =  chessBoard.findComponentAt(e.getX(), e.getY());
 
     java.awt.Point arrayIndex = findArrayIndex(e.getY(), e.getX());
-    moveFromSquare = new client.game.Point(arrayIndex.x, arrayIndex.y);
+    moveFromSquare = new client.Point(arrayIndex.x, arrayIndex.y);
 
     System.out.println("Array location: " + arrayIndex);
     System.out.println("Game Point location: " + moveFromSquare);
@@ -203,7 +211,6 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
       return;
     }
 
-    setValidMoves("dCeDcCdDeEcDdEcEeC", true);
 
 
     movingPieceStartSquare = c.getParent();
@@ -215,6 +222,8 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
     movingChessPiece.setLocation(e.getX() + xAdjustment, e.getY() + yAdjustment);
     movingChessPiece.setSize(movingChessPiece.getWidth(), movingChessPiece.getHeight());
     layeredPane.add(movingChessPiece, JLayeredPane.DRAG_LAYER);
+
+    appDriver.handleViewMessage(new ViewValidMoves(moveFromSquare));
 
   }
 
@@ -240,7 +249,7 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
     setAllValidMoves(false);
 
     java.awt.Point arrayIndex = findArrayIndex(e.getY(), e.getX());
-    moveToPoint = new client.game.Point(arrayIndex.x, arrayIndex.y);
+    moveToPoint = new client.Point(arrayIndex.x, arrayIndex.y);
 
     Component c =  chessBoard.findComponentAt(e.getX(), e.getY());
 
@@ -266,10 +275,16 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
 
     //Logic for getting move
 
+    appDriver.handleViewMessage(new MovePieceMessage(moveFromSquare, moveToPoint));
+
+    /*
     moveToSquare.remove(c); //only for none working
     moveToSquare.add(movingChessPiece);
+    */
 
-    movingChessPiece.setVisible(true);
+    // Remove the icon from the drag layer
+    layeredPane.remove(movingChessPiece);
+
   }
 
   private void resetMove() {
@@ -277,7 +292,7 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
     movingChessPiece.setVisible(true);
   }
 
-  private void setValidMoves(String validMoves, boolean state) {
+  public void setValidMoves(String validMoves, boolean state) {
 
     if (validMoves.length() % 2 != 0) {
       throw new IllegalArgumentException("ChadGameBoard::setValidMoves: " + validMoves +
@@ -294,7 +309,7 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
       setValidMove(square, state);
       validPieceMoves.add(square);
 
-      validMoves = validMoves.substring(2, validMoves.length());
+      validMoves = validMoves.substring(2);
 
     }
   }
@@ -335,15 +350,7 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
     // Do nothing
   }
 
-  public static void main(String[] args) {
-    JFrame frame = new JFrame();
-    frame.getContentPane().add(new ChadGameBoard(DEFAULT_GAME_BOARD));
-    frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE );
-    frame.pack();
-    frame.setResizable(false);
-    frame.setLocationRelativeTo( null );
-    frame.setVisible(true);
-  }
+
 
 
 

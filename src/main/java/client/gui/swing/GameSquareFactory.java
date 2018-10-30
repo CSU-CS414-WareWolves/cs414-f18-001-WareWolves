@@ -1,9 +1,8 @@
 package client.gui.swing;
 
-import client.game.Point;
+import client.Point;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;

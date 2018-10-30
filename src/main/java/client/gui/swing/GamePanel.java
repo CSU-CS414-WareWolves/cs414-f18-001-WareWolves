@@ -23,6 +23,10 @@ public class GamePanel extends JPanel {
   JTextArea output;
   JScrollPane scrollPane;
 
+
+
+
+
   public JMenuBar createMenuBar() {
     JMenuBar menuBar;
     JMenu menu, submenu;
@@ -130,8 +134,8 @@ public class GamePanel extends JPanel {
     if (imgURL != null) {
       return new ImageIcon(imgURL);
     } else {
-      System.err.println("Couldn't find file: " + path);
-      return null;
+      //System.err.println("Couldn't find file: " + path);
+      return new ImageIcon();
     }
   }
 
