@@ -1,8 +1,5 @@
 package client.gui.swing;
 
-import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
-
-
 import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.ViewValidMoves;
 import java.awt.Component;
@@ -13,7 +10,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.HashSet;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -76,6 +72,9 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
    */
   private HashSet<JPanel> validPieceMoves = new HashSet<>();
 
+  /**
+   * The driver for the game
+   */
   private SwingChadDriver appDriver;
 
   /**
@@ -103,7 +102,6 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
     layeredPane = new JLayeredPane();
     this.add(layeredPane);
     layeredPane.setPreferredSize(boardSize);
-
 
     //Add a chess board to the Layered Pane
 
@@ -147,7 +145,7 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
       JPanel square = (JPanel)chessBoard.getComponent(pieceIndex);
       square.add(pieceLabel);
 
-      piecesLocations = piecesLocations.substring(3, piecesLocations.length());
+      piecesLocations = piecesLocations.substring(3);
     }
 
     this.revalidate();
@@ -189,6 +187,7 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
         }
       }
     }
+    this.repaint();
   }
 
 
@@ -332,6 +331,9 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
     }
   }
 
+  public void displayGameOverMessage(String message){
+
+  }
 
 
   // MouseListener, MouseMotionListener methods implemented but not used
