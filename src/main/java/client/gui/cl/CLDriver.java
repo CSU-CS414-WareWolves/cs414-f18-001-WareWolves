@@ -161,9 +161,15 @@ public class CLDriver {
 
     //Show the invites
     this.getMenu().viewInvites(L);
-    //Request option
-    int opt = this.keys.nextInt();
+
+    int opt = 0;
+    while(!(opt <= L.size())){
+      //Request option
+      opt = this.keys.nextInt();
+    }
     System.out.println("Option chosen: "+opt);
+
+
     return 0;
   }
 
