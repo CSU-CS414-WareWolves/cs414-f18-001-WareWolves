@@ -20,7 +20,7 @@ public class CLDriver {
 
   /**
    * Gets CLDriver's CLLogin instance
-   * @return
+   * @return class instance of CLLogin
    */
   public CLLogin getLogin() {
     return login;
@@ -28,7 +28,7 @@ public class CLDriver {
 
   /**
    * Gets CLDriver's CLMenu instance
-   * @return
+   * @return class instance of CLMenu
    */
   public CLMenu getMenu() {
     return menu;
@@ -36,7 +36,7 @@ public class CLDriver {
 
   /**
    * Gets CLDriver's CLGameView instance
-   * @return
+   * @return class instance of CLGameView
    */
   public CLGameView getGame() {
     return game;
@@ -44,7 +44,7 @@ public class CLDriver {
 
   /**
    * Creates space for readability of the command-line
-   * (returns nothing, but prints a long line)
+   * (returns nothing, but prints a long line and some space for readability)
    */
   public void clearScreen() {
     System.out.println("\n-----------------------------------------------------------\n");
@@ -128,9 +128,11 @@ public class CLDriver {
           System.out.println("Enter a valid move (format: L4): ");
           move = this.keys.nextLine();
           // Move is applied and sent to other player
+          // swap turns
           System.out.println("Submitting move: { "+piece+" -> "+move+" }");
           opt = 0;
           turn = false;
+          // reprint board with move applied
           break;
         case 4:
           System.out.println("Leaving game...");
@@ -199,12 +201,10 @@ public class CLDriver {
     CLMenu menu = new CLMenu();
     CLGameView game = new CLGameView();
 
-    int opt = 0;
+    int option = 0;
     int transition = 1979;
     //-------for quick testing purposes
-    ArrayList<String> G = new ArrayList<String>();
-    G.add("theGameMASTER");
-    G.add("n00b1");
+    String[] G = {"theGameMASTER", "n00b1"};
     //-------
 
     CLDriver driver = new CLDriver(login, menu, game);
@@ -214,11 +214,12 @@ public class CLDriver {
 
     while(transition == 1979) {
       login.showLogin();
-      opt = driver.keys.nextInt();
-      transition = driver.handleLoginMenu(opt);
+      option = driver.keys.nextInt();
+      transition = driver.handleLoginMenu(option);
     }
 
     while(transition != 1979) {
+      option = 0;
       driver.clearScreen();
 
       switch(transition){
@@ -228,12 +229,11 @@ public class CLDriver {
           break;
         case 1:
           driver.getGame().showCurrentGames(G);
-          while(opt > 0 && opt < G.size()) {
-            opt = driver.keys.nextInt();
+          while(option <= 0 || option > G.length) {
+            option = driver.keys.nextInt();
           }
           //String s = G[opt].getGameboard()
-          System.out.println("Loading game against player \""+G.get(opt-1)+"\"...");
-          opt = 0;
+          System.out.println("Loading game against player \""+G[option-1]+"\"...");
           //Pass this string s eventually
           transition = driver.handleGame();
           break;

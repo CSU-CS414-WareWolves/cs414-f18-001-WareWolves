@@ -7,7 +7,7 @@ import java.util.Collection;
 
 public interface GameView {
   // Prints a list of current games
-  void showCurrentGames(ArrayList<String> games);
+  void showCurrentGames(String[] games);
 
   // Prints the board from the given state
   void showGameBoard(GameBoard gb);
