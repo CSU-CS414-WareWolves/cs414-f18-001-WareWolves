@@ -23,14 +23,14 @@ public class CLGameView implements GameView {
    * Prints all current games of the user
    * @param games list of usernames the player has an active game with
    */
-  public void showCurrentGames(ArrayList<String> games){
+  public void showCurrentGames(String[] games){
     //Print the list in a nice fashion
     StringBuilder res = new StringBuilder();
 
     res.append("+++ Select the Game you wish to continue +++\n\n");
-    for(int i=0; i<games.size(); i++){
+    for(int i=0; i<games.length; i++){
       res.append("[").append(i+1).append("]: ");
-      res.append(games.get(i).toString());
+      res.append(games[i]);
       res.append("\n");
     }
 
@@ -48,6 +48,7 @@ public class CLGameView implements GameView {
     for(int i=11; i>=0; --i){
       res.append(row++).append(" {");
         for (int j=11; j>=0; --j) {
+          //check for walls, represent with ▣ = "\u25A3"
           res.append(" ").append(pieceToCharacter(gb.getPieceAt(j, i)));
           if(j==0){
             res.append(" }\n");
