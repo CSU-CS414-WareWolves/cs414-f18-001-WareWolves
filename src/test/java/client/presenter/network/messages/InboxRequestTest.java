@@ -8,12 +8,12 @@ import org.junit.jupiter.api.Test;
 public class InboxRequestTest {
 	private static InboxRequest testInboxRequest1, testInboxRequest2;
 
-	public final String testGameRequestString = "15:1234";
+	public final String testGameRequestString = "15:testUser";
 
 	@BeforeAll
 	public static void setup() {
-		testInboxRequest1 = new InboxRequest(1234);
-		testInboxRequest2 = new InboxRequest("15:1234");
+		testInboxRequest1 = new InboxRequest("testUser");
+		testInboxRequest2 = new InboxRequest("15:testUser", 0);
 	}
 
 	@Test

@@ -67,7 +67,9 @@ public class RecieveThread extends Thread{
 			case RESIGN: message = new Resign(msg);
 			case REGISTER_RESPONSE: new RegisterResponse(msg);
 			case INBOX_REQUEST: message = new InboxRequest(msg);
-			case INBOX_RESPONSE:
+			case INBOX_RESPONSE: message = new InboxResponse(msg);
+			case PROFILE_REQUEST: message = new ProfileRequest(msg);
+			case PROFILE_RESPONSE: message = new ProfileResponse(msg);
 		}
 		if(message!=null)
 			mgmt.sendToPresenter(message);

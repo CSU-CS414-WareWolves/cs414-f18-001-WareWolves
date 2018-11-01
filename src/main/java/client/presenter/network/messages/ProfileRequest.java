@@ -1,17 +1,15 @@
 package client.presenter.network.messages;
 
-import java.util.regex.Pattern;
-
-public class InboxRequest extends NetworkMessage {
+public class ProfileRequest extends NetworkMessage {
 
 	public final String nickname;
 	
 	/**
 	 * Constructor for presenter
-	 * @param nickname The logged in user's ID
+	 * @param nickname the nickname of the profile requesting to see
 	 */
-	public InboxRequest(String nickname) {
-		super(NET_MESSAGE_TYPE.INBOX_REQUEST);
+	public ProfileRequest(String nickname) {
+		super(NET_MESSAGE_TYPE.PROFILE_REQUEST);
 		this.nickname = nickname;
 		length = this.getDataString().getBytes().length;
 	}
@@ -21,8 +19,8 @@ public class InboxRequest extends NetworkMessage {
 	 * @param data String representation of the message
 	 * @param off dummy variable to differentiate constructors
 	 */
-	public InboxRequest(String data, int off) {
-		super(NET_MESSAGE_TYPE.INBOX_REQUEST);
+	public ProfileRequest(String data, int off) {
+		super(NET_MESSAGE_TYPE.PROFILE_REQUEST);
 		this.nickname = data.split(":")[1];
 		length = this.getDataString().getBytes().length;
 	}
