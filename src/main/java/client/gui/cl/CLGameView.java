@@ -49,7 +49,12 @@ public class CLGameView implements GameView {
       res.append(row++).append(" {");
         for (int j=11; j>=0; --j) {
           //check for walls, represent with ▣ = "\u25A3"
-          res.append(" ").append(pieceToCharacter(gb.getPieceAt(j, i)));
+          if(checkWall(i,j)){
+            res.append(" ").append("\u25A3");
+          }
+          else {
+            res.append(" ").append(pieceToCharacter(gb.getPieceAt(j, i)));
+          }
           if(j==0){
             res.append(" }\n");
           }
@@ -57,6 +62,18 @@ public class CLGameView implements GameView {
     }
     res.append("  { 1  2 3  4 5 6  7 8 9 10 11 12}");
     System.out.println(res);
+  }
+
+  public boolean checkWall(int row, int col){
+    return (row==1 &&(col==2 || col==3 || col==4))
+        || (row==5 &&(col==2 || col==3 || col==4))
+        || (col==1 &&(row==2 || row==3 || row==4))
+        || (col==5 &&(row==2 || row==3 || row==4))
+
+        || (row==6 &&(col==7 || col==8 || col==9))
+        || (row==10 &&(col==7 || col==8 || col==9))
+        || (col==6 &&(row==7 || row==8 || row==9))
+        || (col==10 &&(row==7 || row==8 || row==9));
   }
 
   /**

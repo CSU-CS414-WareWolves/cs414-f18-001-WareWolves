@@ -123,7 +123,7 @@ public class CLDriver {
             else if(input.toUpperCase().equals("EXIT")){
               opt = 3;
             }else if(input.toUpperCase().equals("FORFEIT")){
-              opt = 3;
+              opt = 4;
             }
             else{
               System.out.println("Please enter a valid option.");
@@ -175,6 +175,7 @@ public class CLDriver {
 
   /**
    * Handle inbox interactions
+   * (@param ultimately needs the list of requests in order to print them out
    * @return int back to main menu
    */
   public int handleInbox(){
@@ -187,12 +188,12 @@ public class CLDriver {
     //Show the invites
     this.getMenu().viewInvites(L);
 
-    int opt = 0;
-    while(!(opt <= L.size())){
+    int opt = -1;
+    while(opt==-1){
       //Request option
       opt = this.keys.nextInt();
     }
-    System.out.println("Option chosen: "+opt);
+    System.out.println("Accepted invite: "+opt);
 
 
     return 0;
@@ -203,18 +204,25 @@ public class CLDriver {
    * @return int back to main menu
    */
   public int handleOutbox(){
-    this.getMenu().requestUsername();
+    while(true) {
+      this.clearScreen();
+      System.out.println("+++ Invite A Player +++");
 
-    String rival = "";
-    while(rival.equals("")) {
-      rival = this.keys.nextLine();
+      this.getMenu().requestUsername();
+      String rival = "";
+      while (rival.equals("")) {
+        rival = this.keys.nextLine();
+      }
+      if(rival.toUpperCase().equals("EXIT")){
+        System.out.println("Returning to Main Menu...");
+        return 0;
+      }
+      //Look for rival in database and send challenge
+      System.out.println("Sending challenge to: \"" + rival + "\"");
     }
-    //Look for rival in database and send challenge
-    System.out.println("Sending challenge to: \""+rival+"\"");
-    return 0;
   }
 
-  /**
+  /** Runs and handles the Driver for the command line
    *
    */
   public void runView(){
@@ -253,14 +261,13 @@ public class CLDriver {
           transition = this.handleInbox();
           break;
         case 3:
-          System.out.println("Send!");
           transition = this.handleOutbox();
           break;
         case 4:
           //@TODO
           // Receive input for profile
           this.getMenu().requestUsername();
-          this.getMenu().showStats("L33tL0rD",10,7,2,1);
+          this.getMenu().showStats("admin",10,7,2,1);
           transition = 0;
           break;
         case 5:

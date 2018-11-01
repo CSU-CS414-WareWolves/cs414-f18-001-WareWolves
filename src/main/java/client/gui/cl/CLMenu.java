@@ -29,7 +29,7 @@ public class CLMenu implements MenuView {
       return;
     } else {
       StringBuilder res = new StringBuilder();
-      res.append("+++ Inbox +++");
+      res.append("+++ Inbox +++\n");
       for (int i = 0; i < mail.size(); i++) {
         res.append("[" + i + "]: " + mail.get(i) + " has invited you to a game!\n");
       }
@@ -38,10 +38,11 @@ public class CLMenu implements MenuView {
   }
 
   /**
-   * Request a player's stats after providing a their username
+   * Request a username from the current player
+   *
    */
   public void requestUsername(){
-    System.out.println("Please enter player's username: ");
+    System.out.println("Please enter player's username(type EXIT to leave): ");
   }
 
   /**
