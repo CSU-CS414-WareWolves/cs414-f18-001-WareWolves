@@ -1,28 +1,33 @@
 package client.gui.swing;
 
 import client.game.Game;
-import client.game.GameBoard;
 import client.gui.ChadGameDriver;
-import client.presenter.controller.ViewMessageType;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMoves;
 import client.presenter.network.messages.GameInfo;
 import client.presenter.network.messages.NetworkMessage;
-import java.util.ArrayList;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import org.junit.Before;
 
 public class SwingChadDriver implements ChadGameDriver{
 
-
+  /**
+   * The Swing GUI / View
+   */
   private GameJPanel gamePanel;
+  /**
+   * The game / Model
+   */
   private Game chadGame;
 
+  /**
+   * The currently login play
+   */
   private int gameID;
+  /**
+   *
+   */
   private String playerNickname;
 
 
@@ -30,6 +35,10 @@ public class SwingChadDriver implements ChadGameDriver{
       "rdCreDRiHRjIrcCkdDreERhHKiIRjJrcDrdERhIRiJrcERhJreCRjH";
 
 
+  /**
+   * Processes a message from the Swing GUI
+   * @param message the message to process
+   */
   public void handleViewMessage(ViewMessage message){
 
     switch (message.messageType){

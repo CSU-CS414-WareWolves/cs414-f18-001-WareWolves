@@ -221,15 +221,13 @@ public class GameBoard {
   }
 
   public boolean gameover() {
-    boolean white = false, black = false;
+    boolean finsihed = false;
     for (Piece[] row : board){
       for (Piece p : row){
-        if (p != null && p.getClass() == King.class && p.getColor())
-          black = true;
-        if (p != null && p.getClass() == King.class && !p.getColor())
-          white = true;
+        if (p != null && p.getClass() == King.class)
+          finsihed = !finsihed;
       }
     }
-    return !black || !white;
+    return finsihed;
   }
 }
