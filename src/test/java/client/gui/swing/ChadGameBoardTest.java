@@ -27,8 +27,8 @@ class ChadGameBoardTest {
     public ChadGameBoardTestDriver(){
 
       gamePanel = new ChadGameBoard(this, DEFAULT_GAME_BOARD);
-      gamePanel.revalidate();
-      gamePanel.repaint();
+      //gamePanel.revalidate();
+      //gamePanel.repaint();
 
 
     }

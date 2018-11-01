@@ -14,8 +14,10 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import org.junit.Before;
 
 public class SwingChadDriver implements ChadGameDriver{
+
 
   private GameJPanel gamePanel;
   private Game chadGame;

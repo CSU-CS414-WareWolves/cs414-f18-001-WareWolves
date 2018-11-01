@@ -73,9 +73,11 @@ public abstract class Piece {
       return false;
     }
     boolean isKing = (other.getClass() == King.class) && notSameColor(other);
-    return isKing || (other.inOwnCastle() && GameBoard.isWall(this.getBoardLocation()))
-        || (this.inOwnCastle() && GameBoard.isWall((other.getBoardLocation())));
+    return isKing || rightOfCapture(other, this) || rightOfCapture(this, other);
+  }
 
+  private boolean rightOfCapture(Piece P1, Piece P2) {
+    return P1.inOwnCastle() && GameBoard.isWall(P2.getBoardLocation());
   }
 
   /**
