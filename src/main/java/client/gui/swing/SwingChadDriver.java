@@ -2,6 +2,7 @@ package client.gui.swing;
 
 import client.game.Game;
 import client.game.GameBoard;
+import client.gui.ChadGameDriver;
 import client.presenter.controller.ViewMessageType;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceMessage;
@@ -14,7 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class SwingChadDriver {
+public class SwingChadDriver implements ChadGameDriver{
 
   private GameJPanel gamePanel;
   private Game chadGame;
@@ -37,6 +38,7 @@ public class SwingChadDriver {
       case UNREGISTER:
         break;
       case SHOW_VALID_MOVES:
+        if(chadGame.gameover()){return;}
         ViewValidMoves validMovesMessage = (ViewValidMoves) message;
         String validMoves = chadGame.validMoves(validMovesMessage.location.toString());
         gamePanel.setValidMoves(validMoves);
@@ -49,6 +51,10 @@ public class SwingChadDriver {
         chadGame.move(moves.fromLocation.toString(), moves.toLocation.toString());
         setupGame(gameID, chadGame.getBoard(), chadGame.getTurn());
 
+        if(chadGame.gameover()){
+          gamePanel.displayGameOverMessage(
+              getCurrentPlayer(!chadGame.getTurn()) + " player won the game!");
+        }
         // Send Move to Server
         break;
       case REGISTER_RESPONSE:
@@ -166,13 +172,14 @@ public class SwingChadDriver {
   private void setupGame(int gameId, String boardSetup, boolean turn){
     this.gameID = gameId;
     gamePanel.setBoardPieces(boardSetup);
-    String playerTurnMessage = "The " + getCurrentPlayer(turn) + " player's turn";
+    String playerTurnMessage = getCurrentPlayer(turn) + " player's turn";
     gamePanel.setSetGameStatus(playerTurnMessage);
   }
 
   private String getCurrentPlayer(boolean turn) {
-    return turn ? "Black" : "White";
+    return turn ? "The Black" : "The White";
   }
+
 
   public static void main(String[] args) {
 

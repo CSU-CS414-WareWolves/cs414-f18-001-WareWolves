@@ -34,6 +34,7 @@ public class GameSquareFactory {
 
   public JPanel createdBoardSquare(int index, int squareSize){
     JPanel square = new JPanel( new BorderLayout());
+    square.setName("Squire");
     square.setBorder(BorderFactory.createLineBorder(Color.black));
 
     // Color the tile
@@ -63,19 +64,6 @@ public class GameSquareFactory {
     label.setVisible(false);
     return label;
   }
-
-
-  private static final Set<Point> WHITE_CASTLE = Stream.of(
-      new Point(2, 2), new Point(2, 3), new Point(2, 4),
-      new Point(3, 2), new Point(3, 3), new Point(3, 4),
-      new Point(4, 2), new Point(4, 3), new Point(4, 4)
-  ).collect(Collectors.toSet());
-
-  private static final Set<Point> BLACK_CASTLE = Stream.of(
-      new Point(7, 7), new Point(7, 8), new Point(7, 9),
-      new Point(8, 7), new Point(8, 8), new Point(8, 9),
-      new Point(9, 7), new Point(9, 8), new Point(9, 9)
-  ).collect(Collectors.toSet());
 
 
   private GameSquareFactory() {

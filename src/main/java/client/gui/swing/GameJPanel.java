@@ -1,5 +1,6 @@
 package client.gui.swing;
 
+import client.gui.ChadGameDriver;
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.ViewMessageType;
 import client.presenter.controller.messages.MenuMessage;
@@ -27,9 +28,9 @@ public class GameJPanel extends JPanel implements ActionListener {
 
   ChadGameBoard gameBoard;
 
-  SwingChadDriver driver;
+  ChadGameDriver driver;
 
-  public GameJPanel(SwingChadDriver driver){
+  public GameJPanel(ChadGameDriver driver){
     super(new BorderLayout());
 
     this.driver = driver;
@@ -130,14 +131,20 @@ public class GameJPanel extends JPanel implements ActionListener {
   public void actionPerformed(ActionEvent e) {
 
     if(RESTART_GAME.equals(e.getActionCommand())){
-      JOptionPane.showMessageDialog(null, "Restarting Game");
+      JOptionPane.showMessageDialog(this, "Restarting Game");
       driver.handleNetMessage(new GameInfo(-1, "rdCreDRiHRjIrcCkdDreERhHKiIRjJrcDrdERhIRiJrcERhJreCRjH", false));
     } else if(QUIT_GAME.equals(e.getActionCommand())){
-      JOptionPane.showMessageDialog(null, "Quitting Game");
+      JOptionPane.showMessageDialog(this, "Quitting Game");
       driver.handleViewMessage(new MenuMessage(MenuMessageTypes.LOGOUT, new String[0]));
     }
 
   }
+
+  public void displayGameOverMessage(String message){
+
+    JOptionPane.showMessageDialog(this,message);
+  }
+
 
   public void setValidMoves(String validMoves) {
     gameBoard.setValidMoves(validMoves, true);
