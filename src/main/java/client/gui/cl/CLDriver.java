@@ -112,19 +112,31 @@ public class CLDriver {
     while(opt!=0 && turn){
       switch(opt){
         case 1:
-          this.clearScreen();
-          this.game.showIngameMenu();
-          this.game.showGameBoard(new GameBoard("RiIrdDKjJkeERcC"));
-          opt = 2;
+          /** BOARD **/
+          this.showGame();
+          String input = "";
+          while(input.equals("")) {
+            input = this.keys.nextLine();
+            if(input.toUpperCase().equals("MOVE")){
+              opt = 2;
+            }
+            else if(input.toUpperCase().equals("EXIT")){
+              opt = 3;
+            }else if(input.toUpperCase().equals("FORFEIT")){
+              opt = 3;
+            }
+            else{
+              System.out.println("Please enter a valid option.");
+            }
+          }
           break;
         case 2:
+          /** MOVE **/
+          this.showGame();
           System.out.println("Select a piece (format: D4): ");
           while(piece.equals("")) {
             piece = this.keys.nextLine();
           }
-          opt = 3;
-          break;
-        case 3:
           System.out.println("Enter a valid move (format: L4): ");
           move = this.keys.nextLine();
           // Move is applied and sent to other player
@@ -134,20 +146,31 @@ public class CLDriver {
           turn = false;
           // reprint board with move applied
           break;
-        case 4:
+        case 3:
+          /** EXIT **/
           System.out.println("Leaving game...");
           opt = 0;
           break;
-        case 5:
+        case 4:
+          /** FORFEIT **/
+          System.out.println("Forfeiting game...");
+          System.out.println("Good luck next time!");
           opt = 0;
-          break;
-        default:
-          System.out.println("Please enter a valid option/piece/move");
-          opt = 1;
           break;
       }
     }
     return 0;
+  }
+
+
+  /**
+   * Helper method to show in-game view.
+   * (returns nothing but a nice view)
+   */
+  public void showGame(){
+    this.clearScreen();
+    this.game.showGameBoard(new GameBoard("RiIrdDKjJkeERcC"));
+    this.game.showInGameMenu();
   }
 
   /**
@@ -191,68 +214,57 @@ public class CLDriver {
     return 0;
   }
 
-  //@TODO
-  // Make a method for housing the
-  // switch statement in Main below!
-  //@TODO
-  // Remove testing arraylists from methods
-  public static void main(String[] args) {
-    CLLogin login = new CLLogin();
-    CLMenu menu = new CLMenu();
-    CLGameView game = new CLGameView();
-
+  /**
+   *
+   */
+  public void runView(){
     int option = 0;
     int transition = 1979;
-    //-------for quick testing purposes
-    String[] G = {"theGameMASTER", "n00b1"};
-    //-------
-
-    CLDriver driver = new CLDriver(login, menu, game);
-
-    login.showSplash();
-    driver.clearScreen();
 
     while(transition == 1979) {
       login.showLogin();
-      option = driver.keys.nextInt();
-      transition = driver.handleLoginMenu(option);
+      option = this.keys.nextInt();
+      transition = this.handleLoginMenu(option);
     }
 
     while(transition != 1979) {
       option = 0;
-      driver.clearScreen();
+      this.clearScreen();
+      //-------for quick testing purposes
+      String[] G = {"theGameMASTER", "n00b1"};
+      //-------
 
       switch(transition){
         case 0:
-          driver.getMenu().showMenu();
-          transition = driver.keys.nextInt();
+          this.getMenu().showMenu();
+          transition = this.keys.nextInt();
           break;
         case 1:
-          driver.getGame().showCurrentGames(G);
+          this.getGame().showCurrentGames(G);
           while(option <= 0 || option > G.length) {
-            option = driver.keys.nextInt();
+            option = this.keys.nextInt();
           }
           //String s = G[opt].getGameboard()
           System.out.println("Loading game against player \""+G[option-1]+"\"...");
           //Pass this string s eventually
-          transition = driver.handleGame();
+          transition = this.handleGame();
           break;
         case 2:
-          transition = driver.handleInbox();
+          transition = this.handleInbox();
           break;
         case 3:
           System.out.println("Send!");
-          transition = driver.handleOutbox();
+          transition = this.handleOutbox();
           break;
         case 4:
           //@TODO
           // Receive input for profile
-          driver.getMenu().requestUsername();
-          driver.getMenu().showStats("L33tL0rD",10,7,2,1);
+          this.getMenu().requestUsername();
+          this.getMenu().showStats("L33tL0rD",10,7,2,1);
           transition = 0;
           break;
         case 5:
-          driver.getMenu().unregisterUser();
+          this.getMenu().unregisterUser();
           transition = 0;
           break;
         case 6:
@@ -264,6 +276,19 @@ public class CLDriver {
           break;
       }
     }
-    //end loop
+  }
+
+  //@TODO
+  // Remove testing ArrayLists from methods
+  public static void main(String[] args) {
+    CLLogin login = new CLLogin();
+    CLMenu menu = new CLMenu();
+    CLGameView game = new CLGameView();
+
+    CLDriver driver = new CLDriver(login, menu, game);
+
+    login.showSplash();
+    driver.clearScreen();
+    driver.runView();
   }
 }

@@ -99,10 +99,7 @@ public class CLGameView implements GameView {
   /**
    * Print in-game menu for player's benefit
    */
-  public void showIngameMenu(){
-    StringBuilder res = new StringBuilder();
-    res.append("(you can type the below in-game options at any time)\n");
-    res.append("~[    Exit    ]~~~~~[   Forfeit  ]~\n");
-    System.out.println(res);
+  public void showInGameMenu(){
+    System.out.println("~[   Move   ]~~[   Exit   ]~~[   Forfeit  ]~\n");
   }
 }
