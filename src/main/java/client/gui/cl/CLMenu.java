@@ -29,6 +29,7 @@ public class CLMenu implements MenuView {
       return;
     } else {
       StringBuilder res = new StringBuilder();
+      res.append("+++ Inbox +++");
       for (int i = 0; i < mail.size(); i++) {
         res.append("[" + i + "]: " + mail.get(i) + " has invited you to a game!\n");
       }
@@ -71,6 +72,7 @@ public class CLMenu implements MenuView {
    */
   public void unregisterUser(){
     StringBuilder res = new StringBuilder();
+    res.append("+++ Unregister +++");
     res.append(">>> Are you sure you want to UNREGISTER?\n>>> Your game record will be deleted\n");
     res.append("1.[      YES!     ]\n");
     res.append("2.[      NO!!     ]\n");
