@@ -16,7 +16,7 @@ Updated Use Case Document: [PDF](https://github.com/CSU-CS414-WareWolves/cs414-f
 
 
 ## P3:
-Presentation 3: [PDF](google.com)
+Presentation 3: [PDF](P3)
 
 Design Document:
 
