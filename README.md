@@ -16,7 +16,7 @@ Updated Use Case Document: [PDF](https://github.com/CSU-CS414-WareWolves/cs414-f
 
 
 ## P3:
-Presentation 3: 
+Presentation 3: [PDF](./P3/WareWolves Project Presentation 3.pdf)
 
 Design Document:
 
@@ -26,7 +26,7 @@ Testing Document:
 
 Development Manual:
 
-Traceability Link Matrix: 
+Traceability Link Matrix: [PDF](P3/Traceability Link Matrix 11-01-18 - Sheet1.pdf)
 
-Updated Use Case Document: 
+Updated Use Case Document: [PDF](./P3/Warewolves Use Case Document_10-28-18.pdf)
 
