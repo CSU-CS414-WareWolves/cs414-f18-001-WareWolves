@@ -20,19 +20,13 @@ This project requires the latest versions of:
 
 
 
-### Running a server
-
-1. Clone this repository into a directory of your choice.
-2. Run server package.
-
-
-
 ### Instructions for development
 
 1. Clone this repository into a directory of your choice.
 2. Create a new branch.
-3. Do your thing.
-4. Create pull request.
+3. Pick an issue to tackle.
+4. Commit your solution to your branch, with complete comments and reasoning for your changes.
+5. Create pull request.
 
 
 
@@ -49,3 +43,5 @@ To run the current version of the game GUI run the main method of `SwingChadDriv
 ### Testing
 
 Run the command `mvn test`
+Alternatively, you can run individual junit test cases from src/test/java/client
+
