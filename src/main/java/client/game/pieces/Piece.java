@@ -1,7 +1,7 @@
 package client.game.pieces;
 
-import client.game.GameBoard;
 import client.Point;
+import client.game.GameBoard;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -10,14 +10,15 @@ public abstract class Piece {
   Point boardLocation;
   private final boolean color; //Black == true, White == false
 
-  public Piece(Point boardLocation, boolean color) {
+  Piece(Point boardLocation, boolean color) {
     this.boardLocation = boardLocation;
     this.color = color;
   }
 
-  public Piece (String str){
-    this(new Point(str.substring(0,2)), Boolean.parseBoolean(str.substring(2)));
+  Piece(String str) {
+    this(new Point(str.substring(0, 2)), Boolean.parseBoolean(str.substring(2)));
   }
+
   /**
    * Get the color of this Piece.
    *
@@ -53,7 +54,9 @@ public abstract class Piece {
    */
   public boolean move(Point move, Piece[][] board) {
     if (Arrays.stream(this.getValidMoves(board)).anyMatch(move::equals)) {
+      board[this.boardLocation.getArrayCol()][this.boardLocation.getArrayRow()] = null;
       this.boardLocation = move;
+      board[this.boardLocation.getArrayCol()][this.boardLocation.getArrayRow()] = this;
       return true;
     }
     return false;
@@ -66,13 +69,15 @@ public abstract class Piece {
    * @return True if this Piece can capture other, false otherwise.
    */
   boolean canCapture(Piece other) {
-    if (other == null) {
+    if (other == null || other.color == this.color) {
       return false;
     }
     boolean isKing = (other.getClass() == King.class) && notSameColor(other);
-    return isKing || (other.inOwnCastle() && GameBoard.isWall(this.getBoardLocation()))
-        || (this.inOwnCastle() && GameBoard.isWall((other.getBoardLocation())));
+    return isKing || rightOfCapture(other, this) || rightOfCapture(this, other);
+  }
 
+  private boolean rightOfCapture(Piece P1, Piece P2) {
+    return P1.inOwnCastle() && GameBoard.isWall(P2.getBoardLocation());
   }
 
   /**
@@ -92,6 +97,25 @@ public abstract class Piece {
    */
   boolean inOwnCastle(Point p) {
     return this.getColor() ? GameBoard.isBlackCastle(p) : GameBoard.isWhiteCastle(p);
+  }
+
+  /**
+   * Determines if a Point is in its opponent's castle.
+   *
+   * @param p Point to check.
+   * @return True if P is in this Pieces opponent's castle, false otherwise.
+   */
+  private boolean inOtherCastle(Point p) {
+    return this.getColor() ? GameBoard.isWhiteCastle(p) : GameBoard.isBlackCastle(p);
+  }
+
+  /**
+   * Determines if a Piece is in its opponent's castle.
+   *
+   * @return True if the piece is in its opponent's castle, false otherwise.
+   */
+  boolean inOtherCastle() {
+    return inOtherCastle(this.getBoardLocation());
   }
 
   /**

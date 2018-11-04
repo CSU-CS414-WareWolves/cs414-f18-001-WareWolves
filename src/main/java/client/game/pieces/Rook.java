@@ -53,4 +53,13 @@ public class Rook extends Piece {
     }
     return result;
   }
+
+  @Override
+  public boolean move(Point move, Piece[][] board) {
+    boolean res = super.move(move, board);
+    if (inOtherCastle()){
+      board[this.boardLocation.getArrayCol()][this.boardLocation.getArrayRow()] = new Queen(this.boardLocation, this.getColor());
+    }
+    return res;
+  }
 }

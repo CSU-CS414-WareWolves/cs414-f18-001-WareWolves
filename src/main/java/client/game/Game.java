@@ -62,5 +62,10 @@ public class Game {
    */
   public String getBoard(){
     return gameBoard.getBoard();
+
+  }
+
+  public boolean gameover(){
+    return gameBoard.gameover();
   }
 }

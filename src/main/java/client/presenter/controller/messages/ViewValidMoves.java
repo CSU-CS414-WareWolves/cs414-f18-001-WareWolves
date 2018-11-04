@@ -16,8 +16,12 @@ public class ViewValidMoves extends ViewMessage {
    * @param row the row
    */
   public ViewValidMoves(int col, int row ){
+    this( new Point(col, row));
+  }
+
+  public ViewValidMoves(Point location){
     super(ViewMessageType.SHOW_VALID_MOVES);
-    this.location = new Point(col, row);
+    this.location = location;
   }
 
   @Override
