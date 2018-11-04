@@ -42,6 +42,6 @@ To run the current version of the game GUI run the main method of `SwingChadDriv
 
 ### Testing
 
-Run the command `mvn test`
-Alternatively, you can run individual junit test cases from src/test/java/client
+- Run the command `mvn test`
+- Alternatively, you can run individual junit test cases from src/test/java/client
 
