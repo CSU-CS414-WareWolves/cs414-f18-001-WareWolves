@@ -26,13 +26,10 @@ public class SwingChadDriver implements ChadGameDriver{
    */
   private int gameID;
   /**
-   *
+   * The players name
    */
   private String playerNickname;
 
-
-  private static final String DEFAULT_GAME_BOARD =
-      "rdCreDRiHRjIrcCkdDreERhHKiIRjJrcDrdERhIRiJrcERhJreCRjH";
 
 
   /**
@@ -49,9 +46,12 @@ public class SwingChadDriver implements ChadGameDriver{
       case UNREGISTER:
         break;
       case SHOW_VALID_MOVES:
+        // if the game is over no valid moves
         if(chadGame.gameover()){return;}
+        // Find the valid moves
         ViewValidMoves validMovesMessage = (ViewValidMoves) message;
         String validMoves = chadGame.validMoves(validMovesMessage.location.toString());
+        // Tell GUI to what moves to show
         gamePanel.setValidMoves(validMoves);
         break;
       case MENU:
@@ -62,8 +62,9 @@ public class SwingChadDriver implements ChadGameDriver{
         chadGame.move(moves.fromLocation.toString(), moves.toLocation.toString());
         setupGame(gameID, chadGame.getBoard(), chadGame.getTurn());
 
+        // Show the winner if the game is over
         if(chadGame.gameover()){
-          gamePanel.displayGameOverMessage(
+          gamePanel.displayMessage(
               getCurrentPlayer(!chadGame.getTurn()) + " player won the game!");
         }
         // Send Move to Server
@@ -84,6 +85,10 @@ public class SwingChadDriver implements ChadGameDriver{
 
   }
 
+  /**
+   * Handles all the menu messages from the gui
+   * @param message the message to process
+   */
   private void handleMenuMessage(MenuMessage message) {
     switch (message.menuType){
 
@@ -102,9 +107,12 @@ public class SwingChadDriver implements ChadGameDriver{
       case SEND_INVITE:
         break;
     }
-
   }
 
+  /**
+   * Handles all the messages from NetManager(Not Implemented)
+   * @param message the message to process
+   */
   public void handleNetMessage(NetworkMessage message){
     switch (message.type){
       case LOGIN:
@@ -145,15 +153,15 @@ public class SwingChadDriver implements ChadGameDriver{
     }
   }
 
-
-
-
+  /**
+   * Default constructor will need IP and Port for server
+   */
   public SwingChadDriver(){
-
-
-
   }
 
+  /**
+   * Starts a thread for the Swing GUI
+   */
   public void start(){
 
     javax.swing.SwingUtilities.invokeLater(new Runnable() {
@@ -163,6 +171,9 @@ public class SwingChadDriver implements ChadGameDriver{
     });
   }
 
+  /**
+   * Sets up the Java Swing Frame for the game
+   */
   private void createAndShowGUI() {
     //Create and set up the window.
     JFrame frame = new JFrame("Team Warewolves Chad");
@@ -171,7 +182,7 @@ public class SwingChadDriver implements ChadGameDriver{
     gamePanel = new GameJPanel(this);
     chadGame = new Game();
 
-    setupGame(-1, chadGame.getBoard(), chadGame.getTurn());
+    setupGame(-1, chadGame.getBoard(), chadGame.getTurn()); // Setup default game for demo
 
     frame.setContentPane(gamePanel);
 
@@ -180,6 +191,12 @@ public class SwingChadDriver implements ChadGameDriver{
     frame.setVisible(true);
   }
 
+  /**
+   * Sets up a game from the database and saves the gameId to use for  move messages to the server
+   * @param gameId the ID for the game
+   * @param boardSetup the current setup of the board
+   * @param turn the current players turn
+   */
   private void setupGame(int gameId, String boardSetup, boolean turn){
     this.gameID = gameId;
     gamePanel.setBoardPieces(boardSetup);
@@ -187,6 +204,11 @@ public class SwingChadDriver implements ChadGameDriver{
     gamePanel.setSetGameStatus(playerTurnMessage);
   }
 
+  /**
+   * Gets the Name of the current players turn
+   * @param turn the turn
+   * @return Black or White String
+   */
   private String getCurrentPlayer(boolean turn) {
     return turn ? "The Black" : "The White";
   }

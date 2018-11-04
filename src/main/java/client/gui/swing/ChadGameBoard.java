@@ -18,11 +18,6 @@ import javax.swing.JPanel;
 
 public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionListener {
 
-  /**
-   * Default positions for the start of the game
-   */
-  private static final String DEFAULT_GAME_BOARD =
-      "rdCreDRiHRjIrcCkdDreERhHKiIRjJrcDrdERhIRiJrcERhJreCRjH";
 
   /**
    * Size of the squares in pixels
@@ -192,21 +187,22 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
     }
   }
 
-
-
+  /**
+   * When the user press the mouse button, see if they selected a piece and get the pieces valid move
+   * @param e info about the mouse location
+   */
   public void mousePressed(MouseEvent e){
-
+    // Debug Mouse location
     System.out.println("x:" + e.getX() +" y:" +e.getY());
-
+    // Clear previous moves info
     movingChessPiece = null;
     moveFromSquare = null;
 
-
+    // Convert location to our index method
     Component c =  chessBoard.findComponentAt(e.getX(), e.getY());
-
     java.awt.Point arrayIndex = findArrayIndex(e.getY(), e.getX());
     moveFromSquare = new client.Point(arrayIndex.x, arrayIndex.y);
-
+    // Debug piece location
     System.out.println("Array location: " + arrayIndex);
     System.out.println("Game Point location: " + moveFromSquare);
 
@@ -215,47 +211,49 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
       System.out.println("NO PIECE");
       return;
     }
-
-
-
+    // The square the piece started out
     movingPieceStartSquare = c.getParent();
 
+    // Offsets for moving the piece with the mouse
     java.awt.Point parentLocation = c.getParent().getLocation();
     xAdjustment = parentLocation.x - e.getX();
     yAdjustment = parentLocation.y - e.getY();
+
+    // Attach the piece to mouse
     movingChessPiece = (JLabel)c;
     movingChessPiece.setLocation(e.getX() + xAdjustment, e.getY() + yAdjustment);
     movingChessPiece.setSize(movingChessPiece.getWidth(), movingChessPiece.getHeight());
+    // Move the piece the drag layer for visibility
     layeredPane.add(movingChessPiece, JLayeredPane.DRAG_LAYER);
-
+    // Ask for valid moves for the piece from the Driver
     appDriver.handleViewMessage(new ViewValidMoves(moveFromSquare));
-
   }
 
-
-
-
-  //Move the chess piece around
-
+  /**
+   * Moves the pieces Label to the mouses location
+   * @param me info about the mouse location
+   */
   public void mouseDragged(MouseEvent me) {
     if (movingChessPiece == null) return;
     movingChessPiece.setLocation(me.getX() + xAdjustment, me.getY() + yAdjustment);
   }
 
-  //Drop the chess piece back onto the chess board
-
+  /**
+   * Finds were the piece dropped and sent the move to the Driver if it was in the list
+   * of valid moves
+   * @param e info about the mouse location
+   */
   public void mouseReleased(MouseEvent e) {
     // Not moving a piece
     if(movingChessPiece == null){return;}
 
-    movingChessPiece.setVisible(false);
-
+    movingChessPiece.setVisible(false); // stop sudden jumps in the piece location
 
     setAllValidMoves(false);
 
+    // Convert location to our index method
     java.awt.Point arrayIndex = findArrayIndex(e.getY(), e.getX());
     moveToPoint = new client.Point(arrayIndex.x, arrayIndex.y);
-
     Component c =  chessBoard.findComponentAt(e.getX(), e.getY());
 
     // If player moved piece out of bounds
@@ -273,6 +271,7 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
       moveToSquare = (Container)c;
     }
 
+    // If the player tried to make an invalid move
     if(!validPieceMoves.contains(moveToSquare)){
       resetMove();
       return;
@@ -281,56 +280,63 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
     //Logic for getting move
     validPieceMoves.clear();
 
+    // Send the move to the Diver
     appDriver.handleViewMessage(new MovePieceMessage(moveFromSquare, moveToPoint));
 
-    /*
-    moveToSquare.remove(c); //only for none working
-    moveToSquare.add(movingChessPiece);
-    */
 
     // Remove the icon from the drag layer
     layeredPane.remove(movingChessPiece);
 
   }
 
+  /**
+   * Moves a piece back to its starting square
+   */
   private void resetMove() {
     movingPieceStartSquare.add(movingChessPiece);
     movingChessPiece.setVisible(true);
   }
 
   public void setValidMoves(String validMoves, boolean state) {
-
+    // Check if validMoves is in the correct format
     if (validMoves.length() % 2 != 0) {
       throw new IllegalArgumentException("ChadGameBoard::setValidMoves: " + validMoves +
           " is not a multiple of 2");
     }
 
-    validPieceMoves.clear();
-
+    validPieceMoves.clear(); // remove all previous pieces
     while (validMoves.length() > 0) {
-      String validMoveInfo = validMoves.substring(0, 2);
+      String validMoveInfo = validMoves.substring(0, 2); // break the string into the board locations
       int squareIndex = convertGamePointToIndex(validMoveInfo);
 
       JPanel square = (JPanel) chessBoard.getComponent(squareIndex);
       setValidMove(square, state);
-      validPieceMoves.add(square);
-
-      validMoves = validMoves.substring(2);
+      validPieceMoves.add(square); // save valid move squares for logic checks in mouseRelease()
+      validMoves = validMoves.substring(2); // remove the current squares info
 
     }
   }
 
+  /**
+   * Sets all the valid move Jlabels to visible or not visible
+   * @param state visible or not visible
+   */
   private void setAllValidMoves(boolean state) {
     for(Component gameSquare: chessBoard.getComponents()){
       setValidMove(gameSquare, state);
     }
   }
 
+  /**
+   * Sets a squares valid move to visible or not visible
+   * @param gameSquare the square to modify the valid moves visibility
+   * @param state visible or not visible
+   */
   private void setValidMove(Component gameSquare, boolean state) {
     if(!(gameSquare instanceof JPanel)){
       throw new IllegalArgumentException("Trying to convert " + gameSquare.getClass() + " to JPanel");
     }
-
+    // Find the validMove JLabel
     for(Component labels: ((JPanel) gameSquare).getComponents()){
       if("ValidMove".equals(labels.getName())){
         labels.setVisible(state);

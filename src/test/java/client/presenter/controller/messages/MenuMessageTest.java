@@ -18,7 +18,7 @@ class MenuMessageTest {
   private static MenuMessage testMessage;
 
   @BeforeEach
-  public void setup() throws NoSuchAlgorithmException {
+  public void setup() {
     testMessage = new MenuMessage(MenuMessageTypes.PLAYER_STATS, TEST_MENU_OPTIONS_INT_STRING);
   }
 

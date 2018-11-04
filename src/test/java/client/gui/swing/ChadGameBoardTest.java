@@ -1,22 +1,19 @@
 package client.gui.swing;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import client.game.Game;
 import client.gui.ChadGameDriver;
-import client.presenter.Driver;
-import client.presenter.controller.messages.MenuMessage;
-import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.ViewMessage;
-import client.presenter.controller.messages.ViewValidMoves;
 import client.presenter.network.messages.NetworkMessage;
 import java.awt.event.MouseEvent;
-import javax.swing.JFrame;
+import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
 import org.junit.jupiter.api.Test;
 
 class ChadGameBoardTest {
 
 
+  /**
+   * Class to save messages from the swing gui
+   */
   private static class ChadGameBoardTestDriver implements ChadGameDriver {
 
     public ChadGameBoard gamePanel;
@@ -27,9 +24,6 @@ class ChadGameBoardTest {
     public ChadGameBoardTestDriver(){
 
       gamePanel = new ChadGameBoard(this, DEFAULT_GAME_BOARD);
-      //gamePanel.revalidate();
-      //gamePanel.repaint();
-
 
     }
 
@@ -47,7 +41,7 @@ class ChadGameBoardTest {
     }
 
     public void setBoard(String board){
-
+      gamePanel.setBoardPieces(board);
     }
   }
 
@@ -60,13 +54,21 @@ class ChadGameBoardTest {
 
   }
 
+  /**
+   * Should find a piece Label but it is not.
+   * However, the piece is there
+   */
   @Test
   void mousePressed() {
 
 
-    MouseEvent action = new MouseEvent(gamePanel, MouseEvent.MOUSE_PRESSED, 10, 0, 155, 515, 1, false);
+    MouseEvent action = new MouseEvent(gamePanel, MouseEvent.MOUSE_PRESSED, 10, 0, 279, 563, 1, false);
     driver.gamePanel.mousePressed(action);
-    System.out.println(driver.gamePanel);
+    JLayeredPane mainBoard = (JLayeredPane) driver.gamePanel.getComponents()[0];
+    JPanel gameBoard = (JPanel) mainBoard.getComponents()[0];
+    JPanel square = (JPanel) gameBoard.getComponent(112);
+    System.out.println(square.getComponents()[1].getName());
+
   }
 
   @Test
