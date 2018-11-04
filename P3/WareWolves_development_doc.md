@@ -1,4 +1,4 @@
-# WareWolves Chad
+# WareWolves Chad - Development Manual
 
 A simple and elegant game of tactical and strategic depth
 
@@ -6,16 +6,17 @@ A simple and elegant game of tactical and strategic depth
 
 ### Technologies needed
 
-* Java 1.8
-* Junit 5
-* maven
+This project requires the latest versions of:
+- [Java SDK 11](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html)
+- [JUnit 5](https://junit.org/junit5/docs/current/user-guide/#installation)
+- maven
 
 
 
 ### Running instructions
 
 1. Clone this repository into a directory of your choice.
-2. Run SwingChadDriver or CLDriver to launch the 
+2. Run SwingChadDriver or CLDriver to launch the interface of your choice.
 
 
 
@@ -32,19 +33,6 @@ A simple and elegant game of tactical and strategic depth
 2. Create a new branch.
 3. Do your thing.
 4. Create pull request.
-
-
-
-
-
-## WareWolves Chad - Development Manual
-
-### Setup
-This project requires the latest versions of:
-
-- [IntelliJ](https://www.jetbrains.com/idea/)
-- [Java SDK 11](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html)
-- [JUnit 5](https://junit.org/junit5/docs/current/user-guide/#installation)
 
 
 
