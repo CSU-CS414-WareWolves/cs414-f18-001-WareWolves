@@ -9,7 +9,7 @@ A simple and elegant game of tactical and strategic depth
 This project requires the latest versions of:
 - [Java SDK 11](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html)
 - [JUnit 5](https://junit.org/junit5/docs/current/user-guide/#installation)
-- [maven](https://maven.apache.org/install.html)
+- [Maven](https://maven.apache.org/install.html)
 
 
 
@@ -43,5 +43,5 @@ To run the current version of the game GUI run the main method of `SwingChadDriv
 ### Testing
 
 - Run the command `mvn test`
-- Alternatively, you can run individual junit test cases from src/test/java/client
+- Alternatively, you can run individual JUnit test cases from src/test/java/client
 
