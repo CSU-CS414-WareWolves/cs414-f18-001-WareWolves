@@ -104,10 +104,11 @@ public class GameBoard {
    * Piece, returns an empty String.
    */
   public String getMoves(Point p, boolean turn) {
-    if (this.getPieceAt(p) == null || this.getPieceAt(p).getColor() != turn) {
+    Piece piece = this.getPieceAt(p);
+    if (piece == null || piece.getColor() != turn) {
       return "";
     }
-    Point[] result = board[p.getArrayCol()][p.getArrayRow()].getValidMoves(this.board);
+    Point[] result = piece.getValidMoves(this.board);
     StringBuilder res = new StringBuilder();
     for (Point move : result) {
       res.append(move.toString());
