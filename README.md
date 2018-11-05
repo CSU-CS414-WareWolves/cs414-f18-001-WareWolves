@@ -24,7 +24,7 @@ Design Class Diagram: [PNG](./P3/Documentation/DesignClassDiagram.png)
 
 * Raw images of all class diagrams and sequence diagrams are located [Here](./P3/Documentation)
 
-Testing Document: 
+Testing Document: [PDF](./P3/WareWolvesTestingDocument11-04-18.pdf)
 
 Development Manual: [MD](./P3/WareWolves_development_doc.md)
 
