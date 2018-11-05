@@ -80,6 +80,7 @@ public class CLDriver {
         System.out.println("Registered!");
         return 0;
       case 3:
+        System.out.println("Good bye!");
         return 1979;
       default:
         System.out.println("Please enter a valid option");
@@ -227,13 +228,7 @@ public class CLDriver {
    */
   public void runView(){
     int option = 0;
-    int transition = 1979;
-
-    while(transition == 1979) {
-      login.showLogin();
-      option = this.keys.nextInt();
-      transition = this.handleLoginMenu(option);
-    }
+    int transition = 7;
 
     while(transition != 1979) {
       option = 0;
@@ -275,8 +270,13 @@ public class CLDriver {
           transition = 0;
           break;
         case 6:
-          transition = 1979;
-          System.out.println("Good bye!");
+          transition = 7;
+          System.out.println("Logging off...!");
+          break;
+        case 7:
+          login.showLogin();
+          option = this.keys.nextInt();
+          transition = this.handleLoginMenu(option);
           break;
         default:
           transition = 0;
