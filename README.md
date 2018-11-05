@@ -16,17 +16,19 @@ Updated Use Case Document: [PDF](https://github.com/CSU-CS414-WareWolves/cs414-f
 
 
 ## P3:
-Presentation 3: [PDF]()
+Presentation 3: [PDF](./P3/WareWolvesProjectPresentation3.pdf)
 
-Design Document:
+Design Document: [PDF](./P3/WareWolvesDesignDocument11-04-18.pdf)
 
-Design Class Diagram:
+Design Class Diagram: [PNG](./P3/Documentation/DesignClassDiagram.png)
 
-Testing Document:
+​	Raw images of all class diagrams and sequence diagrams are locates [Here](./P3/Documentation)
 
-Development Manual:
+Testing Document: 
+
+Development Manual: [MD](./P3/WareWolves_development_doc.md)
 
 Traceability Link Matrix: [PDF]()
 
-Updated Use Case Document: [PDF]()
+Updated Use Case Document: [PDF](./P3/WarewolvesUseCaseDocument10-28-18.pdf)
 
