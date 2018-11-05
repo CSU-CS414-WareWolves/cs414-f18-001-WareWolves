@@ -22,7 +22,7 @@ Design Document: [PDF](./P3/WareWolvesDesignDocument11-04-18.pdf)
 
 Design Class Diagram: [PNG](./P3/Documentation/DesignClassDiagram.png)
 
-​	Raw images of all class diagrams and sequence diagrams are located [Here](./P3/Documentation)
+* Raw images of all class diagrams and sequence diagrams are located [Here](./P3/Documentation)
 
 Testing Document: 
 
