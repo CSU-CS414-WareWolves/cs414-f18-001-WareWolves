@@ -1,7 +1,5 @@
 package client.presenter.network.messages;
 
-import java.util.regex.Pattern;
-
 public class InboxRequest extends NetworkMessage {
 
 	public final String nickname;

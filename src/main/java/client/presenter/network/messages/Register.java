@@ -30,6 +30,7 @@ public class Register extends NetworkMessage{
 		email = splt[1];
 		nickname = splt[2];
 		password = splt[3];
+		length = this.getDataString().getBytes().length;
 	}
 	
 	@Override

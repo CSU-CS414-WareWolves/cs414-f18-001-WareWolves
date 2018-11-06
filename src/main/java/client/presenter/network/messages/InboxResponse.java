@@ -51,6 +51,7 @@ public class InboxResponse extends NetworkMessage {
 				sendDates[i]=splt[3];
 			}
 		}
+		length = this.getDataString().getBytes().length;
 	}
 	
 	

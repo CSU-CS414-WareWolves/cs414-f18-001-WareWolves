@@ -51,6 +51,7 @@ public class ActiveGameResponse extends NetworkMessage {
 				startDates[i]=splt[3];
 			}
 		}
+		length = this.getDataString().getBytes().length;
 	}
 
 	@Override

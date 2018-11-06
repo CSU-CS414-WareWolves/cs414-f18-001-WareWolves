@@ -55,6 +55,7 @@ public class ProfileResponse extends NetworkMessage {
 				results[i]=Boolean.parseBoolean(splt[4]);
 			}
 		}
+		length = this.getDataString().getBytes().length;
 	}
 	
 	@Override
