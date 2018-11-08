@@ -26,16 +26,15 @@ abstract class LinePiece extends Piece {
   ArrayList<Point> search(Piece[][] board, int[] deltaCol, int[] deltaRow) {
     ArrayList<Point> result = new ArrayList<>();
     for (int i = 0; i < deltaCol.length; ++i) {
-      int col = this.boardLocation.getArrayCol() + deltaCol[i];
-      int row = this.boardLocation.getArrayRow() + deltaRow[i];
-      result.addAll(subSearch(col, row, deltaCol[i], deltaRow[i], board));
+      result.addAll(subSearch(deltaCol[i], deltaRow[i], board));
     }
     return result;
   }
 
-  private ArrayList<Point> subSearch(
-      int col, int row, int deltaCol, int deltaRow, Piece[][] board) {
+  private ArrayList<Point> subSearch(int deltaCol, int deltaRow, Piece[][] board) {
     ArrayList<Point> result = new ArrayList<>();
+    int col = this.boardLocation.getArrayCol() + deltaCol;
+    int row = this.boardLocation.getArrayRow() + deltaRow;
     while (row >= 0 && row < 12 && col >= 0 && col < 12 && board[col][row] == null) {
       result.add(new Point(col, row));
       row += deltaRow;
