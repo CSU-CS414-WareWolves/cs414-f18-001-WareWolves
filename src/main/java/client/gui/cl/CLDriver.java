@@ -56,10 +56,12 @@ public class CLDriver {
    * @return the option that was chosen
    */
   public int handleLoginMenu(int option){
+    //----Temporary, remove once Presenter implemented with CL
     String user = "";
     String pass = "";
     String aU = "admin";
     String aP = "password";
+    //----------
 
     switch (option){
       case 1:
@@ -105,7 +107,6 @@ public class CLDriver {
     // Have some sort of check to make sure
     // the player can't make a move unless
     // it's their turn.
-
     if(!turn){
       opt = 5;
       System.out.println("[!] Your opponent has not made their move yet.");
@@ -227,7 +228,7 @@ public class CLDriver {
    *
    */
   public void runView(){
-    int option = 0;
+    int option;
     int transition = 7;
 
     while(transition != 1979) {
