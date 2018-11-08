@@ -6,10 +6,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.ViewMessageType;
 import client.presenter.controller.messages.LoginMessage;
+import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.MovePieceResponse;
 import client.presenter.controller.messages.RegisterMessage;
+import client.presenter.controller.messages.RegisterResponseMessage;
 import client.presenter.controller.messages.UnregisterMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMoves;
@@ -36,6 +38,16 @@ class ViewMessageFactoryTest {
   }
 
   @Test
+  void createRegisterResponse() {
+    String[] messages = {"Successfully Registered User"};
+    RegisterResponseMessage expected = new RegisterResponseMessage(TEST_SUCCESS, messages);
+
+    String[] info = {Boolean.toString(TEST_SUCCESS), "Successfully Registered User"};
+    testResponseEquals(expected, info, ViewMessageType.REGISTER_RESPONSE);
+
+  }
+
+  @Test
   void createViewMessageUnregister() throws NoSuchAlgorithmException {
 
     UnregisterMessage expected =
@@ -53,6 +65,15 @@ class ViewMessageFactoryTest {
 
     String[] info = {TEST_LOGIN_EMAIL, TEST_LOGIN_PASSWORD};
     testMessageEquals(expected, info, ViewMessageType.LOGIN);
+  }
+
+  @Test
+  void createLoginResponse() {
+
+    LoginResponseMessage expected = new LoginResponseMessage(TEST_SUCCESS, TEST_NICKNAME);
+
+    String[] info = {Boolean.toString(TEST_SUCCESS), TEST_NICKNAME};
+    testResponseEquals(expected, info, ViewMessageType.LOGIN_RESPONSE);
   }
 
   @Test
@@ -92,7 +113,6 @@ class ViewMessageFactoryTest {
   @Test
   void createMovePieceResponse() throws NoSuchAlgorithmException {
 
-
     MovePieceResponse expected =
         new MovePieceResponse(true, TEST_GAME_BOARD);
 
@@ -102,6 +122,7 @@ class ViewMessageFactoryTest {
 
   /**
    * Tests different types of messages to see if they are created correctly
+   *
    * @param expected the expected message
    * @param info the info to build the message
    * @param type the type of message
@@ -110,6 +131,18 @@ class ViewMessageFactoryTest {
   private void testMessageEquals(ViewMessage expected, String[] info, ViewMessageType type)
       throws NoSuchAlgorithmException {
     ViewMessage result = factory.createViewMessage(type, info);
+    assertEquals(expected, result);
+  }
+
+  /**
+   * Tests different types of responses to see if they are created correctly
+   *
+   * @param expected the expected message
+   * @param info the info to build the message
+   * @param type the type of message
+   */
+  private void testResponseEquals(ViewMessage expected, String[] info, ViewMessageType type) {
+    ViewMessage result = factory.createViewMessageFromServer(type, info);
     assertEquals(expected, result);
   }
 

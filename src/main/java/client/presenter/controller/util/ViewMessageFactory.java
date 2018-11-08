@@ -3,13 +3,18 @@ package client.presenter.controller.util;
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.ViewMessageType;
 import client.presenter.controller.messages.LoginMessage;
+import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.MenuMessage;
+import client.presenter.controller.messages.MenuMessageResponse;
 import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.MovePieceResponse;
 import client.presenter.controller.messages.RegisterMessage;
+import client.presenter.controller.messages.RegisterResponseMessage;
 import client.presenter.controller.messages.UnregisterMessage;
+import client.presenter.controller.messages.UnregisterResponseMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMoves;
+import client.presenter.controller.messages.ViewValidMovesResponse;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
@@ -61,21 +66,33 @@ public class ViewMessageFactory {
     }
   }
 
-
-  public ViewMessage createViewMessageFromServer() {
-    ;
-      /*
+  /**
+   * View Message Response creator. The info[] must be in the same order as the constructor for the
+   * message. The exception to this is Menu Response messages. The first index should be the string
+   * value of the MenuMessageType enum
+   *
+   *
+   * @param type the type of response message to create
+   * @param info the info to construct the message
+   * @return the constructed message
+   */
+  public ViewMessage createViewMessageFromServer(ViewMessageType type, String[] info) {
+    switch(type) {
       case REGISTER_RESPONSE:
-        //not implemented;
+        return new RegisterResponseMessage(Boolean.parseBoolean(info[0]),
+            Arrays.copyOfRange(info, 1, info.length));
       case LOGIN_RESPONSE:
-        //not implemented;
+        return new LoginResponseMessage(Boolean.parseBoolean(info[0]), info[1]);
       case UNREGISTER_RESPONSE:
-        //not implemented;
+        return new UnregisterResponseMessage(Boolean.parseBoolean(info[0]),
+            Arrays.copyOfRange(info, 1, info.length));
       case SHOW_VALID_MOVES_RESPONSE:
-        //not implemented;
+        return new ViewValidMovesResponse(info);
       case MENU_RESPONSE:
-        //not implemented;
-      */
-    return null;
+        return new MenuMessageResponse(MenuMessageTypes.valueOf(info[0]),
+            Arrays.copyOfRange(info, 1, info.length));
+      default:
+        throw new IllegalArgumentException("The messageType of " + type.name() + " is not valid");
+    }
   }
 }
