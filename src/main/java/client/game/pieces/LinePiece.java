@@ -2,6 +2,7 @@ package client.game.pieces;
 
 import client.Point;
 import java.util.ArrayList;
+import java.util.Collection;
 
 abstract class LinePiece extends Piece {
 
@@ -27,14 +28,21 @@ abstract class LinePiece extends Piece {
     for (int i = 0; i < deltaCol.length; ++i) {
       int col = this.boardLocation.getArrayCol() + deltaCol[i];
       int row = this.boardLocation.getArrayRow() + deltaRow[i];
-      while (row >= 0 && row < 12 && col >= 0 && col < 12 && board[col][row] == null) {
-        result.add(new Point(col, row));
-        row += deltaRow[i];
-        col += deltaCol[i];
-      }
-      if (row >= 0 && row < 12 && col >= 0 && col < 12 && canCapture(board[col][row])) {
-        result.add(new Point(col, row));
-      }
+      result.addAll(subSearch(col, row, deltaCol[i], deltaRow[i], board));
+    }
+    return result;
+  }
+
+  private ArrayList<Point> subSearch(
+      int col, int row, int deltaCol, int deltaRow, Piece[][] board) {
+    ArrayList<Point> result = new ArrayList<>();
+    while (row >= 0 && row < 12 && col >= 0 && col < 12 && board[col][row] == null) {
+      result.add(new Point(col, row));
+      row += deltaRow;
+      col += deltaCol;
+    }
+    if (row >= 0 && row < 12 && col >= 0 && col < 12 && canCapture(board[col][row])) {
+      result.add(new Point(col, row));
     }
     return result;
   }
