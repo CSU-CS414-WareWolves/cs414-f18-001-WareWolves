@@ -7,12 +7,12 @@ import org.junit.jupiter.api.Test;
 public class LoginTest {
 
   private static Login testLogin, testLogin2;
-  private final String testUserString = "1:TestUser:TestPassword";
+  private final String testUserString = "1:testUser@example.com:TestPassword";
 
 	@BeforeAll
 	public static void setup() {
-		testLogin = new Login("TestUser", "TestPassword");
-		testLogin2 = new Login("1:TestUser:TestPassword");
+		testLogin = new Login("testUser@example.com", "TestPassword");
+		testLogin2 = new Login("1:testUser@example.com:TestPassword");
 	}
 
 	@Test

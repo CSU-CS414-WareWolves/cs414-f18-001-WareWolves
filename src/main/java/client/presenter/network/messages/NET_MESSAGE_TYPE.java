@@ -18,7 +18,8 @@ public enum NET_MESSAGE_TYPE {
 	INBOX_REQUEST(15),
 	INBOX_RESPONSE(16),
 	PROFILE_REQUEST(17),
-	PROFILE_RESPONSE(18);
+	PROFILE_RESPONSE(18),
+	PLAYERS(19);
 	
 	/**
 	 * int representation of the NET_MESSAGE_TYPE
@@ -59,6 +60,7 @@ public enum NET_MESSAGE_TYPE {
 			case 16: return NET_MESSAGE_TYPE.INBOX_RESPONSE;
 			case 17: return NET_MESSAGE_TYPE.PROFILE_REQUEST;
 			case 18: return NET_MESSAGE_TYPE.PROFILE_RESPONSE;
+			case 19: return NET_MESSAGE_TYPE.PLAYERS;
 		}
 		return null;
 	}

@@ -70,6 +70,7 @@ public class RecieveThread extends Thread{
 			case INBOX_RESPONSE: message = new InboxResponse(msg);
 			case PROFILE_REQUEST: message = new ProfileRequest(msg);
 			case PROFILE_RESPONSE: message = new ProfileResponse(msg);
+			case PLAYERS:
 		}
 		if(message!=null)
 			mgmt.sendToPresenter(message);

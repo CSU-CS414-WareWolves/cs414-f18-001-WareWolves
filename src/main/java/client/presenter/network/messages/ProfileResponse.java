@@ -8,7 +8,7 @@ public class ProfileResponse extends NetworkMessage {
 	public final String[] blackPlayers;
 	public final String[] startDates;
 	public final String[] endDates;
-	public final boolean[] results;// T=white win, F=black win
+	public final boolean[] results;// T=black win, F=white win,
 	
 	/**
 	 * Constructor for Server response
