@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 public class ActiveGameResponseTest {
 	private static ActiveGameResponse testResponse1, testResponse2;
 	
-	public final String testResponseString = "10:123:RaaQllrbb:testUser:01-01-18:true#1234:QbbqccRdd:testUser2:02-14-18:false";
+	public final String testResponseString = "10:123:RaaQllrbb:testUser:01-01-18:true:true#1234:QbbqccRdd:testUser2:02-14-18:false:false";
 	
 	  @BeforeAll
 	  public static void setup() {
@@ -17,8 +17,9 @@ public class ActiveGameResponseTest {
 		  String[] opponents = {"testUser", "testUser2"};
 		  String[] dates = {"01-01-18", "02-14-18"};
 		  boolean[] turns = {true, false};
-		  testResponse1 = new ActiveGameResponse(gameIDs, gameBoard, opponents, dates, turns);
-		  testResponse2 = new ActiveGameResponse("10:123:RaaQllrbb:testUser:01-01-18:true#1234:QbbqccRdd:testUser2:02-14-18:false");
+		  boolean[] colors = {true, false};
+		  testResponse1 = new ActiveGameResponse(gameIDs, gameBoard, opponents, dates, turns, colors);
+		  testResponse2 = new ActiveGameResponse("10:123:RaaQllrbb:testUser:01-01-18:true:true#1234:QbbqccRdd:testUser2:02-14-18:false:false");
 	  }
 
 	  @Test
