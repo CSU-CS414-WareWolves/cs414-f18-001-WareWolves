@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 
-import client.presenter.Driver;
+import client.gui.swing.SwingChadDriver;
 import client.presenter.network.messages.NetworkMessage;
 
 public class NetworkManager {
 	private Socket sock;
 	private Sender send;
 	private RecieveThread recv;
-	private Driver presenter;
+	private SwingChadDriver presenter;
 	
 	/**
 	 * @constructor
@@ -19,7 +19,7 @@ public class NetworkManager {
 	 * @param port Port that server is listening on
 	 * @throws IOException 
 	 */
-	public NetworkManager(InetAddress addr, int port, Driver presenter) throws IOException {
+	public NetworkManager(InetAddress addr, int port, SwingChadDriver presenter) throws IOException {
 		sock = new Socket(addr, port);
 		send = new Sender(sock);
 		recv = new RecieveThread(sock, this);
