@@ -19,8 +19,7 @@ public class Query {
 	
 	/**
 	 * 
-	 * @param username The player's nickname who is attempting to log in
-	 * @param hashedPass The hash of the password attempt
+	 * @param msg Login message recieved from the server.
 	 * @return True if successful login, false if failed due to nickname or password failure
 	 */
 	public LoginResponse loginCheck(Login msg) {
@@ -112,7 +111,7 @@ public class Query {
 				Statement st = conn.createStatement();
 				try {
 					String query = "INSERT INTO users (nickname, email, hashedPass) VALUES ('"+msg.nickname+"', '"+msg.email+"', '"+msg.password+"');";       
-					st.executeQuery(query);
+					st.executeUpdate(query);
 				} finally { st.close(); }
 			} finally { conn.close(); }
 		} catch (Exception e) {
@@ -170,7 +169,8 @@ public class Query {
 	 * Unregisters a User if all fields of a users profile match their request.
 	 * @param msg Unregister message with fields passed from the server;
 	 */
-	public void unregister(Unregister msg) {
+	public UnregisterResponse unregister(Unregister msg) {
+		UnregisterResponse ret = new UnregisterResponse(false);
 		if(unregisterCheck(msg)) {
 			try	{//Connect to DB 
 				Class.forName(driver); 
@@ -178,15 +178,23 @@ public class Query {
 				try{
 					Statement st = conn.createStatement();
 					try {
-						String query = "DELETE FROM users WHERE nickname = '"+msg.nickname+"';";       
-						st.executeQuery(query);
+						String query = "SELECT * FROM users WHERE nickname = '"+msg.nickname+"' AND email = '"+msg.email+"' AND hashedPass = '"+msg.password+"';";
+						ResultSet rs = st.executeQuery(query);
+						try {
+							if(rs.first()) {
+								query = "DELETE FROM users WHERE nickname = '"+msg.nickname+"';";       
+								st.executeUpdate(query);
+								ret = new UnregisterResponse(true);
+							}
+						} finally { rs.close(); }
 					} finally { st.close(); }
 				} finally { conn.close(); }
 			} catch (Exception e) {
 				System.err.printf("Exception: ");
 				System.err.println(e.getMessage());
 			}
-		}	
+		}
+		return ret;
 	}
 	
 	/**
@@ -230,7 +238,7 @@ public class Query {
 					Statement st = conn.createStatement();
 					try {
 						String query = "INSERT INTO invites (sender, recipient, sendDate) VALUES ('"+inv.sender+"', '"+inv.recipient+"', CURDATE());";       
-						st.executeQuery(query);
+						st.executeUpdate(query);
 					} finally { st.close(); }
 				} finally { conn.close(); }
 			} catch (Exception e) {
@@ -252,7 +260,7 @@ public class Query {
 				Statement st = conn.createStatement();
 				try {
 					String query = "UPDATE invites SET status = "+inv.status+" WHERE inviteID="+inv.inviteID+";";       
-					st.executeQuery(query);
+					st.executeUpdate(query);
 				} finally { st.close(); }
 			} finally { conn.close(); }
 		} catch (Exception e) {
@@ -285,6 +293,7 @@ public class Query {
 					} finally { rs.close(); }
 					query = "INSERT INTO activeGames (whitePlayer, blackPlayer, board, turn, startDate, ended) VALUES"+
 							"('"+white+"', '"+black+"', '"+startingBoard+"', false, CURDATE(), false);";
+					st.executeUpdate(query);
 				} finally { st.close(); }
 			} finally { conn.close(); }
 		} catch (Exception e) {
@@ -316,12 +325,12 @@ public class Query {
 							ArrayList<String> sendDates = new ArrayList<String>();
 							ids.add(rs.getInt("inviteID"));
 							senders.add(rs.getString("sender"));
-							recipients.add(rs.getString("recipients"));
+							recipients.add(rs.getString("recipient"));
 							sendDates.add(rs.getString("sendDate"));
 							while(rs.next()) {
 								ids.add(rs.getInt("inviteID"));
 								senders.add(rs.getString("sender"));
-								recipients.add(rs.getString("recipients"));
+								recipients.add(rs.getString("recipient"));
 								sendDates.add(rs.getString("sendDate"));
 							}
 							String[] Senders = new String[senders.size()];
@@ -341,6 +350,65 @@ public class Query {
 		}
 		return ret;
 	}
+	
+	
+	
+	public String move(Move msg, boolean color) {
+		String ret="";
+		try	{//Connect to DB 
+			Class.forName(driver); 
+			Connection conn = DriverManager.getConnection(theURL, user, pass);	
+			try{
+				Statement st = conn.createStatement();
+				try {
+					String query = "UPDATE activeGames SET board = '"+msg.board+"' WHERE gameID = "+msg.gameID+";";       
+					st.executeUpdate(query);
+					if(msg.ending) {
+						if(color) {
+							if(msg.draw) {
+								query = "UPDATE activeGames SET ended = true, blackSeeResults = true WHERE gameID = "+msg.gameID+";";
+								st.executeUpdate(query);
+							}
+							else {
+								query = "UPDATE activeGames SET ended = true, winner = true, blackSeeResults = true WHERE gameID = "+msg.gameID+";";
+								st.executeUpdate(query);
+							}
+						}
+						else {
+							if(msg.draw) {
+								query = "UPDATE activeGames SET ended = true, whiteSeeResults = true WHERE gameID = "+msg.gameID+";";
+								st.executeUpdate(query);
+							}
+							else {
+								query = "UPDATE activeGames SET ended = true, winner = false, whiteSeeResults = true WHERE gameID = "+msg.gameID+";";
+								st.executeUpdate(query);
+							}
+						}
+					}
+					if(color) {
+						query = "SELET * FROM activeGames WHERE gameID = "+msg.gameID+";";
+						ResultSet rs = st.executeQuery(query);
+						try{//Check if rs is empty
+							ret = rs.getString("whitePlayer");
+						} finally { rs.close(); }
+					}
+					else {
+						query = "SELET * FROM activeGames WHERE gameID = "+msg.gameID+";";
+						ResultSet rs = st.executeQuery(query);
+						try{//Check if rs is empty
+							ret = rs.getString("blackPlayer");
+						} finally { rs.close(); }
+					}
+				} finally { st.close(); }
+			} finally { conn.close(); }
+		} catch (Exception e) {
+			System.err.printf("Exception: ");
+			System.err.println(e.getMessage());
+		}
+		return ret;
+	}
+	
+	
 	
 	/**
 	 * Checks what color a player is in a given game
@@ -386,7 +454,7 @@ public class Query {
 					Statement st = conn.createStatement();
 					try {
 						String query = "UPDATE activeGames SET ended=true, winner=true, whiteSeeResults=true WHERE gameID="+msg.gameID+";";       
-						st.executeQuery(query);
+						st.executeUpdate(query);
 					} finally { st.close(); }
 				} finally { conn.close(); }
 			} catch (Exception e) {
@@ -402,7 +470,7 @@ public class Query {
 					Statement st = conn.createStatement();
 					try {
 						String query = "UPDATE activeGames SET ended=true, winner=false, blackSeeResults=true WHERE gameID="+msg.gameID+";";       
-						st.executeQuery(query);
+						st.executeUpdate(query);
 					} finally { st.close(); }
 				} finally { conn.close(); }
 			} catch (Exception e) {
@@ -571,11 +639,21 @@ public class Query {
 		return ret;
 	}
 	
-	
-	public static void main(String[] args) {
-		Query q = new Query();
-		Login test = new Login("testUser@example.com", "123");
-		q.loginCheck(test);
+	public void testCleanUp() {
+		try	{//Connect to DB 
+			Class.forName(driver); 
+			Connection conn = DriverManager.getConnection(theURL, user, pass);	
+			try{
+				Statement st = conn.createStatement();
+				try {
+					String query = "DELETE FROM users WHERE nickname = 'testUser4';";       
+					st.executeUpdate(query);
+				} finally { st.close(); }
+			} finally { conn.close(); }
+		} catch (Exception e) {
+			System.err.printf("Exception: ");
+			System.err.println(e.getMessage());
+		}
 	}
 	
 }

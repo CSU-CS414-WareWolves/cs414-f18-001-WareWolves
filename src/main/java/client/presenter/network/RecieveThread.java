@@ -52,23 +52,14 @@ public class RecieveThread extends Thread{
 		NET_MESSAGE_TYPE mt = NET_MESSAGE_TYPE.fromInt(Integer.parseInt(msg.split(":")[0]));
 		NetworkMessage message = null;
 		switch(mt) {
-			case LOGIN: message = new Login(msg);
 			case LOGIN_RESPONSE: message = new LoginResponse(msg);
-			case LOGOUT: message = new Logout(msg);
-			case REGISTER: message = new Register(msg);
-			case UNREGISTER: message = new Unregister(msg);
-			case GAME_REQUEST: message = new GameRequest(msg);
 			case GAME_INFO: message = new GameInfo(msg);
 			case MOVE: message = new Move(msg);
-			case ACTIVE_GAMES_REQUEST: message = new ActiveGameRequest(msg);
 			case ACTIVE_GAMES_RESPONSE: message = new ActiveGameResponse(msg);
 			case INVITE_REQUEST: message = new InviteRequest(msg);
 			case INVITE_RESPONSE: message = new InviteResponse(msg);
-			case RESIGN: message = new Resign(msg);
 			case REGISTER_RESPONSE: new RegisterResponse(msg);
-			case INBOX_REQUEST: message = new InboxRequest(msg);
 			case INBOX_RESPONSE: message = new InboxResponse(msg);
-			case PROFILE_REQUEST: message = new ProfileRequest(msg);
 			case PROFILE_RESPONSE: message = new ProfileResponse(msg);
 			case PLAYERS: message = new Players(msg);
 			case UNREGISTER_RESPONSE: new UnregisterResponse(msg);
