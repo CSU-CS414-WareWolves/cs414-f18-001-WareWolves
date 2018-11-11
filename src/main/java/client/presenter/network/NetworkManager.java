@@ -41,9 +41,13 @@ public class NetworkManager {
 	public boolean sendMessage(NetworkMessage msg) {
 		return send.sendToServer(msg);
 	}
-	
+
+  /**
+   *
+   * @param msg The Message object to send
+   */
 	protected void sendToPresenter(NetworkMessage msg) {
-		
+		presenter.handleNetMessage(msg);
 	}
 
 	
