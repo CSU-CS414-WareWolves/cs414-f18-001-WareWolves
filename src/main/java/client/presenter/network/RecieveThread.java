@@ -71,6 +71,7 @@ public class RecieveThread extends Thread{
 			case PROFILE_REQUEST: message = new ProfileRequest(msg);
 			case PROFILE_RESPONSE: message = new ProfileResponse(msg);
 			case PLAYERS: message = new Players(msg);
+			case UNREGISTER_RESPONSE: new UnregisterResponse(msg);
 		}
 		if(message!=null)
 			mgmt.sendToPresenter(message);
