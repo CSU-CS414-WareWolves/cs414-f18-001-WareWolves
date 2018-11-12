@@ -15,7 +15,7 @@ public class Query {
 	private final String pass = "830271534";
 	private static final String startingBoard = "rcCrcDrcErdCkdDrdEreCreDreERhHRhIRhJRiHKiIRiJRjHRjIRjJ";
 	
-	//TODO: Move, end game
+	//TODO: Move game to pastGames
 	
 	/**
 	 * 
@@ -408,7 +408,43 @@ public class Query {
 		return ret;
 	}
 	
+	/**
+	 * Sets results as seen for the given game and color within the passed SeeResults message.
+	 * @param msg The SeeResuls message recieved by the server.
+	 */
+	public void setResults(SeeResults msg) {
+		try	{//Connect to DB 
+			Class.forName(driver); 
+			Connection conn = DriverManager.getConnection(theURL, user, pass);	
+			try{
+				Statement st = conn.createStatement();
+				try {
+					if(msg.color) {
+						String query = "UPDATE activeGames SET blackSeeResults = true WHERE gameID="+msg.gameID+";";       
+						st.executeUpdate(query);
+					}
+					else {
+						String query = "UPDATE activeGames SET whiteSeeResults = true WHERE gameID="+msg.gameID+";";       
+						st.executeUpdate(query);
+					}
+					String query = "SELECT * FROM activeGames WHERE whiteSeeResults = true AND blackSeeResults = true AND gameID="+msg.gameID+";";       
+					ResultSet rs = st.executeQuery(query);
+					try{//Check if rs is empty
+						if(rs.first())
+							changeGameTable(msg.gameID);
+					} finally { rs.close(); }
+				} finally { st.close(); }
+			} finally { conn.close(); }
+		} catch (Exception e) {
+			System.err.printf("Exception: ");
+			System.err.println(e.getMessage());
+		}
+	}
 	
+	//TODO
+	private void changeGameTable(int gameID) {
+		
+	}
 	
 	/**
 	 * Checks what color a player is in a given game
@@ -564,16 +600,20 @@ public class Query {
 		return ret;
 	}
 	
-	//TODO: add ended?
-	
+	/**
+	 * Finds all active games for a given nickname
+	 * @param nickname Nickname of the player to fetch active games for
+	 * @return An ActiveGameResponse for the server to send back to the player's client.
+	 */
 	public ActiveGameResponse getActiveGames(String nickname) {
-		ActiveGameResponse ret = new ActiveGameResponse(new int[] {-1}, new String[] {"-1"}, new String[] {"-1"}, new String[] {"-1"}, new boolean[] {false}, new boolean[] {false});
+		ActiveGameResponse ret = new ActiveGameResponse(new int[] {-1}, new String[] {"-1"}, new String[] {"-1"}, new String[] {"-1"}, new boolean[] {false}, new boolean[] {false}, new boolean[] {false});
 		ArrayList<Integer> gameIDs = new ArrayList<Integer>();
 		ArrayList<String> boards = new ArrayList<String>();
 		ArrayList<String> opponents = new ArrayList<String>();
 		ArrayList<String> startDates = new ArrayList<String>();
 		ArrayList<Boolean> turns = new ArrayList<Boolean>();
 		ArrayList<Boolean> colors = new ArrayList<Boolean>();
+		ArrayList<Boolean> endeds = new ArrayList<Boolean>();
 		try	{//Connect to DB 
 			Class.forName(driver); 
 			Connection conn = DriverManager.getConnection(theURL, user, pass);	
@@ -589,6 +629,7 @@ public class Query {
 							opponents.add(rs.getString("blackPlayer"));
 							startDates.add(rs.getString("startDate"));
 							turns.add(rs.getBoolean("turn"));
+							endeds.add(rs.getBoolean("ended"));
 							while(rs.next()) {
 								gameIDs.add(rs.getInt("gameID"));
 								boards.add(rs.getString("board"));
@@ -596,6 +637,7 @@ public class Query {
 								startDates.add(rs.getString("startDate"));
 								turns.add(rs.getBoolean("turn"));
 								colors.add(false);
+								endeds.add(rs.getBoolean("ended"));
 							}
 						}
 					} finally { rs.close(); }
@@ -608,6 +650,7 @@ public class Query {
 							opponents.add(rs.getString("whitePlayer"));
 							startDates.add(rs.getString("startDate"));
 							turns.add(rs.getBoolean("turn"));
+							endeds.add(rs.getBoolean("ended"));
 							while(rs.next()) {
 								gameIDs.add(rs.getInt("gameID"));
 								boards.add(rs.getString("board"));
@@ -615,6 +658,7 @@ public class Query {
 								startDates.add(rs.getString("startDate"));
 								turns.add(rs.getBoolean("turn"));
 								colors.add(true);
+								endeds.add(rs.getBoolean("ended"));
 							}
 						}
 					} finally { rs.close(); }
@@ -630,12 +674,14 @@ public class Query {
 		String[] dates = new String[startDates.size()];
 		boolean[] turn = new boolean[turns.size()];
 		boolean[] color = new boolean[colors.size()];
+		boolean[] ended = new boolean[endeds.size()];
 		for(int i=0;i<ids.length;i++) {
 			ids[i] = gameIDs.get(i).intValue();
 			turn[i] = turns.get(i).booleanValue();
 			color[i] = colors.get(i).booleanValue();
+			ended[i] = endeds.get(i).booleanValue();
 		}
-		ret = new ActiveGameResponse(ids, boards.toArray(board), opponents.toArray(opponent), startDates.toArray(dates), turn, color);
+		ret = new ActiveGameResponse(ids, boards.toArray(board), opponents.toArray(opponent), startDates.toArray(dates), turn, color, ended);
 		return ret;
 	}
 	

@@ -63,6 +63,7 @@ public class RecieveThread extends Thread{
 			case PROFILE_RESPONSE: message = new ProfileResponse(msg);
 			case PLAYERS: message = new Players(msg);
 			case UNREGISTER_RESPONSE: new UnregisterResponse(msg);
+			default: System.err.println("Could not parse message: "+msg);
 		}
 		if(message!=null)
 			mgmt.sendToPresenter(message);

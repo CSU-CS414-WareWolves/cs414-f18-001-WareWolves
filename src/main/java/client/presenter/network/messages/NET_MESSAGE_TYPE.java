@@ -20,7 +20,8 @@ public enum NET_MESSAGE_TYPE {
 	PROFILE_REQUEST(17),
 	PROFILE_RESPONSE(18),
 	PLAYERS(19),
-	UNREGISTER_RESPONSE(20);
+	UNREGISTER_RESPONSE(20),
+	SEE_RESULTS(21);
 	
 	/**
 	 * int representation of the NET_MESSAGE_TYPE
@@ -63,6 +64,7 @@ public enum NET_MESSAGE_TYPE {
 			case 18: return NET_MESSAGE_TYPE.PROFILE_RESPONSE;
 			case 19: return NET_MESSAGE_TYPE.PLAYERS;
 			case 20: return NET_MESSAGE_TYPE.UNREGISTER_RESPONSE;
+			case 21: return NET_MESSAGE_TYPE.SEE_RESULTS;
 		}
 		return null;
 	}
