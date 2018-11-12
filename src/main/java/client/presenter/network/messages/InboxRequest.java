@@ -1,7 +1,9 @@
 package client.presenter.network.messages;
 
 public class InboxRequest extends NetworkMessage {
-
+	/**
+	 * Nickname of the player who's inbox is being requested
+	 */
 	public final String nickname;
 	
 	/**

@@ -1,8 +1,14 @@
 package client.presenter.network.messages;
 
 public class SeeResults extends NetworkMessage{
+	/**
+	 * ID of the game who's results have been seen.
+	 */
 	public final int gameID;
-	public final boolean color;//T=black, F=white
+	/**
+	 * Color of the player who has seen the results of a game, T=black, F=white.
+	 */
+	public final boolean color;
 	
 	/**
 	 * Constructor for presenter
@@ -18,7 +24,7 @@ public class SeeResults extends NetworkMessage{
 	
 	/**
 	 * Constructor for server.
-	 * @param data 
+	 * @param data DataString representation of the message
 	 */
 	public SeeResults(String data) {
 		super(NET_MESSAGE_TYPE.SEE_RESULTS);

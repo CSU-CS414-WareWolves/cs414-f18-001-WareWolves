@@ -1,9 +1,14 @@
 package client.presenter.network.messages;
 
 public class InviteResponse extends NetworkMessage {
-
+	/**
+	 * ID of the invite being responded to.
+	 */
 	public final int inviteID;
-	public final boolean status;//T=accepted, F=declined or cancelled
+	/**
+	 * Response status to the invite, T=accepted, F=declined or cancelled
+	 */
+	public final boolean status;
 	
 	/**
 	 * Constructor for response

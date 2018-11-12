@@ -1,8 +1,13 @@
 package client.presenter.network.messages;
 
 public class Resign extends NetworkMessage {
-
+	/**
+	 * ID of the game being resigned from
+	 */
 	public final int gameID;
+	/**
+	 * Nickname of the player resigning, logged in player.
+	 */
 	public final String nickname;
 	
 	/**

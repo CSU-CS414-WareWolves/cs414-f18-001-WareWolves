@@ -1,6 +1,9 @@
 package client.presenter.network.messages;
 
 public class UnregisterResponse extends NetworkMessage {
+	/**
+	 * Success status of paired Unregister request
+	 */
 	public final boolean success;
 	
 	/**

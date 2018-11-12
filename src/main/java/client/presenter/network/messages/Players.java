@@ -3,7 +3,9 @@ package client.presenter.network.messages;
 import java.util.Arrays;
 
 public class Players extends NetworkMessage {
-
+	/**
+	 * Array of all the nicknames of players in the database
+	 */
 	public final String[] players;
 	
 	/**

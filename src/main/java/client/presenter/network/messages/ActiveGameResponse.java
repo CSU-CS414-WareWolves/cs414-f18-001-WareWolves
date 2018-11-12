@@ -3,21 +3,45 @@ package client.presenter.network.messages;
 import java.util.Arrays;
 
 public class ActiveGameResponse extends NetworkMessage {
-
+	/**
+	 * GameIDs of active games for the user with the paired ActiveGameRequest.
+	 */
 	public final int[] gameIDs;
+	/**
+	 * String representation of game boards for the active games.
+	 */
 	public final String[] gameBoards;
+	/**
+	 * Nickname of the opponents for the active games.
+	 */
 	public final String[] opponents;
+	/**
+	 * Start dates of the active games.
+	 */
 	public final String[] startDates;
+	/**
+	 * The current turn of the active games.
+	 */
 	public final boolean[] turns;
+	/**
+	 * Color of the requesting player for the active games.
+	 */
 	public final boolean[] color;//F= white, T=black
+	/**
+	 * Whether or not the active game has been ended. If it is, the requesting player has not seen the results yet.
+	 */
 	public final boolean[] ended;
 	
+	
 	/**
-	 * Constructor for the server
-	 * @param gameIDs Arrays of game IDs
-	 * @param gameBoards Array of game boards in string form
-	 * @param opponents Array of opponent nicknames
-	 * @param startDates Array of start dates of the games
+	 * Constructor for the server.
+	 * @param gameIDs Arrays of game IDs.
+	 * @param gameBoards Array of game boards in string form.
+	 * @param opponents Array of opponent nicknames.
+	 * @param startDates Array of start dates of the games.
+	 * @param turns Array representing the turn of the games.
+	 * @param color Array of the requesting players color for the games. 
+	 * @param ended Array of where or not the active games have been ended or not.
 	 */
 	public ActiveGameResponse(int[] gameIDs, String[] gameBoards, String[] opponents, String[] startDates, boolean[] turns, boolean[] color, boolean[] ended) {
 		super(NET_MESSAGE_TYPE.ACTIVE_GAMES_RESPONSE);
@@ -32,8 +56,8 @@ public class ActiveGameResponse extends NetworkMessage {
 	}
 	
 	/**
-	 * Constructor for RecieveThread
-	 * @param data String representation of the message
+	 * Constructor for RecieveThread.
+	 * @param data String representation of the message.
 	 */
 	public ActiveGameResponse(String data) {
 		super(NET_MESSAGE_TYPE.ACTIVE_GAMES_RESPONSE);

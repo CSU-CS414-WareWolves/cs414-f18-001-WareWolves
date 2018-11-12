@@ -1,18 +1,33 @@
 package client.presenter.network.messages;
 
 public class Move extends NetworkMessage {
-
+	/**
+	 * ID of the game that the Move belongs too
+	 */
 	public final int gameID;
+	/**
+	 * String representation of the move
+	 */
 	public final String move;
+	/**
+	 * String representation of the board of the game.
+	 */
 	public final String board;
+	/**
+	 * Boolean representing if the move ends the game or not
+	 */
 	public final boolean ending;
+	/**
+	 * Boolean representing if the move ends the game in a draw
+	 */
 	public final boolean draw;
 	
 	/**
 	 * Constructor for mover
 	 * @param gameID games ID, from game board/presenter
 	 * @param move String representation of the pieces moved
-	 * @param ending True if the move being sent causes the end of the game
+	 * @param ending True if the move being sent causes the end of the game 
+	 * @param draw True if the move being sent causes the game to end in a draw
 	 */
 	public Move(int gameID, String move, String board, boolean ending, boolean draw) {
 		super(NET_MESSAGE_TYPE.MOVE);

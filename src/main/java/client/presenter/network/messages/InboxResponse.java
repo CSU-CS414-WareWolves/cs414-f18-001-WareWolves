@@ -3,10 +3,21 @@ package client.presenter.network.messages;
 import java.util.Arrays;
 
 public class InboxResponse extends NetworkMessage {
-
+	/**
+	 * Array of inviteIDs of the inbox.
+	 */
 	public final int[] inviteIDs;
+	/**
+	 * Array of nicknames of the invites' senders.
+	 */
 	public final String[] senders;
+	/**
+	 * Array of nicknames of the invites' recipients.
+	 */
 	public final String[] recipients;
+	/**
+	 * Array of sendDates of the invites.
+	 */
 	public final String[] sendDates;
 	
 	/**

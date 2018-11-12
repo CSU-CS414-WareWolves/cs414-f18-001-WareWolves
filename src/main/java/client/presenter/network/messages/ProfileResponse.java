@@ -29,7 +29,10 @@ public class ProfileResponse extends NetworkMessage {
 		length = this.getDataString().getBytes().length;
 	}
 	
-	
+	/**
+	 * Constructor for presenter
+	 * @param data String representation of the message
+	 */
 	public ProfileResponse(String data) {
 		super(NET_MESSAGE_TYPE.PROFILE_RESPONSE);
 		String[] recs = data.split("#");

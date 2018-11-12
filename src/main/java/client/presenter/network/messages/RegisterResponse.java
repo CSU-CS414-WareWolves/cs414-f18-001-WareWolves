@@ -1,8 +1,13 @@
 package client.presenter.network.messages;
 
 public class RegisterResponse extends NetworkMessage {
-
+	/**
+	 * Success status of paired registration request
+	 */
 	public final boolean success;
+	/**
+	 * Reason for failed registration, T=nickname was taken, F=email was taken.
+	 */
 	public final boolean reason;//True=nickname taken, False=email taken
 	
 	/**

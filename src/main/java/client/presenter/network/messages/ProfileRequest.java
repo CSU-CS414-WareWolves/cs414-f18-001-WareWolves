@@ -1,7 +1,9 @@
 package client.presenter.network.messages;
 
 public class ProfileRequest extends NetworkMessage {
-
+	/**
+	 * Nickname of the player who's profile is being requested
+	 */
 	public final String nickname;
 	
 	/**

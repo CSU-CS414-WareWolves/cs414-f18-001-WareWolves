@@ -7,8 +7,17 @@ import java.net.Socket;
 import client.presenter.network.messages.*;
 
 public class RecieveThread extends Thread{
+	/**
+	 * A Socket connected to the server
+	 */
 	private Socket sock;
+	/**
+	 * DataInputStream from the socket, recieves from the server
+	 */
 	private DataInputStream din;
+	/**
+	 * NetworkManager in charge of the RecieveThread, used to pass recieved messages up.
+	 */
 	private NetworkManager mgmt;
 	
 	
@@ -56,8 +65,6 @@ public class RecieveThread extends Thread{
 			case GAME_INFO: message = new GameInfo(msg);
 			case MOVE: message = new Move(msg);
 			case ACTIVE_GAMES_RESPONSE: message = new ActiveGameResponse(msg);
-			case INVITE_REQUEST: message = new InviteRequest(msg);
-			case INVITE_RESPONSE: message = new InviteResponse(msg);
 			case REGISTER_RESPONSE: new RegisterResponse(msg);
 			case INBOX_RESPONSE: message = new InboxResponse(msg);
 			case PROFILE_RESPONSE: message = new ProfileResponse(msg);

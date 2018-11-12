@@ -9,18 +9,29 @@ import client.presenter.network.messages.*;
 
 
 public class Query {
+	/**
+	 * Driver for java mysql
+	 */
 	private final String driver = "com.mysql.jdbc.Driver";
+	/**
+	 * URL for the mysql database
+	 */
 	private final String theURL = "jdbc:mysql://129.82.45.59:3306/warewolves";
+	/**
+	 * Username for Ben Goodwin in database
+	 */
 	private final String user = "bcgood";
 	private final String pass = "830271534";
-	private static final String startingBoard = "rcCrcDrcErdCkdDrdEreCreDreERhHRhIRhJRiHKiIRiJRjHRjIRjJ";
+	/**
+	 * String representation of the starting board of a Chad game.
+	 */
+	private final String startingBoard = "rcCrcDrcErdCkdDrdEreCreDreERhHRhIRhJRiHKiIRiJRjHRjIRjJ";
 	
-	//TODO: Move game to pastGames
 	
 	/**
-	 * 
+	 * Check a login request and craft response to it.
 	 * @param msg Login message recieved from the server.
-	 * @return True if successful login, false if failed due to nickname or password failure
+	 * @return LoginResponse message for the given Login request message.
 	 */
 	public LoginResponse loginCheck(Login msg) {
 		LoginResponse ret = new LoginResponse(false, "undefined");
@@ -441,9 +452,27 @@ public class Query {
 		}
 	}
 	
-	//TODO
+	/**
+	 * Move a completed game from activeGames to pastGames
+	 * @param gameID ID of the game to move from active to past games.
+	 */
 	private void changeGameTable(int gameID) {
-		
+		try	{//Connect to DB 
+			Class.forName(driver); 
+			Connection conn = DriverManager.getConnection(theURL, user, pass);	
+			try{
+				Statement st = conn.createStatement();
+				try {
+					String query = "INSERT INTO pastGames (whitePlayer, blackPlayer, startDate, endDate, winner) SELECT whitePlayer, blackPlayer, startDate, CURDATE(), winner FROM activeGames WHERE gameID = "+gameID+";";     
+					st.executeUpdate(query);
+					query = "DELETE FROM activeGames WHERE gameID = "+gameID+";";
+					st.executeUpdate(query);
+				} finally { st.close(); }
+			} finally { conn.close(); }
+		} catch (Exception e) {
+			System.err.printf("Exception: ");
+			System.err.println(e.getMessage());
+		}
 	}
 	
 	/**

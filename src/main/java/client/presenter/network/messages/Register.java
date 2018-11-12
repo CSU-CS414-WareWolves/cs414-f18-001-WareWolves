@@ -1,8 +1,17 @@
 package client.presenter.network.messages;
 
 public class Register extends NetworkMessage{
+	/**
+	 * Email of attempted registration
+	 */
 	public final String email;
+	/**
+	 * Email of attempted registration
+	 */
 	public final String nickname;
+	/**
+	 * Hash of password for attempted registration
+	 */
 	public final String password;
 	
 	/**

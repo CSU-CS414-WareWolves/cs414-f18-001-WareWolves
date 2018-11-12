@@ -1,7 +1,9 @@
 package client.presenter.network.messages;
 
 public class ActiveGameRequest extends NetworkMessage {
-
+	/**
+	 * Nickname of the player who's active games are being requested
+	 */
 	public final String nickname;
 	
 	/**
