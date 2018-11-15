@@ -67,7 +67,7 @@ public class CLDriver {
   public ViewMessage handleLoginMenu() throws NoSuchAlgorithmException {
     String email = "";
     String pass = "";
-    
+
     int option = 0;
 
     while(true) {
@@ -195,25 +195,11 @@ public class CLDriver {
    * (@param ultimately needs the list of requests in order to print them out
    * @return int back to main menu
    */
-  public int handleInbox(){
-    //-------for quick testing purposes
-    ArrayList<String> L = new ArrayList<String>();
-    L.add("n00b1");
-    L.add("DecentRival");
-    //-------
-
+  public MenuMessage handleInbox(){
     //Show the invites
-    this.getMenu().viewInvites(L);
+//    this.getMenu().viewInvites(L);
 
-    int opt = -1;
-    while(opt==-1){
-      //Request option
-      opt = this.keys.nextInt();
-    }
-    System.out.println("Accepted invite: "+opt);
-
-
-    return 0;
+    return new MenuMessage(MenuMessageTypes.INVITES, null);
   }
 
   /**
