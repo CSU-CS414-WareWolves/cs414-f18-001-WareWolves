@@ -47,8 +47,6 @@ class CLDriverTest {
 
   @Test
   void handleLoginMenu() {
-    int i = driver.handleLoginMenu(3);
-    Assert.assertTrue(i==1979);
   }
 
   @Test
