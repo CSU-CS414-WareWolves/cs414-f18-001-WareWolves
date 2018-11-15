@@ -206,23 +206,24 @@ public class CLDriver {
    * Handle outbox interactions
    * @return int back to main menu
    */
-  public int handleOutbox(){
-    while(true) {
-      this.clearScreen();
-      System.out.println("+++ Invite A Player +++");
-
-      this.getMenu().requestUsername();
-      String rival = "";
-      while (rival.equals("")) {
-        rival = this.keys.nextLine();
-      }
-      if(rival.toUpperCase().equals("EXIT")){
-        System.out.println("Returning to Main Menu...");
-        return 0;
-      }
-      //Look for rival in database and send challenge
-      System.out.println("Sending challenge to: \"" + rival + "\"");
-    }
+  public MenuMessage handleOutbox(){
+    return new MenuMessage(MenuMessageTypes.SEND_INVITE, null);
+//    while(true) {
+//      this.clearScreen();
+//      System.out.println("+++ Invite A Player +++");
+//
+//      this.getMenu().requestUsername();
+//      String rival = "";
+//      while (rival.equals("")) {
+//        rival = this.keys.nextLine();
+//      }
+//      if(rival.toUpperCase().equals("EXIT")){
+//        System.out.println("Returning to Main Menu...");
+//        return 0;
+//      }
+//      //Look for rival in database and send challenge
+//      System.out.println("Sending challenge to: \"" + rival + "\"");
+//    }
   }
 
   public ViewMessage handleMenu(){
