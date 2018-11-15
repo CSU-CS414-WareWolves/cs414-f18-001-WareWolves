@@ -1,6 +1,16 @@
 package client.gui.cl;
 
+import static java.lang.System.exit;
+
 import client.game.GameBoard;
+import client.presenter.controller.MenuMessageTypes;
+import client.presenter.controller.messages.LoginMessage;
+import client.presenter.controller.messages.MenuMessage;
+import client.presenter.controller.messages.RegisterMessage;
+import client.presenter.controller.messages.UnregisterMessage;
+import client.presenter.controller.messages.ViewMessage;
+import client.presenter.network.messages.Logout;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -52,41 +62,46 @@ public class CLDriver {
 
   /**
    * Handle login menu interactions
-   * @param option the option chosen by the user
-   * @return the option that was chosen
+   * @return a new LoginMessage object
    */
-  public int handleLoginMenu(int option){
-    //----Temporary, remove once Presenter implemented with CL
-    String user = "";
+  public ViewMessage handleLoginMenu() throws NoSuchAlgorithmException {
+    String email = "";
     String pass = "";
-    String aU = "admin";
-    String aP = "password";
-    //----------
+    
+    int option = 0;
 
-    switch (option){
-      case 1:
-        System.out.println("Username: ");
-        while(user.equals("")) {
-          user = this.keys.nextLine();
-        }
-        System.out.println("Password: ");
-        pass = this.keys.nextLine();
-        if(!(user.equals(aU) && pass.equals(aP))){
-          System.out.println("[!] Username does not exist/Password is incorrect");
-          return 1979;
-        }
-        else
-          return 0;
-        // Jump to main menu
-      case 2:
-        System.out.println("Registered!");
-        return 0;
-      case 3:
-        System.out.println("Good bye!");
-        return 1979;
-      default:
-        System.out.println("Please enter a valid option");
-        return 0;
+    while(true) {
+      option = keys.nextInt();
+
+      switch (option) {
+        case 1:
+          System.out.println("Enter e-mail:");
+          email = keys.nextLine();
+
+          System.out.println("Enter password:");
+          pass = keys.nextLine();
+
+          return new LoginMessage(email, pass);
+        case 2:
+          System.out.println("Enter e-mail:");
+          email = keys.nextLine();
+
+          System.out.println("Enter nickname:");
+          String nick = keys.nextLine();
+
+          System.out.println("Enter password:");
+          pass = keys.nextLine();
+
+          return new RegisterMessage(email, pass, nick);
+        case 3:
+          System.out.println();
+          exit(0);
+        default:
+          System.out.println("[!] Please enter a valid option.");
+          clearScreen();
+          login.showLogin();
+          break;
+      }
     }
   }
 
@@ -224,65 +239,69 @@ public class CLDriver {
     }
   }
 
+  public ViewMessage handleMenu(){
+    int option = 0;
+    while(true) {
+      option = keys.nextInt();
+
+      switch (option) {
+        case 1:
+          return handleGame();
+        case 2:
+          return handleInbox();
+        case 3:
+          return handleOutbox();
+        case 4:
+          menu.requestUsername();
+          menu.showStats();
+          break;
+        case 5:
+          menu.unregisterUser();
+          int unreg = keys.nextInt();
+          if (unreg == 0) {
+            return new MenuMessage(MenuMessageTypes.LOGOUT, null);
+          } else {
+            option = 1;
+            break;
+          }
+        case 6:
+          System.out.println("[!] Hope to see you again soon!");
+          //needs current player's nickname
+          return new MenuMessage(MenuMessageTypes.LOGOUT, null);
+        default:
+          clearScreen();
+          System.out.println("[!] Please enter a valid option.\n");
+          menu.showMenu();
+          break;
+      }
+    }
+  }
+
   /** Runs and handles the Driver for the command line
    *
    */
-  public void runView(){
-    int option;
-    int transition = 7;
-
-    while(transition != 1979) {
-      option = 0;
-      this.clearScreen();
-      //-------for quick testing purposes
-      String[] G = {"theGameMASTER", "n00b1"};
-      //-------
-
-      switch(transition){
-        case 0:
-          this.getMenu().showMenu();
-          transition = this.keys.nextInt();
-          break;
-        case 1:
-          this.getGame().showCurrentGames(G);
-          while(option <= 0 || option > G.length) {
-            option = this.keys.nextInt();
-          }
-          //String s = G[opt].getGameboard()
-          System.out.println("Loading game against player \""+G[option-1]+"\"...");
-          //Pass this string s eventually
-          transition = this.handleGame();
-          break;
-        case 2:
-          transition = this.handleInbox();
-          break;
-        case 3:
-          transition = this.handleOutbox();
-          break;
-        case 4:
-          //@TODO
-          // Receive input for profile
-          this.getMenu().requestUsername();
-          this.getMenu().showStats("admin",10,7,2,1);
-          transition = 0;
-          break;
-        case 5:
-          this.getMenu().unregisterUser();
-          transition = 0;
-          break;
-        case 6:
-          transition = 7;
-          System.out.println("Logging off...!");
-          break;
-        case 7:
-          login.showLogin();
-          option = this.keys.nextInt();
-          transition = this.handleLoginMenu(option);
-          break;
-        default:
-          transition = 0;
-          break;
-      }
+  public ViewMessage runCLView(int transition) throws NoSuchAlgorithmException{
+    switch (transition) {
+      case 0:
+        login.showSplash();
+        login.showLogin();
+        return handleLoginMenu();
+      case 1:
+        menu.showMenu();
+        return handleMenu();
+      case 2:
+        return handleGame();
+      case 3:
+        return handleInbox();
+      case 4:
+        return handleOutbox();
+        break;
+      case 8:
+        break;
+      default:
+        System.out.println("[!] Please select a valid option.");
+        transition = 1;
+        break;
     }
   }
 
@@ -297,6 +316,11 @@ public class CLDriver {
 
     login.showSplash();
     driver.clearScreen();
-    driver.runView();
+
+    try {
+      driver.runCLView(0);
+    } catch (NoSuchAlgorithmException e) {
+      e.printStackTrace();
+    }
   }
 }
