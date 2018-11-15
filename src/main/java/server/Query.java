@@ -493,8 +493,7 @@ public class Query {
 					ResultSet rs = st.executeQuery(query);
 					try{//Check if rs is empty
 						rs.first();
-						String white = rs.getString("whitePlayer");
-						if(nickname.equalsIgnoreCase(white))
+						if(nickname.equalsIgnoreCase(rs.getString("whitePlayer")))
 							ret = true;
 					} finally { rs.close(); }
 				} finally { st.close(); }
