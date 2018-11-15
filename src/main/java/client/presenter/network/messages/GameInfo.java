@@ -1,9 +1,17 @@
 package client.presenter.network.messages;
 
 public class GameInfo extends NetworkMessage {
-
+	/**
+	 * ID of the game who's information is stored in the message
+	 */
 	public final int gameID;
+	/**
+	 * String representation of the gameBoard
+	 */
 	public final String gameBoard;
+	/**
+	 * Turn of the game.
+	 */
 	public final boolean turn;
 	
 	/**

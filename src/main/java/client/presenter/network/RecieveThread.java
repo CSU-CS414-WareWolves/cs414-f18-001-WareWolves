@@ -7,8 +7,17 @@ import java.net.Socket;
 import client.presenter.network.messages.*;
 
 public class RecieveThread extends Thread{
+	/**
+	 * A Socket connected to the server
+	 */
 	private Socket sock;
+	/**
+	 * DataInputStream from the socket, recieves from the server
+	 */
 	private DataInputStream din;
+	/**
+	 * NetworkManager in charge of the RecieveThread, used to pass recieved messages up.
+	 */
 	private NetworkManager mgmt;
 	
 	
@@ -52,22 +61,16 @@ public class RecieveThread extends Thread{
 		NET_MESSAGE_TYPE mt = NET_MESSAGE_TYPE.fromInt(Integer.parseInt(msg.split(":")[0]));
 		NetworkMessage message = null;
 		switch(mt) {
-			case LOGIN: message = new Login(msg);
 			case LOGIN_RESPONSE: message = new LoginResponse(msg);
-			case LOGOUT: message = new Logout(msg);
-			case REGISTER: message = new Register(msg);
-			case UNREGISTER: message = new Unregister(msg);
-			case GAME_REQUEST: message = new GameRequest(msg);
 			case GAME_INFO: message = new GameInfo(msg);
 			case MOVE: message = new Move(msg);
-			case ACTIVE_GAMES_REQUEST: message = new ActiveGameRequest(msg);
 			case ACTIVE_GAMES_RESPONSE: message = new ActiveGameResponse(msg);
-			case INVITE_REQUEST: message = new InviteRequest(msg);
-			case INVITE_RESPONSE: message = new InviteResponse(msg);
-			case RESIGN: message = new Resign(msg);
 			case REGISTER_RESPONSE: new RegisterResponse(msg);
-			case INBOX_REQUEST: message = new InboxRequest(msg);
-			case INBOX_RESPONSE:
+			case INBOX_RESPONSE: message = new InboxResponse(msg);
+			case PROFILE_RESPONSE: message = new ProfileResponse(msg);
+			case PLAYERS: message = new Players(msg);
+			case UNREGISTER_RESPONSE: new UnregisterResponse(msg);
+			default: System.err.println("Could not parse message: "+msg);
 		}
 		if(message!=null)
 			mgmt.sendToPresenter(message);

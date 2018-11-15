@@ -1,8 +1,13 @@
 package client.presenter.network.messages;
 
 public class InviteRequest extends NetworkMessage {
-
+	/**
+	 * Nickname of the player sending the invite, creator of the invite.
+	 */
 	public final String sender;
+	/**
+	 * Nickname of the recipient of the invite.
+	 */
 	public final String recipient;
 	
 	/**
