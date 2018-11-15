@@ -7,11 +7,8 @@ import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.RegisterMessage;
-import client.presenter.controller.messages.UnregisterMessage;
 import client.presenter.controller.messages.ViewMessage;
-import client.presenter.network.messages.Logout;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class CLDriver {
@@ -105,78 +102,107 @@ public class CLDriver {
     }
   }
 
+  public ViewMessage handleMenu(){
+    int option = 0;
+    while(true) {
+      option = keys.nextInt();
+
+      switch (option) {
+        case 1:
+          return handleGame();
+        case 2:
+          return handleInbox();
+        case 3:
+          return handleOutbox();
+        case 4:
+          menu.requestUsername();
+          return new MenuMessage(MenuMessageTypes.PLAYER_STATS,null);
+        case 5:
+          menu.unregisterUser();
+          int unreg = keys.nextInt();
+          if (unreg == 0) {
+            return new MenuMessage(MenuMessageTypes.LOGOUT, null);
+          } else {
+            option = 1;
+            break;
+          }
+        case 6:
+          System.out.println("[!] Hope to see you again soon!");
+          //needs current player's nickname
+          return new MenuMessage(MenuMessageTypes.LOGOUT, null);
+        default:
+          clearScreen();
+          System.out.println("[!] Please enter a valid option.\n");
+          menu.showMenu();
+          break;
+      }
+    }
+  }
+
   /**
    * Handle in-game interactions
    * @return int back to main menu
    */
-  public int handleGame(){
-    //-------create temp array for quick tests-------
-    ArrayList<String> moves = new ArrayList<String>();
-    moves.add("D4");
-    moves.add("C3");
-    //--------------
-    int opt = 1;
-    String piece = "";
-    String move = "";
-    boolean turn = true;
-    // Have some sort of check to make sure
-    // the player can't make a move unless
-    // it's their turn.
-    if(!turn){
-      opt = 5;
-      System.out.println("[!] Your opponent has not made their move yet.");
-    }
-    while(opt!=0 && turn){
-      switch(opt){
-        case 1:
-          /** BOARD **/
-          this.showGame();
-          String input = "";
-          while(input.equals("")) {
-            input = this.keys.nextLine();
-            if(input.toUpperCase().equals("MOVE")){
-              opt = 2;
-            }
-            else if(input.toUpperCase().equals("EXIT")){
-              opt = 3;
-            }else if(input.toUpperCase().equals("FORFEIT")){
-              opt = 4;
-            }
-            else{
-              System.out.println("Please enter a valid option.");
-            }
-          }
-          break;
-        case 2:
-          /** MOVE **/
-          this.showGame();
-          System.out.println("Select a piece (format: D4): ");
-          while(piece.equals("")) {
-            piece = this.keys.nextLine();
-          }
-          System.out.println("Enter a valid move (format: L4): ");
-          move = this.keys.nextLine();
-          // Move is applied and sent to other player
-          // swap turns
-          System.out.println("Submitting move: { "+piece+" -> "+move+" }");
-          opt = 0;
-          turn = false;
-          // reprint board with move applied
-          break;
-        case 3:
-          /** EXIT **/
-          System.out.println("Leaving game...");
-          opt = 0;
-          break;
-        case 4:
-          /** FORFEIT **/
-          System.out.println("Forfeiting game...");
-          System.out.println("Good luck next time!");
-          opt = 0;
-          break;
-      }
-    }
-    return 0;
+  public MenuMessage handleGame(){
+    return new MenuMessage(MenuMessageTypes.SELECT_GAME, null);
+//    int opt = 1;
+//    String piece = "";
+//    String move = "";
+//    boolean turn = true;
+//    if(!turn){
+//      opt = 5;
+//      System.out.println("[!] Your opponent has not made their move yet.");
+//    }
+//    while(opt!=0 && turn){
+//      switch(opt){
+//        case 1:
+//          /** BOARD **/
+//          this.showGame();
+//          String input = "";
+//          while(input.equals("")) {
+//            input = this.keys.nextLine();
+//            if(input.toUpperCase().equals("MOVE")){
+//              opt = 2;
+//            }
+//            else if(input.toUpperCase().equals("EXIT")){
+//              opt = 3;
+//            }else if(input.toUpperCase().equals("FORFEIT")){
+//              opt = 4;
+//            }
+//            else{
+//              System.out.println("Please enter a valid option.");
+//            }
+//          }
+//          break;
+//        case 2:
+//          /** MOVE **/
+//          this.showGame();
+//          System.out.println("Select a piece (format: D4): ");
+//          while(piece.equals("")) {
+//            piece = this.keys.nextLine();
+//          }
+//          System.out.println("Enter a valid move (format: L4): ");
+//          move = this.keys.nextLine();
+//          // Move is applied and sent to other player
+//          // swap turns
+//          System.out.println("Submitting move: { "+piece+" -> "+move+" }");
+//          opt = 0;
+//          turn = false;
+//          // reprint board with move applied
+//          break;
+//        case 3:
+//          /** EXIT **/
+//          System.out.println("Leaving game...");
+//          opt = 0;
+//          break;
+//        case 4:
+//          /** FORFEIT **/
+//          System.out.println("Forfeiting game...");
+//          System.out.println("Good luck next time!");
+//          opt = 0;
+//          break;
+//      }
+//    }
   }
 
 
@@ -226,72 +252,6 @@ public class CLDriver {
 //    }
   }
 
-  public ViewMessage handleMenu(){
-    int option = 0;
-    while(true) {
-      option = keys.nextInt();
-
-      switch (option) {
-        case 1:
-          return handleGame();
-        case 2:
-          return handleInbox();
-        case 3:
-          return handleOutbox();
-        case 4:
-          menu.requestUsername();
-          menu.showStats();
-          break;
-        case 5:
-          menu.unregisterUser();
-          int unreg = keys.nextInt();
-          if (unreg == 0) {
-            return new MenuMessage(MenuMessageTypes.LOGOUT, null);
-          } else {
-            option = 1;
-            break;
-          }
-        case 6:
-          System.out.println("[!] Hope to see you again soon!");
-          //needs current player's nickname
-          return new MenuMessage(MenuMessageTypes.LOGOUT, null);
-        default:
-          clearScreen();
-          System.out.println("[!] Please enter a valid option.\n");
-          menu.showMenu();
-          break;
-      }
-    }
-  }
-
-  /** Runs and handles the Driver for the command line
-   *
-   */
-  public ViewMessage runCLView(int transition) throws NoSuchAlgorithmException{
-    switch (transition) {
-      case 0:
-        login.showSplash();
-        login.showLogin();
-        return handleLoginMenu();
-      case 1:
-        menu.showMenu();
-        return handleMenu();
-      case 2:
-        return handleGame();
-      case 3:
-        return handleInbox();
-      case 4:
-        return handleOutbox();
-        break;
-      case 8:
-        break;
-      default:
-        System.out.println("[!] Please select a valid option.");
-        transition = 1;
-        break;
-    }
-  }
-
   //@TODO
   // Remove testing ArrayLists from methods
   public static void main(String[] args) {
@@ -303,11 +263,5 @@ public class CLDriver {
 
     login.showSplash();
     driver.clearScreen();
-
-    try {
-      driver.runCLView(0);
-    } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
-    }
   }
 }
