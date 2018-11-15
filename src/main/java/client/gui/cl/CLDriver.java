@@ -234,22 +234,6 @@ public class CLDriver {
    */
   public MenuMessage handleOutbox(){
     return new MenuMessage(MenuMessageTypes.SEND_INVITE, null);
-//    while(true) {
-//      this.clearScreen();
-//      System.out.println("+++ Invite A Player +++");
-//
-//      this.getMenu().requestUsername();
-//      String rival = "";
-//      while (rival.equals("")) {
-//        rival = this.keys.nextLine();
-//      }
-//      if(rival.toUpperCase().equals("EXIT")){
-//        System.out.println("Returning to Main Menu...");
-//        return 0;
-//      }
-//      //Look for rival in database and send challenge
-//      System.out.println("Sending challenge to: \"" + rival + "\"");
-//    }
   }
 
   //@TODO
@@ -263,5 +247,13 @@ public class CLDriver {
 
     login.showSplash();
     driver.clearScreen();
+
+    try {
+      driver.handleLoginMenu();
+    } catch (NoSuchAlgorithmException e) {
+      e.printStackTrace();
+    }
+
+    driver.handleMenu();
   }
 }
