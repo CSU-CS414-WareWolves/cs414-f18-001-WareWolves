@@ -2,6 +2,9 @@ package client.gui.cl;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import client.presenter.controller.messages.LoginMessage;
+import client.presenter.controller.messages.ViewMessage;
+import java.security.NoSuchAlgorithmException;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,6 +50,12 @@ class CLDriverTest {
 
   @Test
   void handleLoginMenu() {
+    try {
+      ViewMessage check = driver.handleLoginMenu();
+      assertTrue(check instanceof LoginMessage);
+    } catch (NoSuchAlgorithmException e) {
+      e.printStackTrace();
+    }
   }
 
   @Test
