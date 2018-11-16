@@ -62,12 +62,11 @@ public class CLDriver {
    * @return a new LoginMessage object
    */
   public ViewMessage handleLoginMenu() throws NoSuchAlgorithmException {
-    String email = "";
-    String pass = "";
-
-    int option = 0;
+    String email, pass;
+    int option;
 
     while(true) {
+      login.showLogin();
       option = keys.nextInt();
 
       switch (option) {
