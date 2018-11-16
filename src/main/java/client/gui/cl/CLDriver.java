@@ -90,7 +90,7 @@ public class CLDriver {
 
           return new RegisterMessage(email, pass, nick);
         case 3:
-          System.out.println();
+          System.out.println("[!] Good bye!");
           exit(0);
         default:
           System.out.println("[!] Please enter a valid option.");
@@ -101,33 +101,39 @@ public class CLDriver {
     }
   }
 
-  public ViewMessage handleMenu(){
+  public ViewMessage handleMenu(String nickname){
+    String[] info = {nickname};
     int option = 0;
     while(true) {
       option = keys.nextInt();
 
       switch (option) {
         case 1:
-          return handleGame();
+          //Resume game
+          return new MenuMessage(MenuMessageTypes.ACTIVE_GAMES, info);
         case 2:
-          return handleInbox();
+          //View Inbox
+          return new MenuMessage(MenuMessageTypes.INVITES, info);
         case 3:
-          return handleOutbox();
+          //Send outbox
+          return new MenuMessage(MenuMessageTypes.SEND_INVITE, info);
         case 4:
+          //View Stats
           menu.requestUsername();
-          return new MenuMessage(MenuMessageTypes.PLAYER_STATS,null);
+          return new MenuMessage(MenuMessageTypes.PLAYER_STATS, info);
         case 5:
+          //Unregister
           menu.unregisterUser();
           int unreg = keys.nextInt();
           if (unreg == 0) {
-            return new MenuMessage(MenuMessageTypes.LOGOUT, null);
+            return new MenuMessage(MenuMessageTypes.LOGOUT, info);
           } else {
             option = 1;
             break;
           }
         case 6:
+          //Logout
           System.out.println("[!] Hope to see you again soon!");
-          //needs current player's nickname
           return new MenuMessage(MenuMessageTypes.LOGOUT, null);
         default:
           clearScreen();
@@ -235,8 +241,6 @@ public class CLDriver {
     return new MenuMessage(MenuMessageTypes.SEND_INVITE, null);
   }
 
-  //@TODO
-  // Remove testing ArrayLists from methods
   public static void main(String[] args) {
     CLLogin login = new CLLogin();
     CLMenu menu = new CLMenu();
@@ -246,13 +250,5 @@ public class CLDriver {
 
     login.showSplash();
     driver.clearScreen();
-
-    try {
-      driver.handleLoginMenu();
-    } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
-    }
-
-    driver.handleMenu();
   }
 }
