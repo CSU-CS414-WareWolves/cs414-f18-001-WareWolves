@@ -172,19 +172,28 @@ public class CLDriver {
     return new MenuMessage(MenuMessageTypes.SELECT_GAME, info);
   }
 
-  public MenuMessage handleInGame(ViewMessage message){
-    System.out.println("[!] Not implemented");
-    return new MenuMessage(null, null);
+  
+
+  /**
+   * Handles the in-game menu interactions
+   * @param gb The GameBoard object representing the current users selected game
+   * @return the option chosen for the in-game menu
+   */
+  public int handleInGame(GameBoard gb){
+    //Show the in-game screen
+    showGame(gb);
+    int option = keys.nextInt();
+    return option;
   }
 
   /**
    * Helper method to show in-game view.
-   * (returns nothing but a nice view)
+   * (returns nothing but prints a nice view)
    */
   public void showGame(GameBoard gb){
-    this.clearScreen();
-    this.game.showGameBoard(gb);
-    this.game.showInGameMenu();
+    clearScreen();
+    game.showGameBoard(gb);
+    game.showInGameMenu();
   }
 
   /**
@@ -192,7 +201,7 @@ public class CLDriver {
    * @param mail array of String that are game invites for the user
    */
   public void handleInbox(String[]  mail){
-    this.getMenu().viewInvites(mail);
+    menu.viewInvites(mail);
     return;
   }
 
