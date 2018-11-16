@@ -63,42 +63,48 @@ public class CLDriver {
    * @return a new LoginMessage object
    */
   public ViewMessage handleLoginMenu() throws NoSuchAlgorithmException {
-    String email, pass;
     int option;
 
     while(true) {
       login.showLogin();
       option = keys.nextInt();
 
-      switch (option) {
-        case 1:
-          System.out.println("Enter e-mail:");
-          email = keys.nextLine();
+      ViewMessage res = handleLoginHelper(option);
+      if (res != null)
+        return res;
+    }
+  }
 
-          System.out.println("Enter password:");
-          pass = keys.nextLine();
+  private ViewMessage handleLoginHelper(int option) throws NoSuchAlgorithmException {
+    String email;
+    String pass;
+    switch (option) {
+      case 1:
+        System.out.println("Enter e-mail:");
+        email = keys.nextLine();
 
-          return new LoginMessage(email, pass);
-        case 2:
-          System.out.println("Enter e-mail:");
-          email = keys.nextLine();
+        System.out.println("Enter password:");
+        pass = keys.nextLine();
 
-          System.out.println("Enter nickname:");
-          String nick = keys.nextLine();
+        return new LoginMessage(email, pass);
+      case 2:
+        clearScreen();
+        System.out.println("Welcome to Chad Chess!\n Please enter a valid e-mail:");
+        email = keys.nextLine();
 
-          System.out.println("Enter password:");
-          pass = keys.nextLine();
+        System.out.println("Enter a unique nickname:");
+        String nick = keys.nextLine();
 
-          return new RegisterMessage(email, pass, nick);
-        case 3:
-          System.out.println("[!] Good bye!");
-          exit(0);
-        default:
-          System.out.println("[!] Please enter a valid option.");
-          clearScreen();
-          login.showLogin();
-          break;
-      }
+        System.out.println("Enter a strong password:");
+        pass = keys.nextLine();
+
+        return new RegisterMessage(email, pass, nick);
+      case 3:
+        System.out.println("[!] Good bye!");
+        exit(0);
+      default:
+        System.out.println("[!] Please enter a valid option.");
+        return null;
     }
   }
 
@@ -239,7 +245,7 @@ public class CLDriver {
     menu.requestUsername();
     String[] info = new String[1];
     info[0] = keys.nextLine();
-
+    System.out.println("Invite sent to: " + info[0]);
     return new MenuMessage(MenuMessageTypes.SEND_INVITE, info);
   }
 
@@ -252,5 +258,11 @@ public class CLDriver {
 
     login.showSplash();
     driver.clearScreen();
+
+    try {
+      driver.handleLoginMenu();
+    } catch (NoSuchAlgorithmException e) {
+      e.printStackTrace();
+    }
   }
 }
