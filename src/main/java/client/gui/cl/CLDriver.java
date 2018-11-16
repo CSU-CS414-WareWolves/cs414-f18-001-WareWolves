@@ -8,6 +8,7 @@ import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.ViewMessage;
+import client.presenter.controller.messages.ViewValidMovesResponse;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -117,7 +118,10 @@ public class CLDriver {
       switch (option) {
         case 1:
           //Resume game
-          return new MenuMessage(MenuMessageTypes.ACTIVE_GAMES, info);
+          //@TODO: 11/16/2018 - get the activeGames somehow and then handle em
+          MenuMessage activeGames = new MenuMessage(null, null);
+          return handleActiveGames(activeGames);
+          //After returning the chose, Presenter should call driver.handleInGame() run the game
         case 2:
           //View Inbox
           return new MenuMessage(MenuMessageTypes.INVITES, info);
@@ -152,71 +156,26 @@ public class CLDriver {
   }
 
   /**
-   * Handle in-game interactions
-   * @return int back to main menu
+   * Handle active game screen
+   * @param games MenuMessage containing the active games of the user
+   *        games.information should contain the nicknames from the active games
+   * @return MenuMessage object with
    */
-  public MenuMessage handleGame(){
-    return new MenuMessage(MenuMessageTypes.SELECT_GAME, null);
-//    int opt = 1;
-//    String piece = "";
-//    String move = "";
-//    boolean turn = true;
-//    if(!turn){
-//      opt = 5;
-//      System.out.println("[!] Your opponent has not made their move yet.");
-//    }
-//    while(opt!=0 && turn){
-//      switch(opt){
-//        case 1:
-//          /** BOARD **/
-//          this.showGame();
-//          String input = "";
-//          while(input.equals("")) {
-//            input = this.keys.nextLine();
-//            if(input.toUpperCase().equals("MOVE")){
-//              opt = 2;
-//            }
-//            else if(input.toUpperCase().equals("EXIT")){
-//              opt = 3;
-//            }else if(input.toUpperCase().equals("FORFEIT")){
-//              opt = 4;
-//            }
-//            else{
-//              System.out.println("Please enter a valid option.");
-//            }
-//          }
-//          break;
-//        case 2:
-//          /** MOVE **/
-//          this.showGame();
-//          System.out.println("Select a piece (format: D4): ");
-//          while(piece.equals("")) {
-//            piece = this.keys.nextLine();
-//          }
-//          System.out.println("Enter a valid move (format: L4): ");
-//          move = this.keys.nextLine();
-//          // Move is applied and sent to other player
-//          // swap turns
-//          System.out.println("Submitting move: { "+piece+" -> "+move+" }");
-//          opt = 0;
-//          turn = false;
-//          // reprint board with move applied
-//          break;
-//        case 3:
-//          /** EXIT **/
-//          System.out.println("Leaving game...");
-//          opt = 0;
-//          break;
-//        case 4:
-//          /** FORFEIT **/
-//          System.out.println("Forfeiting game...");
-//          System.out.println("Good luck next time!");
-//          opt = 0;
-//          break;
-//      }
-//    }
+  public MenuMessage handleActiveGames(MenuMessage games){
+    //show games
+    game.showCurrentGames(games.information);
+
+    String[] info = new String[1];
+    int option = keys.nextInt();
+    info[0] = games.information[option-1];
+
+    return new MenuMessage(MenuMessageTypes.SELECT_GAME, info);
   }
 
+  public MenuMessage handleInGame(ViewMessage message){
+    System.out.println("[!] Not implemented");
+    return new MenuMessage(null, null);
+  }
 
   /**
    * Helper method to show in-game view.
