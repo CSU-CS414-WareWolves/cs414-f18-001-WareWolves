@@ -9,6 +9,7 @@ import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.ViewMessage;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class CLDriver {
@@ -106,7 +107,7 @@ public class CLDriver {
     int option = 0;
     while(true) {
       option = keys.nextInt();
-
+      menu.showMenu();
       switch (option) {
         case 1:
           //Resume game
@@ -116,7 +117,7 @@ public class CLDriver {
           return new MenuMessage(MenuMessageTypes.INVITES, info);
         case 3:
           //Send outbox
-          return new MenuMessage(MenuMessageTypes.SEND_INVITE, info);
+          return handleOutbox();
         case 4:
           //View Stats
           menu.requestUsername();
@@ -215,30 +216,31 @@ public class CLDriver {
    * Helper method to show in-game view.
    * (returns nothing but a nice view)
    */
-  public void showGame(){
+  public void showGame(GameBoard gb){
     this.clearScreen();
-    this.game.showGameBoard(new GameBoard("RiIrdDKjJkeERcC"));
+    this.game.showGameBoard(gb);
     this.game.showInGameMenu();
   }
 
   /**
    * Handle inbox interactions
-   * (@param ultimately needs the list of requests in order to print them out
-   * @return int back to main menu
+   * @param mail array of String that are game invites for the user
    */
-  public MenuMessage handleInbox(){
-    //Show the invites
-//    this.getMenu().viewInvites(L);
-
-    return new MenuMessage(MenuMessageTypes.INVITES, null);
+  public void handleInbox(String[]  mail){
+    this.getMenu().viewInvites(mail);
+    return;
   }
 
   /**
-   * Handle outbox interactions
-   * @return int back to main menu
+   * Requests input from
+   * @return
    */
   public MenuMessage handleOutbox(){
-    return new MenuMessage(MenuMessageTypes.SEND_INVITE, null);
+    menu.requestUsername();
+    String[] info = new String[1];
+    info[0] = keys.nextLine();
+
+    return new MenuMessage(MenuMessageTypes.SEND_INVITE, info);
   }
 
   public static void main(String[] args) {
