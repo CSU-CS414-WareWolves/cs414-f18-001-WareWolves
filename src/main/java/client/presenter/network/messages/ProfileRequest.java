@@ -1,29 +1,28 @@
 package client.presenter.network.messages;
 
-public class ActiveGameRequest extends NetworkMessage {
+public class ProfileRequest extends NetworkMessage {
 	/**
-	 * Nickname of the player who's active games are being requested
+	 * Nickname of the player who's profile is being requested
 	 */
 	public final String nickname;
 	
 	/**
 	 * Constructor for presenter
-	 * @param nickname the nickname of the logged in player, from presenter/login prompt
+	 * @param nickname the nickname of the profile requesting to see
 	 */
-	public ActiveGameRequest(String nickname) {
-		super(NET_MESSAGE_TYPE.ACTIVE_GAMES_REQUEST);
+	public ProfileRequest(String nickname) {
+		super(NET_MESSAGE_TYPE.PROFILE_REQUEST);
 		this.nickname = nickname;
 		length = this.getDataString().getBytes().length;
 	}
-
+	
 	/**
 	 * Constructor for server
-	 * Expected: "9:nickname"
 	 * @param data String representation of the message
 	 * @param off dummy variable to differentiate constructors
 	 */
-	public ActiveGameRequest(String data, int off) {
-		super(NET_MESSAGE_TYPE.ACTIVE_GAMES_REQUEST);
+	public ProfileRequest(String data, int off) {
+		super(NET_MESSAGE_TYPE.PROFILE_REQUEST);
 		this.nickname = data.split(":")[1];
 		length = this.getDataString().getBytes().length;
 	}

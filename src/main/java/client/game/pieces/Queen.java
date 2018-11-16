@@ -1,15 +1,17 @@
 package client.game.pieces;
 
 import client.Point;
-import java.util.ArrayList;
-import java.util.Arrays;
 
-public class Queen extends Rook {
+public class Queen extends LinePiece {
 
   public Queen(Point boardLocation, boolean color) {
     super(boardLocation, color);
   }
-  public Queen(String queen){super(queen);}
+
+  public Queen(String queen) {
+    super(queen);
+  }
+
   /**
    * Finds all the valid moves for a Queen in chad chess. A Queen moves along vertical, horizontal,
    * and diagonal lines. A Queen can only capture a enemy non-King piece if the Queen is on an enemy
@@ -22,11 +24,9 @@ public class Queen extends Rook {
    */
   @Override
   public Point[] getValidMoves(Piece[][] board) {
-    ArrayList<Point> result = new ArrayList<>(Arrays.asList(super.getValidMoves(board)));
-    result.addAll(this.search(board, 1, 1));   //NE
-    result.addAll(this.search(board, 1, -1));  //NW
-    result.addAll(this.search(board, -1, 1));  //SE
-    result.addAll(this.search(board, -1, -1)); //SW
-    return result.toArray(new Point[0]);
+    int deltaX[] = {1, -1, 0, 0, 1, 1, -1, -1};
+    int deltaY[] = {0, 0, 1, -1, 1, -1, 1, -1};
+
+    return this.search(board, deltaX, deltaY).toArray(new Point[0]);
   }
 }

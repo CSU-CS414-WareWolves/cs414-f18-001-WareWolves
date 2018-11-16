@@ -1,8 +1,17 @@
 package client.presenter.network.messages;
 
 public class Register extends NetworkMessage{
+	/**
+	 * Email of attempted registration
+	 */
 	public final String email;
+	/**
+	 * Email of attempted registration
+	 */
 	public final String nickname;
+	/**
+	 * Hash of password for attempted registration
+	 */
 	public final String password;
 	
 	/**
@@ -30,6 +39,7 @@ public class Register extends NetworkMessage{
 		email = splt[1];
 		nickname = splt[2];
 		password = splt[3];
+		length = this.getDataString().getBytes().length;
 	}
 	
 	@Override

@@ -1,7 +1,13 @@
 package client.presenter.network.messages;
 
 public class LoginResponse extends NetworkMessage {
+	/**
+	 * Success status of paired login request
+	 */
 	public final boolean success;
+	/**
+	 * Nickname of player logging in if success, "undefined" if failure
+	 */
 	public final String nickname;
 	
 	/**

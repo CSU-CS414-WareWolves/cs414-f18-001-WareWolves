@@ -1,9 +1,17 @@
 package client.presenter.network.messages;
 
 public class Unregister extends NetworkMessage {
-	
+	/**
+	 * Email of the unregistration attempt
+	 */
 	public final String email;
+	/**
+	 * Nickname of the unregistration attempt
+	 */
 	public final String nickname;
+	/**
+	 * Hash of password of the unregistration attempt
+	 */
 	public final String password;
 	
 	/**
