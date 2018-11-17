@@ -8,9 +8,7 @@ import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.ViewMessage;
-import client.presenter.controller.messages.ViewValidMovesResponse;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class CLDriver {
@@ -104,7 +102,7 @@ public class CLDriver {
         System.out.println("[!] Good bye!");
         exit(0);
       default:
-        System.out.println("[!] Please enter a valid option.");
+        warningValidOption();
         return null;
     }
   }
@@ -148,7 +146,7 @@ public class CLDriver {
           return new MenuMessage(MenuMessageTypes.LOGOUT, null);
         default:
           clearScreen();
-          System.out.println("[!] Please enter a valid option.\n");
+          warningValidOption();
           menu.showMenu();
           break;
       }
@@ -172,8 +170,6 @@ public class CLDriver {
     return new MenuMessage(MenuMessageTypes.SELECT_GAME, info);
   }
 
-  
-
   /**
    * Handles the in-game menu interactions
    * @param gb The GameBoard object representing the current users selected game
@@ -184,6 +180,22 @@ public class CLDriver {
     showGame(gb);
     int option = keys.nextInt();
     return option;
+  }
+
+  public ViewMessage handleBoard(GameBoard gameboard){
+    while(true){
+      int option = handleInGame(gameboard);
+      switch (option){
+        case 1:
+          break;
+        case 2:
+          break;
+        case 3:
+          break;
+        default:
+          warningValidOption();
+      }
+    }
   }
 
   /**
@@ -215,6 +227,10 @@ public class CLDriver {
     info[0] = keys.nextLine();
     System.out.println("Invite sent to: " + info[0]);
     return new MenuMessage(MenuMessageTypes.SEND_INVITE, info);
+  }
+
+  private void warningValidOption() {
+    System.err.println("[!] Please input a valid option\n");
   }
 
   public static void main(String[] args) {
