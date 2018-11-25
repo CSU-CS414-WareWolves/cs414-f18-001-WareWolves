@@ -2,15 +2,18 @@ package client.gui.swing;
 
 import client.game.Game;
 import client.gui.ChadGameDriver;
+import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.RegisterMessage;
+import client.presenter.controller.messages.UnregisterMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMoves;
 import client.presenter.network.NetworkManager;
 import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.GameInfo;
 import client.presenter.network.messages.InboxResponse;
+import client.presenter.network.messages.Login;
 import client.presenter.network.messages.LoginResponse;
 import client.presenter.network.messages.Move;
 import client.presenter.network.messages.NetworkMessage;
@@ -19,6 +22,7 @@ import client.presenter.network.messages.ProfileResponse;
 import client.presenter.network.messages.Register;
 import client.presenter.network.messages.RegisterResponse;
 import client.presenter.controller.util.HashPasswords;
+import client.presenter.network.messages.Unregister;
 import client.presenter.network.messages.UnregisterResponse;
 import java.security.NoSuchAlgorithmException;
 import javax.swing.JFrame;
@@ -57,6 +61,7 @@ public class SwingChadDriver implements ChadGameDriver{
     switch (message.messageType){
       case REGISTER:
         RegisterMessage registerMessage = (RegisterMessage) message;
+        // Check if messages have invalid characters
         int nicknamePound = registerMessage.nickname.indexOf('#');
         int nicknameColon = registerMessage.nickname.indexOf(':');
         int emailPound = registerMessage.email.indexOf('#');
@@ -74,8 +79,12 @@ public class SwingChadDriver implements ChadGameDriver{
         }
         break;
       case LOGIN:
+        LoginMessage loginMessage = (LoginMessage) message;
+        networkManager.sendMessage(new Login(loginMessage.email, HashPasswords.SHA1FromString(loginMessage.password)));
         break;
       case UNREGISTER:
+        UnregisterMessage unregisterMessage = (UnregisterMessage) message;
+        networkManager.sendMessage(new Unregister(unregisterMessage.email, unregisterMessage.nickname, HashPasswords.SHA1FromString(unregisterMessage.password)));
         break;
       case SHOW_VALID_MOVES:
         // if the game is over no valid moves
