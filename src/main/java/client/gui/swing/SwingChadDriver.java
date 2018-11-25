@@ -6,8 +6,17 @@ import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMoves;
+import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.GameInfo;
+import client.presenter.network.messages.InboxResponse;
+import client.presenter.network.messages.LoginResponse;
+import client.presenter.network.messages.Move;
 import client.presenter.network.messages.NetworkMessage;
+import client.presenter.network.messages.Players;
+import client.presenter.network.messages.ProfileResponse;
+import client.presenter.network.messages.Register;
+import client.presenter.network.messages.RegisterResponse;
+import client.presenter.network.messages.UnregisterResponse;
 import javax.swing.JFrame;
 
 public class SwingChadDriver implements ChadGameDriver{
@@ -115,17 +124,15 @@ public class SwingChadDriver implements ChadGameDriver{
    */
   public void handleNetMessage(NetworkMessage message){
     switch (message.type){
-      case LOGIN:
-        break;
       case LOGIN_RESPONSE:
-        break;
-      case LOGOUT:
-        break;
-      case REGISTER:
-        break;
-      case UNREGISTER:
-        break;
-      case GAME_REQUEST:
+        LoginResponse loginResponse = (LoginResponse) message;
+        // If the login was successful
+        if(loginResponse.success) {
+            this.playerNickname = loginResponse.nickname;
+        }
+        else {
+          // Handle login failure (Not Implemented)
+        }
         break;
       case GAME_INFO:
         GameInfo gameInfo = (GameInfo) message;
@@ -133,22 +140,67 @@ public class SwingChadDriver implements ChadGameDriver{
         setupGame(gameInfo.gameID, chadGame.getBoard(), chadGame.getTurn());
         break;
       case MOVE:
-        break;
-      case ACTIVE_GAMES_REQUEST:
+        Move move = (Move) message;
+        // The game has ended
+        if(move.ending) {
+          // The game ends in a draw
+          if(move.draw) {
+            // Show draw (Not Implemented)
+          }
+          else {
+            // Show game ending (Not Implemented)
+          }
+        }
+        else {
+          // Game has not ended
+          // Handle showing move (Not Implemented)
+        }
         break;
       case ACTIVE_GAMES_RESPONSE:
-        break;
-      case INVITE_REQUEST:
-        break;
-      case INVITE_RESPONSE:
-        break;
-      case RESIGN:
+        ActiveGameResponse activeGameResponse = (ActiveGameResponse) message;
+        // Display Active Games in view with ID, board, opponents, start dates, current turn, color and if it has ended
+        // (Not Implemented)
         break;
       case REGISTER_RESPONSE:
-        break;
-      case INBOX_REQUEST:
+        RegisterResponse registerResponse = (RegisterResponse) message;
+        if(registerResponse.success) {
+          // Successful Register
+          // Display successful register (Not Implemented)
+        }
+        else {
+          if(registerResponse.reason) {
+            // Nickname already taken
+            // Display unsuccessful register nickname taken (Not Implemented)
+          }
+          else {
+            // Email already taken
+            // Display unsuccessful register email taken (Not Implemented)
+          }
+        }
         break;
       case INBOX_RESPONSE:
+        InboxResponse inboxResponse = (InboxResponse) message;
+        // Display inbox of messages with ids, senders, recipients, and send dates (Not Implemented)
+        break;
+      case PROFILE_RESPONSE:
+        ProfileResponse profileResponse = (ProfileResponse) message;
+        // Display profile with games player played white and black, start and end dates of games, and results of games
+        // (Not Implemented)
+        break;
+      case PLAYERS:
+        Players players = (Players) message;
+        // Store player array (Not Implemented)
+        break;
+      case UNREGISTER_RESPONSE:
+        UnregisterResponse unregisterResponse = (UnregisterResponse) message;
+        if(unregisterResponse.success) {
+          // Successfully unregistered
+          // Display unregistered success (Not Implemented)
+        }
+        else {
+          // Not successful
+          // Display unregistered unsuccessful (Not Implemented)
+        }
         break;
     }
   }
