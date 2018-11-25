@@ -4,8 +4,10 @@ import client.game.Game;
 import client.gui.ChadGameDriver;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceMessage;
+import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMoves;
+import client.presenter.network.NetworkManager;
 import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.GameInfo;
 import client.presenter.network.messages.InboxResponse;
@@ -16,7 +18,9 @@ import client.presenter.network.messages.Players;
 import client.presenter.network.messages.ProfileResponse;
 import client.presenter.network.messages.Register;
 import client.presenter.network.messages.RegisterResponse;
+import client.presenter.controller.util.HashPasswords;
 import client.presenter.network.messages.UnregisterResponse;
+import java.security.NoSuchAlgorithmException;
 import javax.swing.JFrame;
 
 public class SwingChadDriver implements ChadGameDriver{
@@ -38,17 +42,36 @@ public class SwingChadDriver implements ChadGameDriver{
    * The players name
    */
   private String playerNickname;
-
+  /**
+   * The network manager that handles messages to the server
+   */
+  private NetworkManager networkManager; // Initialize (Not Implemented)
 
 
   /**
    * Processes a message from the Swing GUI
    * @param message the message to process
    */
-  public void handleViewMessage(ViewMessage message){
+  public void handleViewMessage(ViewMessage message) throws NoSuchAlgorithmException {
 
     switch (message.messageType){
       case REGISTER:
+        RegisterMessage registerMessage = (RegisterMessage) message;
+        int nicknamePound = registerMessage.nickname.indexOf('#');
+        int nicknameColon = registerMessage.nickname.indexOf(':');
+        int emailPound = registerMessage.email.indexOf('#');
+        int emailColon = registerMessage.email.indexOf(':');
+        if(nicknameColon != -1 || nicknamePound != -1) {
+          // Nickname contains invalid characters
+          // Show error message (Not Implemented)
+        }
+        else if (emailColon != -1 || emailPound != -1) {
+          // Email contains invalid characters
+          // Show error message (Not Implemented)
+        }
+        else {
+          networkManager.sendMessage(new Register(registerMessage.email, registerMessage.nickname,HashPasswords.SHA1FromString(registerMessage.password)));
+        }
         break;
       case LOGIN:
         break;
