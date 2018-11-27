@@ -15,8 +15,8 @@ public class GameBoard {
 
   /**
    * Creates a GameBoard from a String representing a board.
-   * @param pieces String representation of a GameBoard.
-   * Form [[rRkKqQ][a-l][A-L]]*
+   *
+   * @param pieces String representation of a GameBoard. Form [[rRkKqQ][a-l][A-L]]*
    */
   public GameBoard(String pieces) {
     board = new Piece[12][12];
@@ -85,11 +85,13 @@ public class GameBoard {
         res.append(p.getBoardLocation().toString());
       }
     }
+    System.out.println(res.toString());
     return res.toString();
   }
 
   /**
    * Gets the current Board
+   *
    * @return The current Board.
    */
   public Piece[][] getPieces() {
@@ -129,12 +131,13 @@ public class GameBoard {
   }
 
 
-  private static final Set<Point> WALLS = Stream.of(
+  private static final Set<Point> WHITE_WALLS = Stream.of(
       new Point(1, 2), new Point(1, 3), new Point(1, 4),
       new Point(2, 1), new Point(3, 1), new Point(4, 1),
       new Point(5, 2), new Point(5, 3), new Point(5, 4),
-      new Point(2, 5), new Point(3, 5), new Point(4, 5),
-
+      new Point(2, 5), new Point(3, 5), new Point(4, 5)
+  ).collect(Collectors.toSet());
+  private static final Set<Point> BLACK_WALLS = Stream.of(
       new Point(6, 7), new Point(6, 8), new Point(6, 9),
       new Point(10, 7), new Point(10, 8), new Point(10, 9),
       new Point(7, 6), new Point(8, 6), new Point(9, 6),
@@ -142,13 +145,23 @@ public class GameBoard {
   ).collect(Collectors.toSet());
 
   /**
-   * Calculates if a Point is on a wall.
+   * Calculates if a Point is on the white castle wall.
    *
    * @param point The Point to test.
-   * @return True if the point is on a wall, false otherwise.
+   * @return True if the point is on the white wall, false otherwise.
    */
-  public static boolean isWall(Point point) {
-    return (WALLS.contains(point));
+  public static boolean isWhiteWall(Point point) {
+    return (WHITE_WALLS.contains(point));
+  }
+
+  /**
+   * Calculates if a Point is on the black castle wall.
+   *
+   * @param point The Point to test.
+   * @return True if the point is on the black wall, false otherwise.
+   */
+  public static boolean isBlackWall(Point point) {
+    return (BLACK_WALLS.contains(point));
   }
 
   private static final Set<Point> WHITE_CASTLE = Stream.of(
@@ -223,10 +236,11 @@ public class GameBoard {
 
   public boolean gameover() {
     boolean finsihed = false;
-    for (Piece[] row : board){
-      for (Piece p : row){
-        if (p != null && p.getClass() == King.class)
+    for (Piece[] row : board) {
+      for (Piece p : row) {
+        if (p != null && p.getClass() == King.class) {
           finsihed = !finsihed;
+        }
       }
     }
     return finsihed;
