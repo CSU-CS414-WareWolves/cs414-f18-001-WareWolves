@@ -63,15 +63,23 @@
           </vspacer>
         </children>
       </grid>
-      <component id="d6ac" class="javax.swing.JTable" binding="activeGamesTable" custom-create="true">
+      <scrollpane id="51f95">
         <constraints border-constraint="Center"/>
-        <properties>
-          <autoCreateColumnsFromModel value="false"/>
-          <fillsViewportHeight value="true"/>
-          <surrendersFocusOnKeystroke value="false"/>
-          <visible value="true"/>
-        </properties>
-      </component>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="d6ac" class="javax.swing.JTable" binding="activeGamesTable" custom-create="true">
+            <constraints/>
+            <properties>
+              <autoCreateColumnsFromModel value="false"/>
+              <dragEnabled value="false"/>
+              <fillsViewportHeight value="true"/>
+              <surrendersFocusOnKeystroke value="false"/>
+              <visible value="true"/>
+            </properties>
+          </component>
+        </children>
+      </scrollpane>
     </children>
   </grid>
 </form>

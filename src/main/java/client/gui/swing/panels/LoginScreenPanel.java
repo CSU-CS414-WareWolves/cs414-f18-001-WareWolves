@@ -63,8 +63,8 @@ public class LoginScreenPanel extends SwingGUIController {
       case "Login Screen":
         c.show(mainPanel, "Login");
         break;
-        default:
-          System.out.println(e.getActionCommand());
+      default:
+        System.out.println(e.getActionCommand());
     }
 
   }
