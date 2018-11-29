@@ -10,6 +10,7 @@ import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.ViewMessage;
+import client.presenter.controller.messages.ViewValidMoves;
 import client.presenter.network.messages.NetworkMessage;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
@@ -119,6 +120,11 @@ public class CLDriver implements ChadGameDriver {
         menu.unregisterUser();
         break;
       case SHOW_VALID_MOVES:
+        ViewValidMoves validMovesMessage = (ViewValidMoves) message;
+        String validMoves = chadGame.validMoves(validMovesMessage.location.toString());
+        String[] vm = {validMoves};
+        game.showValidMoves(vm);
+//        game.showValidMoves(validMoves);
         break;
       case REGISTER_RESPONSE:
         break;
@@ -127,7 +133,6 @@ public class CLDriver implements ChadGameDriver {
       case UNREGISTER_RESPONSE:
         break;
       case SHOW_VALID_MOVES_RESPONSE:
-        game.showValidMoves(message.locations);
         break;
       case MENU_RESPONSE:
         break;
@@ -240,6 +245,14 @@ public class CLDriver implements ChadGameDriver {
     showGame(gb);
     int option = keys.nextInt();
     return option;
+  }
+
+  /**
+   * NOT IMPLEMENTED
+   * @return
+   */
+  public ViewMessage handleGameMove(){
+    return new ViewMessage();
   }
 
   public ViewMessage handleBoard(GameBoard gameboard){
