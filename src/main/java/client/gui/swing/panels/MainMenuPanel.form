@@ -99,9 +99,14 @@
             <border type="none"/>
             <children/>
           </grid>
-          <nested-form id="74702" form-file="client/gui/swing/panels/InvitesPanel.form" binding="invitesPanel1" default-binding="true">
+          <nested-form id="74702" form-file="client/gui/swing/panels/InvitesPanel.form" binding="invitesPanel1" custom-create="true" default-binding="true">
             <constraints>
               <card name="Invites"/>
+            </constraints>
+          </nested-form>
+          <nested-form id="643e5" form-file="client/gui/swing/panels/PlayerStatsPanel.form" binding="playerStatsPanel1" custom-create="true" default-binding="true">
+            <constraints>
+              <card name="Stats"/>
             </constraints>
           </nested-form>
         </children>

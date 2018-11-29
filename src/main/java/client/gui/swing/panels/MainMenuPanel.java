@@ -32,6 +32,7 @@ public class MainMenuPanel extends SwingGUIController {
   private JPanel displayPanel;
   private ActiveGamesPanel activeGamesPanel;
   private InvitesPanel invitesPanel1;
+  private PlayerStatsPanel playerStatsPanel1;
 
   public MainMenuPanel() {
 
@@ -45,7 +46,8 @@ public class MainMenuPanel extends SwingGUIController {
 
   private void createUIComponents() {
     activeGamesPanel = new ActiveGamesPanel(this);
-
+    invitesPanel1 = new InvitesPanel(this);
+    playerStatsPanel1 = new PlayerStatsPanel();
   }
 
   @Override
@@ -79,9 +81,10 @@ public class MainMenuPanel extends SwingGUIController {
         cardLayout.show(displayPanel, "Games");
         break;
       case "viewProfiles":
-        cardLayout.show(displayPanel, "Empty");
+        cardLayout.show(displayPanel, "Stats");
         break;
       case "viewInvites":
+        cardLayout.show(displayPanel, "Invites");
         ActiveGamesPanel.loadTestData(activeGamesPanel);
         break;
       default:
