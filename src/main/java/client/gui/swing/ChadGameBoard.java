@@ -192,6 +192,9 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
    * @param e info about the mouse location
    */
   public void mousePressed(MouseEvent e){
+
+    if(e.getButton() != 1) {return;}
+
     // Debug Mouse location
     System.out.println("x:" + e.getX() +" y:" +e.getY());
     // Clear previous moves info
@@ -246,6 +249,7 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
   public void mouseReleased(MouseEvent e) {
     // Not moving a piece
     if(movingChessPiece == null){return;}
+    if(e.getButton() != 1) {return;}
 
     movingChessPiece.setVisible(false); // stop sudden jumps in the piece location
 
