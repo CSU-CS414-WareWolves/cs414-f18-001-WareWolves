@@ -53,12 +53,14 @@ public class MainMenuPanel extends SwingGUIController {
     if (message instanceof MenuMessage) {
       MenuMessage loginMessage = (MenuMessage) message;
 
-      switch (loginMessage.menuType){
+      switch (loginMessage.menuType) {
         case SELECT_GAME:
-          System.out.println("Select Game: " + loginMessage.information[0] + " Opponent: " + loginMessage.information[2]);
+          System.out.println("Select Game: " + loginMessage.information[0] + " Opponent: "
+              + loginMessage.information[2]);
           break;
         case RESIGN_GAME:
-          System.out.println("Resign Game: " + loginMessage.information[0] + " Opponent: " + loginMessage.information[2]);
+          System.out.println("Resign Game: " + loginMessage.information[0] + " Opponent: "
+              + loginMessage.information[2]);
       }
 
     } else {
