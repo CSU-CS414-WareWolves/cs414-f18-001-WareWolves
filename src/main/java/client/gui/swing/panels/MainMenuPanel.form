@@ -99,6 +99,11 @@
             <border type="none"/>
             <children/>
           </grid>
+          <nested-form id="74702" form-file="client/gui/swing/panels/InvitesPanel.form" binding="invitesPanel1" default-binding="true">
+            <constraints>
+              <card name="Invites"/>
+            </constraints>
+          </nested-form>
         </children>
       </grid>
       <hspacer id="b53d9">

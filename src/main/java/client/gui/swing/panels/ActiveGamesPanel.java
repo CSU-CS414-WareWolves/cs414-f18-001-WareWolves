@@ -8,26 +8,20 @@ import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.NetworkMessage;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-public class ActiveGamesPanel extends JPanel implements UpdateJTableList {
+public class ActiveGamesPanel extends UpdatableJTableList {
 
   private final Object[] columnNames = {"GameID", "Opponent", "Start Date", "Players turn",
       "Game Finished"};
@@ -50,7 +44,7 @@ public class ActiveGamesPanel extends JPanel implements UpdateJTableList {
       @Override
       public void actionPerformed(ActionEvent e) {
 
-        int gameIndex = getGameId();
+        int gameIndex = getGameId(activeGamesTable);
         if (gameIndex == -1) {
           return;
         }
@@ -68,7 +62,7 @@ public class ActiveGamesPanel extends JPanel implements UpdateJTableList {
     playGameButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        int gameIndex = getGameId();
+        int gameIndex = getGameId(activeGamesTable);
         if (gameIndex != -1) {
           ActiveGameInfo gameInfo = activeGames.get(gameIndex);
           controller
@@ -78,14 +72,6 @@ public class ActiveGamesPanel extends JPanel implements UpdateJTableList {
     });
   }
 
-  private int getGameId() {
-    int gameIndex = activeGamesTable.getSelectedRow();
-    if (gameIndex != -1) {
-      return (int) gameInfoModel.getValueAt(activeGamesTable.convertRowIndexToModel(gameIndex), 0);
-
-    }
-    return gameIndex;
-  }
 
   private void createUIComponents() {
 

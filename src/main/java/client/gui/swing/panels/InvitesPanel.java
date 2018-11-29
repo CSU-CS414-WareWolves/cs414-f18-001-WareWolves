@@ -1,19 +1,18 @@
 package client.gui.swing.panels;
 
 import client.gui.swing.SwingGUIController;
+import client.gui.swing.info.ActiveGameInfo;
+import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.network.messages.InboxResponse;
 import client.presenter.network.messages.NetworkMessage;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -21,7 +20,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-public class InvitesPanel extends JFrame implements UpdateJTableList {
+public class InvitesPanel extends UpdatableJTableList {
 
   private final String[] receivedColumns = {"IDs", "Invite From", "Date Sent"};
   private final String[] sentColumns = {"IDs", "Sent To", "Date Sent"};
@@ -38,10 +37,44 @@ public class InvitesPanel extends JFrame implements UpdateJTableList {
   private DefaultTableModel receivedTableModel;
   private DefaultTableModel sentTableModel;
 
-  public InvitesPanel() {
+  public InvitesPanel(SwingGUIController controller) {
+
     newInvite.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
+        controller.sendMessage(new MenuMessage(MenuMessageTypes.INVITES, new String[]{}));
+      }
+    });
+    acceptInvite.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        int rowIndex = getGameId(receivedTable);
+        if (rowIndex == -1) {
+          return;
+        }
+        String inviteId = (String) receivedTableModel.getValueAt(rowIndex, 0);
+        controller.sendMessage(new MenuMessage(MenuMessageTypes.INVITES,
+            new String[] {inviteId, String.valueOf(true)}));
+      }
+    });
+    rejectInvite.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+
+        int rowIndex = getGameId(receivedTable);
+        if (rowIndex == -1) {
+          return;
+        }
+        String inviteId = (String) receivedTableModel.getValueAt(rowIndex, 0);
+        controller.sendMessage(new MenuMessage(MenuMessageTypes.INVITES,
+            new String[] {inviteId, String.valueOf(false)}));
+      }
+    });
+    cancelInvite.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        // Send cancel Message
+
 
       }
     });
@@ -69,31 +102,41 @@ public class InvitesPanel extends JFrame implements UpdateJTableList {
   }
 
   private void createUIComponents() {
-    receivedTable = new JTable();
-    receivedTableModel = new DefaultTableModel();
-    sentTable = new JTable();
-    sentTableModel = new DefaultTableModel();
-    setupTables(receivedTable, receivedTableModel, receivedColumns);
-    setupTables(sentTable, sentTableModel, sentColumns);
 
-  }
 
-  private void setupTables(JTable table, DefaultTableModel tableModel, String[] columns) {
-    tableModel = new DefaultTableModel(new Object[][]{}, columns);
-    table = new JTable(tableModel) {
+    receivedTableModel = new DefaultTableModel(new Object[][]{}, receivedColumns);
+    receivedTable = new JTable(receivedTableModel) {
       public boolean isCellEditable(int row, int column) {
         return false;
       }
     };
 
-    table.setRowSelectionAllowed(true);
-    table.setColumnSelectionAllowed(false);
-    table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    table.setAutoCreateRowSorter(true);
-    table.getTableHeader().setReorderingAllowed(false);
-    TableColumnModel columnControl = table.getColumnModel();
+    receivedTable.setRowSelectionAllowed(true);
+    receivedTable.setColumnSelectionAllowed(false);
+    receivedTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    receivedTable.setAutoCreateRowSorter(true);
+    receivedTable.getTableHeader().setReorderingAllowed(false);
+    TableColumnModel columnControl = receivedTable.getColumnModel();
     columnControl.removeColumn(columnControl.getColumn(0));
+
+    sentTableModel = new DefaultTableModel(new Object[][]{}, sentColumns);
+    sentTable = new JTable(sentTableModel) {
+      public boolean isCellEditable(int row, int column) {
+        return false;
+      }
+    };
+
+    sentTable.setRowSelectionAllowed(true);
+    sentTable.setColumnSelectionAllowed(false);
+    sentTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    sentTable.setAutoCreateRowSorter(true);
+    sentTable.getTableHeader().setReorderingAllowed(false);
+    columnControl = sentTable.getColumnModel();
+    columnControl.removeColumn(columnControl.getColumn(0));
+
   }
+
+
 
   public static void main(String[] args) {
 
@@ -117,44 +160,12 @@ public class InvitesPanel extends JFrame implements UpdateJTableList {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     //Create and set up the content pane.
-    InvitesPanel demo = new InvitesPanel();
+    InvitesPanel demo = new InvitesPanel(new TestGameMenuController());
     frame.add(demo.mainPanel);
 
     //Display the window.
     frame.pack();
     frame.setVisible(true);
-  }
-
-  private static class TestMainInviteGameController extends SwingGUIController {
-
-    @Override
-    public void sendMessage(ViewMessage message) {
-      if (message instanceof MenuMessage) {
-        MenuMessage loginMessage = (MenuMessage) message;
-
-        switch (loginMessage.menuType) {
-          case SELECT_GAME:
-            System.out.println("Select Game: " + loginMessage.information[0] + " Opponent: "
-                + loginMessage.information[2]);
-            break;
-          case RESIGN_GAME:
-            System.out.println("Resign Game: " + loginMessage.information[0] + " Opponent: "
-                + loginMessage.information[2]);
-        }
-
-      } else {
-        throw new IllegalArgumentException("ActiveGame:: Did not sent a menu message - "
-            + message.messageType);
-      }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-      throw new IllegalArgumentException("ActiveGame:: Tried to send a action - "
-          + e.getActionCommand());
-
-    }
   }
 
 

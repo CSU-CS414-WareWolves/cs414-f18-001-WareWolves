@@ -59,7 +59,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="38f9b" class="javax.swing.JTable" binding="receivedTable">
+                  <component id="38f9b" class="javax.swing.JTable" binding="receivedTable" custom-create="true">
                     <constraints/>
                     <properties>
                       <fillsViewportHeight value="true"/>

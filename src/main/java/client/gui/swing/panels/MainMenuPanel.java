@@ -31,11 +31,12 @@ public class MainMenuPanel extends SwingGUIController {
   private JPanel buttonPanel;
   private JPanel displayPanel;
   private ActiveGamesPanel activeGamesPanel;
+  private InvitesPanel invitesPanel1;
 
   public MainMenuPanel() {
 
     cardLayout = (CardLayout) displayPanel.getLayout();
-    cardLayout.show(displayPanel, "Empty");
+    cardLayout.show(displayPanel, "Invites");
 
     gamesButton.addActionListener(this);
     invitesButton.addActionListener(this);
