@@ -6,5 +6,6 @@ public enum MenuMessageTypes {
   ACTIVE_GAMES,
   INVITES,
   SELECT_GAME,
+  RESIGN_GAME,
   SEND_INVITE
 }

@@ -41,7 +41,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="1c788" class="javax.swing.JLabel" binding="emailLabel">
+                  <component id="1c788" class="javax.swing.JLabel">
                     <constraints>
                       <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>
@@ -72,7 +72,7 @@
                       <columns value="30"/>
                     </properties>
                   </component>
-                  <component id="87a69" class="javax.swing.JLabel" binding="passwordLabel">
+                  <component id="87a69" class="javax.swing.JLabel">
                     <constraints>
                       <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                       <gridbag weightx="0.0" weighty="0.0"/>

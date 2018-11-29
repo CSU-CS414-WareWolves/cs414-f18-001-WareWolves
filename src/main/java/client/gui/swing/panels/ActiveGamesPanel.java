@@ -1,7 +1,11 @@
 package client.gui.swing.panels;
 
 
+import client.gui.swing.SwingGUIController;
 import client.gui.swing.info.ActiveGameInfo;
+import client.presenter.controller.MenuMessageTypes;
+import client.presenter.controller.messages.MenuMessage;
+import client.presenter.controller.messages.ViewMessage;
 import client.presenter.network.messages.ActiveGameResponse;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -10,6 +14,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -20,59 +25,63 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 public class ActiveGamesPanel extends JPanel {
 
-  Object[] columnNames = {"Opponent", "Start Date", "Players turn", "Game Finished"};
+  private final Object[] columnNames = {"GameID", "Opponent", "Start Date", "Players turn", "Game Finished"};
 
-  private ActiveGameResponse testResponse = new ActiveGameResponse(
-      new int[]{1, 2, 3},
-      new String[]{"RiIrdDKjJkeEQaAqlL", "RiIrdDKjJkeEQaAqlL", "RiIrdDKjJkeEQaAqlL"},
-      new String[]{"Me", "Myself", "I"},
-      new String[]{"12/12/12", "13/13/13", "14/14/14"},
-      new boolean[]{true, false, true},
-      new boolean[]{true, true, true},
-      new boolean[]{false, false, true});
-
-  private ArrayList<ActiveGameInfo> activeGames = new ArrayList<>();
+  private HashMap<Integer, ActiveGameInfo> activeGames = new HashMap<>();
 
   private JPanel mainPanel;
   private JButton playGameButton;
   private JButton resignGameButton;
   private JTable activeGamesTable;
   private DefaultTableModel gameInfoTable;
+  private SwingGUIController controller;
 
 
-  public ActiveGamesPanel() {
+  public ActiveGamesPanel(SwingGUIController controller) {
+
+    this.controller = controller;
+
     resignGameButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        updateGamesList();
 
+        int gameIndex = getGameId();
+        if (gameIndex == -1) {
+          return;
+        }
+        ActiveGameInfo gameInfo = activeGames.get(gameIndex);
         int dialogButton = JOptionPane.YES_NO_OPTION;
         int dialogResult = JOptionPane
-            .showConfirmDialog(null, "Are you sure you want to resign the game", "Warning",
-                dialogButton);
+            .showConfirmDialog(mainPanel, "Are you sure you want to resign the game against "
+                + gameInfo.getOpponents(), "Warning", dialogButton);
         if (dialogResult == JOptionPane.YES_OPTION) {
-          int gameIndex = activeGamesTable.getSelectedRow();
-          if (gameIndex != -1) {
-            System.out.println(gameInfoTable.getValueAt(gameIndex, 0));
-            System.out.println(activeGames.get(gameIndex).getOpponents());
-          }
+          controller.sendMessage(new MenuMessage(MenuMessageTypes.RESIGN_GAME, gameInfo.getInfoArray()));
         }
-
       }
     });
     playGameButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        int gameIndex = activeGamesTable.getSelectedRow();
+        int gameIndex = getGameId();
         if (gameIndex != -1) {
-          System.out.println(gameInfoTable.getValueAt(gameIndex, 0));
-          System.out.println(activeGames.get(gameIndex).getOpponents());
+          ActiveGameInfo gameInfo = activeGames.get(gameIndex);
+          controller.sendMessage(new MenuMessage(MenuMessageTypes.SELECT_GAME, gameInfo.getInfoArray()));
         }
       }
     });
+  }
+
+  private int getGameId(){
+    int gameIndex = activeGamesTable.getSelectedRow();
+    if (gameIndex != -1) {
+      return (int) gameInfoTable.getValueAt(activeGamesTable.convertRowIndexToModel(gameIndex), 0);
+
+    }
+    return gameIndex;
   }
 
   private void createUIComponents() {
@@ -87,6 +96,10 @@ public class ActiveGamesPanel extends JPanel {
     activeGamesTable.setRowSelectionAllowed(true);
     activeGamesTable.setColumnSelectionAllowed(false);
     activeGamesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    activeGamesTable.setAutoCreateRowSorter(true);
+    activeGamesTable.getTableHeader().setReorderingAllowed(false);
+    TableColumnModel columnControl = activeGamesTable.getColumnModel();
+    columnControl.removeColumn(columnControl.getColumn(0));
 
   }
 
@@ -102,30 +115,46 @@ public class ActiveGamesPanel extends JPanel {
     });
   }
 
-  public void updateGamesList() {
+  public void updateGamesList(ActiveGameResponse games) {
 
     // Reset current data
     activeGames.clear();
     gameInfoTable.setNumRows(0);
 
-    for (int i = 0; i < testResponse.gameIDs.length; i++) {
-      activeGames.add(new ActiveGameInfo(testResponse.gameIDs[i], testResponse.gameBoards[i],
-          testResponse.opponents[i], testResponse.startDates[i], testResponse.turns[i],
-          testResponse.color[i], testResponse.ended[i]));
+    for (int i = 0; i < games.gameIDs.length; i++) {
+      activeGames.put(games.gameIDs[i], new ActiveGameInfo(games.gameIDs[i], games.gameBoards[i],
+          games.opponents[i], games.startDates[i], games.turns[i],
+          games.color[i], games.ended[i]));
     }
 
-    for (ActiveGameInfo game : activeGames) {
+    for (Integer game : activeGames.keySet()) {
       String playersTurn;
-      if (game.getColor() == game.getTurns()) {
+      ActiveGameInfo gameInfo = activeGames.get(game);
+      if (gameInfo.getColor() == gameInfo.getTurns()) {
         playersTurn = "Your turn";
       } else {
-        playersTurn = game.getOpponents() + "'s turn";
+        playersTurn = gameInfo.getOpponents() + "'s turn";
       }
 
       gameInfoTable.addRow(
-          new Object[]{game.getOpponents(), game.getStartDates(), playersTurn, game.getEnded()});
+          new Object[]{gameInfo.getGameIDs(), gameInfo.getOpponents(),
+              gameInfo.getStartDates(), playersTurn, gameInfo.getEnded()});
 
     }
+
+  }
+
+  public static void loadTestData(ActiveGamesPanel testPanel){
+    ActiveGameResponse testResponse = new ActiveGameResponse(
+        new int[]{111, 222, 333},
+        new String[]{"RiIrdDKjJkeEQaAqlL", "RiIrdDKjJkeEQaAqlL", "RiIrdDKjJkeEQaAqlL"},
+        new String[]{"Me", "Myself", "I"},
+        new String[]{"12/12/12", "13/13/13", "14/14/14"},
+        new boolean[]{true, false, true},
+        new boolean[]{true, true, true},
+        new boolean[]{false, false, true});
+
+    testPanel.updateGamesList(testResponse);
 
   }
 
@@ -134,17 +163,49 @@ public class ActiveGamesPanel extends JPanel {
    * event-dispatching thread.
    */
   private static void createAndShowGUI() {
+
     //Create and set up the window.
     JFrame frame = new JFrame("Login Panel Test");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     //Create and set up the content pane.
-    ActiveGamesPanel demo = new ActiveGamesPanel();
+    ActiveGamesPanel demo = new ActiveGamesPanel(new TestMainActiveGameController());
+    demo.loadTestData(demo);
     frame.add(demo.mainPanel);
 
     //Display the window.
     frame.pack();
     frame.setVisible(true);
+  }
+
+  private static class TestMainActiveGameController extends SwingGUIController {
+
+    @Override
+    public void sendMessage(ViewMessage message) {
+      if (message instanceof MenuMessage) {
+        MenuMessage loginMessage = (MenuMessage) message;
+
+        switch (loginMessage.menuType){
+          case SELECT_GAME:
+            System.out.println("Select Game: " + loginMessage.information[0] + " Opponent: " + loginMessage.information[2]);
+            break;
+          case RESIGN_GAME:
+            System.out.println("Resign Game: " + loginMessage.information[0] + " Opponent: " + loginMessage.information[2]);
+        }
+
+      } else {
+        throw new IllegalArgumentException("ActiveGame:: Did not sent a menu message - "
+            + message.messageType);
+      }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+      throw new IllegalArgumentException("ActiveGame:: Tried to send a action - "
+          + e.getActionCommand());
+
+    }
   }
 
 }

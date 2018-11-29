@@ -2,48 +2,30 @@ package client.gui.swing.panels;
 
 import client.gui.swing.SwingGUIController;
 import client.presenter.controller.messages.ViewMessage;
-import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 public class LoginScreenPanel extends SwingGUIController {
 
-  private CardLayout c;
+  private CardLayout cardLayout;
 
   private JPanel mainPanel;
-  private JButton registerAccount;
-  private JButton cancelRegister;
-  private JPanel newAccountPanelOld;
-  private JTextField nicknameField;
-  private JLabel NicknameLabel;
   private LoginPanel loginPanel;
   private RegisterNewAccountPanel registerNewAccountPanel;
 
   public LoginScreenPanel() {
     super();
     //this.add(mainPanel);
-    c = (CardLayout) mainPanel.getLayout();
-    c.show(mainPanel, "newAccount");
+    cardLayout = (CardLayout) mainPanel.getLayout();
+    cardLayout.show(mainPanel, "Login");
 
-    cancelRegister.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        CardLayout c = (CardLayout) mainPanel.getLayout();
-        c.show(mainPanel, "Login");
-      }
-    });
   }
 
   @Override
@@ -58,10 +40,10 @@ public class LoginScreenPanel extends SwingGUIController {
 
     switch (e.getActionCommand()) {
       case "New Account":
-        c.show(mainPanel, "newAccount");
+        cardLayout.show(mainPanel, "newAccount");
         break;
       case "Login Screen":
-        c.show(mainPanel, "Login");
+        cardLayout.show(mainPanel, "Login");
         break;
       default:
         System.out.println(e.getActionCommand());

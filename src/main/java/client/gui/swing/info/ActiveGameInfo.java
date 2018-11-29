@@ -16,11 +16,11 @@ public class ActiveGameInfo {
 
     if(gameBoards == null || (gameBoards.length()% 3) != 0)
     {
-      throw new RuntimeException("ActiveGameInfo:: The given game board is not valid " + gameBoards);
+      throw new IllegalArgumentException("ActiveGameInfo:: The given game board is not valid " + gameBoards);
     }
     if(opponents == null || opponents.length() == 0)
     {
-      throw new RuntimeException("ActiveGameInfo:: The given opponents is not valid " + opponents);
+      throw new IllegalArgumentException("ActiveGameInfo:: The given opponents is not valid " + opponents);
     }
     this.gameIDs = gameIDs;
     this.gameBoards = gameBoards;
@@ -57,5 +57,11 @@ public class ActiveGameInfo {
 
   public boolean getEnded() {
     return ended;
+  }
+
+  public String[] getInfoArray(){
+    return new String[] {String.valueOf(getGameIDs()), getGameBoards(),
+        getOpponents(), getStartDates(), String.valueOf(getTurns()),
+        String.valueOf(getColor()), String.valueOf(getEnded()) };
   }
 }

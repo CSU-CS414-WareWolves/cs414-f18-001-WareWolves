@@ -26,13 +26,11 @@ public class LoginPanel extends JPanel {
 
   private JButton Login;
   private JButton newAccountButton;
-  private JLabel emailLabel;
   private JTextField emailTextField;
   private JPasswordField passwordField;
-  private JLabel passwordLabel;
   private JPanel LoginPanel;
 
-  SwingGUIController controller;
+  private SwingGUIController controller;
 
 
   LoginPanel(SwingGUIController controller) {
