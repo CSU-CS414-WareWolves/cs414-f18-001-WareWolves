@@ -101,12 +101,12 @@ public class CLGameView implements GameView {
    * @param list A collection of Points
    * @return void
    */
-  public void showValidMoves(ArrayList<String> list){
+  public void showValidMoves(String[] list){
     //Print the list in a nice fashion
     StringBuilder res = new StringBuilder();
 
-    for(int i=0; i<list.size(); i++){
-      res.append(list.get(i).toString()).append(", ");
+    for(int i=0; i<list.length; i++){
+      res.append(list[i].toString()).append(", ");
     }
     res.append("\n");
 

@@ -3,15 +3,17 @@ package client.gui.cl;
 import static java.lang.System.exit;
 
 import client.game.GameBoard;
+import client.gui.ChadGameDriver;
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.ViewMessage;
+import client.presenter.network.messages.NetworkMessage;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
-public class CLDriver {
+public class CLDriver implements ChadGameDriver {
 
   private CLLogin login;
   private CLMenu menu;
@@ -58,23 +60,85 @@ public class CLDriver {
   }
 
   /**
-   * Handle login menu interactions
-   * @return a new LoginMessage object
+   *
+   * @param message
    */
-  public ViewMessage handleLoginMenu() throws NoSuchAlgorithmException {
-    int option;
-
-    while(true) {
-      login.showLogin();
-      option = keys.nextInt();
-
-      ViewMessage res = handleLoginHelper(option);
-      if (res != null)
-        return res;
+  public void handleNetMessage(NetworkMessage message){
+    switch(message.type){
+      case LOGIN:
+        break;
+      case LOGIN_RESPONSE:
+        break;
+      case LOGOUT:
+        break;
+      case REGISTER:
+        break;
+      case UNREGISTER:
+        break;
+      case GAME_REQUEST:
+        break;
+      case GAME_INFO:
+        break;
+      case MOVE:
+        break;
+      case ACTIVE_GAMES_REQUEST:
+        break;
+      case ACTIVE_GAMES_RESPONSE:
+        break;
+      case INVITE_REQUEST:
+        break;
+      case INVITE_RESPONSE:
+        break;
+      case RESIGN:
+        break;
+      case REGISTER_RESPONSE:
+        break;
+      case INBOX_REQUEST:
+        break;
+      case INBOX_RESPONSE:
+        break;
     }
   }
 
-  private ViewMessage handleLoginHelper(int option) throws NoSuchAlgorithmException {
+  /**
+   *
+   * @param message
+   */
+  public void handleViewMessage(ViewMessage message){
+    switch (message.messageType){
+      case REGISTER:
+        login.showLogin();
+        break;
+      case LOGIN:
+        login.showLogin();
+        break;
+      case UNREGISTER:
+        menu.unregisterUser();
+        break;
+      case SHOW_VALID_MOVES:
+        break;
+      case REGISTER_RESPONSE:
+        break;
+      case LOGIN_RESPONSE:
+        break;
+      case UNREGISTER_RESPONSE:
+        break;
+      case SHOW_VALID_MOVES_RESPONSE:
+        game.showValidMoves(message.locations);
+        break;
+      case MENU_RESPONSE:
+        break;
+      case MOVE_PIECE_RESPONSE:
+        break;
+    }
+
+  }
+
+  /**
+   * Handle login menu interactions
+   * @return a new LoginMessage object
+   */
+  private ViewMessage handleLogin(int option) throws NoSuchAlgorithmException {
     String email;
     String pass;
     switch (option) {
@@ -187,6 +251,10 @@ public class CLDriver {
       int option = handleInGame(gameboard);
       switch (option){
         case 1:
+          //Pick piece
+          keys.nextLine();
+          //show valid moves
+          keys.nextLine();
           break;
         case 2:
           break;
@@ -237,16 +305,15 @@ public class CLDriver {
     CLLogin login = new CLLogin();
     CLMenu menu = new CLMenu();
     CLGameView game = new CLGameView();
-
-    CLDriver driver = new CLDriver(login, menu, game);
-
-    login.showSplash();
-    driver.clearScreen();
-
-    try {
-      driver.handleLoginMenu();
-    } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
-    }
+//    CLDriver driver = new CLDriver(login, menu, game);
+//
+//    login.showSplash();
+//    driver.clearScreen();
+//
+//    try {
+//      driver.handleLoginMenu();
+//    } catch (NoSuchAlgorithmException e) {
+//      e.printStackTrace();
+//    }
   }
 }

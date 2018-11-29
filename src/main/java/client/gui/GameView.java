@@ -11,7 +11,7 @@ public interface GameView {
   void showGameBoard(GameBoard gb);
 
   // Prints the valid moves for the current player
-  void showValidMoves(ArrayList<String> list);
+  void showValidMoves(String[] list);
 
   // Prints the "in-game" menu
   void showInGameMenu();
