@@ -2,6 +2,7 @@ package client.gui.cl;
 
 import static java.lang.System.exit;
 
+import client.game.Game;
 import client.game.GameBoard;
 import client.gui.ChadGameDriver;
 import client.presenter.controller.MenuMessageTypes;
@@ -18,6 +19,7 @@ public class CLDriver implements ChadGameDriver {
   private CLLogin login;
   private CLMenu menu;
   private CLGameView game;
+  private Game chadGame;
   public Scanner keys;
 
   public CLDriver(CLLogin _login, CLMenu _menu, CLGameView _game){
@@ -68,6 +70,7 @@ public class CLDriver implements ChadGameDriver {
       case LOGIN:
         break;
       case LOGIN_RESPONSE:
+        menu.showMenu();
         break;
       case LOGOUT:
         break;
@@ -131,44 +134,37 @@ public class CLDriver implements ChadGameDriver {
       case MOVE_PIECE_RESPONSE:
         break;
     }
-
   }
 
   /**
-   * Handle login menu interactions
-   * @return a new LoginMessage object
+   *
+   * @return
    */
   private ViewMessage handleLogin(int option) throws NoSuchAlgorithmException {
     String email;
     String pass;
-    switch (option) {
-      case 1:
-        System.out.println("Enter e-mail:");
-        email = keys.nextLine();
 
-        System.out.println("Enter password:");
-        pass = keys.nextLine();
+    System.out.println("Enter your e-mail:");
+    email = keys.nextLine();
+    System.out.println("Enter your password:");
+    pass = keys.nextLine();
 
-        return new LoginMessage(email, pass);
-      case 2:
-        clearScreen();
-        System.out.println("Welcome to Chad Chess!\n Please enter a valid e-mail:");
-        email = keys.nextLine();
+    return new LoginMessage(email, pass);
+  }
 
-        System.out.println("Enter a unique nickname:");
-        String nick = keys.nextLine();
+  public ViewMessage handleRegister() throws NoSuchAlgorithmException {
+    String email;
+    String pass;
+    String nick;
 
-        System.out.println("Enter a strong password:");
-        pass = keys.nextLine();
+    System.out.println("Please enter a valid e-mail:");
+    email = keys.nextLine();
+    System.out.println("Enter a unique nickname:");
+    nick = keys.nextLine();
+    System.out.println("Enter a strong password:");
+    pass = keys.nextLine();
 
-        return new RegisterMessage(email, pass, nick);
-      case 3:
-        System.out.println("[!] Good bye!");
-        exit(0);
-      default:
-        warningValidOption();
-        return null;
-    }
+    return new RegisterMessage(email, pass, nick);
   }
 
   public ViewMessage handleMenu(String nickname){
