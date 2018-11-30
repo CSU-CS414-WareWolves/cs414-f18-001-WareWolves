@@ -19,8 +19,10 @@ public class CLDriver implements ChadGameDriver {
   private CLLogin login;
   private CLMenu menu;
   private CLGameView game;
-  private Game chadGame;
   public Scanner keys;
+
+  private Game chadGame;
+  private String nickname;
 
   public CLDriver(CLLogin _login, CLMenu _menu, CLGameView _game){
     login = _login;
@@ -119,10 +121,8 @@ public class CLDriver implements ChadGameDriver {
 
     switch (message.messageType){
       case REGISTER:
-        login.showLogin();
         break;
       case LOGIN:
-        login.showLogin();
         break;
       case UNREGISTER:
         menu.unregisterUser();
@@ -159,11 +159,29 @@ public class CLDriver implements ChadGameDriver {
 
   }
 
+  public ViewMessage handleLoginMenu() throws NoSuchAlgorithmException{
+    int option = 0;
+    while(true) {
+      option = keys.nextInt();
+      switch (option) {
+        case 1:
+          return handleLogin();
+        case 2:
+          return handleRegister();
+        case 3:
+          System.out.println("[!] Good bye.");
+          exit(0);
+        default:
+          warningValidOption();
+      }
+    }
+  }
+
   /**
    *
    * @return
    */
-  private ViewMessage handleLogin(int option) throws NoSuchAlgorithmException {
+  private ViewMessage handleLogin() throws NoSuchAlgorithmException {
     String email;
     String pass;
 
@@ -195,6 +213,5 @@ public class CLDriver implements ChadGameDriver {
   }
 
   public static void main(String[] args) {
-
   }
 }
