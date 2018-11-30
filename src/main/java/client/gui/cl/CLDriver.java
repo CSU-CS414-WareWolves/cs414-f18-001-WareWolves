@@ -66,6 +66,14 @@ public class CLDriver implements ChadGameDriver {
   }
 
   /**
+   * Prints the splash and title screen menu
+   */
+  public void createAndShowGUI(){
+    login.showSplash();
+    login.showLogin();
+  }
+
+  /**
    *
    * @param message
    */
@@ -328,15 +336,5 @@ public class CLDriver implements ChadGameDriver {
     CLLogin login = new CLLogin();
     CLMenu menu = new CLMenu();
     CLGameView game = new CLGameView();
-//    CLDriver driver = new CLDriver(login, menu, game);
-//
-//    login.showSplash();
-//    driver.clearScreen();
-//
-//    try {
-//      driver.handleLoginMenu();
-//    } catch (NoSuchAlgorithmException e) {
-//      e.printStackTrace();
-//    }
   }
 }
