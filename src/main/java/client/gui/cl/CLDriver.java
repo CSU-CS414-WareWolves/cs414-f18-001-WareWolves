@@ -6,9 +6,9 @@ import client.game.Game;
 import client.gui.ChadGameDriver;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.LoginResponseMessage;
+import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.ViewMessage;
-import client.presenter.controller.messages.ViewValidMoves;
 import client.presenter.controller.messages.ViewValidMovesResponse;
 import client.presenter.network.messages.NetworkMessage;
 import java.security.NoSuchAlgorithmException;
@@ -23,6 +23,7 @@ public class CLDriver implements ChadGameDriver {
 
   private Game chadGame;
   private String nickname;
+  private int gameID;
 
   public CLDriver(CLLogin _login, CLMenu _menu, CLGameView _game){
     login = _login;
@@ -69,18 +70,19 @@ public class CLDriver implements ChadGameDriver {
   public void createAndShowGUI(){
     login.showSplash();
     login.showLogin();
+    chadGame = new Game();
+//    setupGame(-1, chadGame.getBoard(), chadGame.getTurn());
   }
 
   /**
-   *
-   * @param message
+   * Handles a given NetworkMessage, acts according to the its type
+   * @param message a NetworkMessage with a type and data dependent on its type
    */
   public void handleNetMessage(NetworkMessage message){
     switch(message.type){
       case LOGIN:
         break;
       case LOGIN_RESPONSE:
-        menu.showMenu();
         break;
       case LOGOUT:
         break;
@@ -114,8 +116,8 @@ public class CLDriver implements ChadGameDriver {
   }
 
   /**
-   *
-   * @param message
+   * Handles a given ViewMessage, acts according to the its type
+   * @param message a ViewMessage with a type and data dependent on its type
    */
   public void handleViewMessage(ViewMessage message){
 
@@ -128,10 +130,13 @@ public class CLDriver implements ChadGameDriver {
         menu.unregisterUser();
         break;
       case SHOW_VALID_MOVES:
-        ViewValidMoves vvm = (ViewValidMoves) message;
-        String validMoves = chadGame.validMoves(vvm.location.toString());
-        String[] validMovesArray0 = {validMoves};
-        game.showValidMoves(validMovesArray0);
+//        ViewValidMoves vvm = (ViewValidMoves) message;
+//        String validMoves = chadGame.validMoves(vvm.location.toString());
+//        String[] validMovesArray0 = {validMoves};
+//        game.showValidMoves(validMovesArray0);
+        break;
+      case MENU:
+        handleMenuMessage((MenuMessage) message);
         break;
       case REGISTER_RESPONSE:
         break;
@@ -157,6 +162,24 @@ public class CLDriver implements ChadGameDriver {
         break;
     }
 
+  }
+
+  private void handleMenuMessage(MenuMessage message) {
+    switch (message.menuType){
+      case LOGOUT:
+        System.exit(0);
+        break;
+      case PLAYER_STATS:
+        break;
+      case ACTIVE_GAMES:
+        break;
+      case INVITES:
+        break;
+      case SELECT_GAME:
+        break;
+      case SEND_INVITE:
+        break;
+    }
   }
 
   public ViewMessage handleLoginMenu() throws NoSuchAlgorithmException{
