@@ -35,4 +35,11 @@ public class CLLogin implements LoginView {
     res.append("3.[     Exit     ]\n");
     System.out.println(res);
   }
+
+  /**
+   * Informs of a failed login attempt
+   */
+  public void failedLogin(){
+    System.out.println("[!] Failed login attempt, please try again.");
+  }
 }

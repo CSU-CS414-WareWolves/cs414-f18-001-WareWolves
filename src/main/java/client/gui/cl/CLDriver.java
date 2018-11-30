@@ -7,10 +7,13 @@ import client.game.GameBoard;
 import client.gui.ChadGameDriver;
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.LoginMessage;
+import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.MenuMessage;
+import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMoves;
+import client.presenter.controller.messages.ViewValidMovesResponse;
 import client.presenter.network.messages.NetworkMessage;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
@@ -109,6 +112,7 @@ public class CLDriver implements ChadGameDriver {
    * @param message
    */
   public void handleViewMessage(ViewMessage message){
+
     switch (message.messageType){
       case REGISTER:
         login.showLogin();
@@ -120,25 +124,35 @@ public class CLDriver implements ChadGameDriver {
         menu.unregisterUser();
         break;
       case SHOW_VALID_MOVES:
-        ViewValidMoves validMovesMessage = (ViewValidMoves) message;
-        String validMoves = chadGame.validMoves(validMovesMessage.location.toString());
-        String[] vm = {validMoves};
-        game.showValidMoves(vm);
-//        game.showValidMoves(validMoves);
+        ViewValidMoves vvm = (ViewValidMoves) message;
+        String validMoves = chadGame.validMoves(vvm.location.toString());
+        String[] validMovesArray0 = {validMoves};
+        game.showValidMoves(validMovesArray0);
         break;
       case REGISTER_RESPONSE:
         break;
       case LOGIN_RESPONSE:
+        LoginResponseMessage lrm = (LoginResponseMessage) message;
+        if(lrm.success){
+          menu.showMenu();
+        }
+        else{
+          login.failedLogin();
+        }
         break;
       case UNREGISTER_RESPONSE:
         break;
       case SHOW_VALID_MOVES_RESPONSE:
+        ViewValidMovesResponse vvmr = (ViewValidMovesResponse) message;
+        String[] validMovesArray1 = vvmr.locations;
+        game.showValidMoves(validMovesArray1);
         break;
       case MENU_RESPONSE:
         break;
       case MOVE_PIECE_RESPONSE:
         break;
     }
+
   }
 
   /**
@@ -252,7 +266,7 @@ public class CLDriver implements ChadGameDriver {
    * @return
    */
   public ViewMessage handleGameMove(){
-    return new ViewMessage();
+    return new MovePieceMessage(null,null);
   }
 
   public ViewMessage handleBoard(GameBoard gameboard){
