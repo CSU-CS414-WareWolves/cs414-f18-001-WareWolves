@@ -119,7 +119,8 @@ public class CLDriver implements ChadGameDriver {
         //send back a MenuMessage
         break;
       case ACTIVE_GAMES_RESPONSE:
-        handleActiveGames(message);
+        ActiveGameResponse agr = (ActiveGameResponse) message;
+        handleActiveGames(agr.gameIDs, agr.opponents);
         break;
       case INVITE_REQUEST:
         //send back a MenuMessage
@@ -174,7 +175,12 @@ public class CLDriver implements ChadGameDriver {
         handleMenuMessage((MenuMessage) message);
         break;
       case MOVE_PIECE:
-        handleMovePiece();
+        MovePieceMessage mpm = handleMovePiece();
+        //give to Presenter ref
+        //update own board to show
+        chadGame.move(mpm.fromLocation.toString(), mpm.toLocation.toString());
+        showGame();
+        // go to main menu
         break;
       case REGISTER_RESPONSE:
         RegisterResponseMessage rrm = (RegisterResponseMessage) message;
@@ -215,6 +221,7 @@ public class CLDriver implements ChadGameDriver {
 
 
   private void handleMenuMessage(MenuMessage message) {
+    MenuMessage mm;
     switch (message.menuType){
       case LOGOUT:
         System.exit(0);
@@ -225,15 +232,20 @@ public class CLDriver implements ChadGameDriver {
         break;
       case ACTIVE_GAMES:
         //TODO
+//        handleActiveGames();
+        //send to Presenter ref
         break;
       case INVITES:
         //TODO
+        //send to Presenter ref
         break;
       case SELECT_GAME:
         //TODO
+        //send to Presenter ref
         break;
       case SEND_INVITE:
-        //TODO
+        mm = handleOutbox();
+        //send to Presenter ref
         break;
     }
   }
@@ -279,19 +291,18 @@ public class CLDriver implements ChadGameDriver {
 
   /**
    * Handle active game screen
-   * @param gs MenuMessage containing the active games of the user
-   *        games.information should contain the nicknames from the active games
+   * @param ids list of ids of invitations
+   * @param opponents list of nicknames the player has an invite from
    * @return MenuMessage object with
    */
-  public MenuMessage handleActiveGames(NetworkMessage gs){
+  public MenuMessage handleActiveGames(int[] ids, String[] opponents){
     //show games
-    ActiveGameResponse games = (ActiveGameResponse) gs;
-    game.showCurrentGames(games.gameIDs, games.opponents);
+    game.showCurrentGames(ids, opponents);
     String[] info = new String[2];
     int option = keys.nextInt();
 
-    info[0] = Integer.toString(games.gameIDs[option]);
-    info[1] = games.opponents[option];
+    info[0] = Integer.toString(ids[option]);
+    info[1] = opponents[option];
     return new MenuMessage(MenuMessageTypes.SELECT_GAME, info);
   }
 
@@ -307,6 +318,7 @@ public class CLDriver implements ChadGameDriver {
       //TODO
     }
     //Show the in-game screen
+    showGame();
     int option = 0;
     while(true) {
       showGame();
@@ -324,7 +336,7 @@ public class CLDriver implements ChadGameDriver {
     }
   }
 
-  public ViewMessage handleMovePiece() {
+  public MovePieceMessage handleMovePiece() {
     String from;
     String to;
     while (true) {
@@ -377,22 +389,37 @@ public class CLDriver implements ChadGameDriver {
    * Handle inbox interactions
    * @param message an InboxResponse with
    */
-  public void handleInbox(NetworkMessage message){
+  public MenuMessage handleInbox(NetworkMessage message){
     InboxResponse ir = (InboxResponse) message;
     menu.viewInvites(ir.inviteIDs, ir.recipients);
-    return;
+
+    String[] info = new String[2];
+    int option = keys.nextInt();
+
+    info[0] = Integer.toString(ir.inviteIDs[option]);
+    info[1] = ir.recipients[option];
+    return new MenuMessage(MenuMessageTypes.INVITES, info);
   }
 
   /**
-   *
-   * @return
+   * Takes input from the user to send a number of invites according to their selection
+   * @return a MenuMessage of type SEND_INVITE with a String array of nicknames||emails(?)
    */
   public MenuMessage handleOutbox(){
-    menu.requestUsername();
-    String[] info = new String[1];
-    info[0] = keys.nextLine();
-    System.out.println("Invite sent to: " + info[0]);
-    return null;
+    String bigString = "";
+    while (true) {
+      menu.requestUsername();
+      String temp = keys.nextLine();
+      if(temp.toUpperCase().equals("EXIT")){
+        break;
+      }
+      else {
+        System.out.println("Invite will be sent to: " + temp);
+        bigString += temp + ":";
+      }
+    }
+    String[] info = bigString.split(":");
+    return new MenuMessage(MenuMessageTypes.SEND_INVITE, info);
   }
 
   private void warningValidOption() {

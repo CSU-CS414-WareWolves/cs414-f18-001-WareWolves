@@ -23,7 +23,7 @@ public class CLMenu implements MenuView {
   /**
    * Print out all the invites that are currently in the user's inbox
    * @param ids list of ids of invitations
-   * @param players list of usernames the player has an invite from
+   * @param players list of nicknames the player has an invite from
    */
   public void viewInvites(int[] ids, String[] players){
     if(ids.length == 0 || ids == null){

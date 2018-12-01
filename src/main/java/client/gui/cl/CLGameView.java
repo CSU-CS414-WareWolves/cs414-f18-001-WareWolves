@@ -22,7 +22,7 @@ public class CLGameView implements GameView {
   /**
    * Prints all current games of the user
    * @param ids list of ids of the active games
-   * @param players list of usernames the player has an active game with
+   * @param players list of nicknames the player has an active game with
    */
   public void showCurrentGames(int[] ids, String[] players){
     //Print the list in a nice fashion
