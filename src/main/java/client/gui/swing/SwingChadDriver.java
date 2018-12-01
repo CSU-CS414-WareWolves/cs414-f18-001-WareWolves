@@ -174,7 +174,7 @@ public class SwingChadDriver implements ChadGameDriver{
   /**
    * Sets up the Java Swing Frame for the game
    */
-  private void createAndShowGUI() {
+  public void createAndShowGUI() {
     //Create and set up the window.
     JFrame frame = new JFrame("Team Warewolves Chad");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
