@@ -2,14 +2,19 @@ package client.gui.cl;
 
 import static java.lang.System.exit;
 
+import client.Point;
 import client.game.Game;
+import client.game.GameBoard;
 import client.gui.ChadGameDriver;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.MenuMessage;
+import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.ViewMessage;
+import client.presenter.controller.messages.ViewValidMoves;
 import client.presenter.controller.messages.ViewValidMovesResponse;
+import client.presenter.network.messages.GameInfo;
 import client.presenter.network.messages.NetworkMessage;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
@@ -130,13 +135,13 @@ public class CLDriver implements ChadGameDriver {
         menu.unregisterUser();
         break;
       case SHOW_VALID_MOVES:
-//        ViewValidMoves vvm = (ViewValidMoves) message;
-//        String validMoves = chadGame.validMoves(vvm.location.toString());
-//        String[] validMovesArray0 = {validMoves};
-//        game.showValidMoves(validMovesArray0);
+        //Give presenter valid moves
+        chadGame.validMoves(((ViewValidMoves)message).location.toString());
         break;
       case MENU:
         handleMenuMessage((MenuMessage) message);
+        break;
+      case MOVE_PIECE:
         break;
       case REGISTER_RESPONSE:
         break;
@@ -150,6 +155,9 @@ public class CLDriver implements ChadGameDriver {
         }
         break;
       case UNREGISTER_RESPONSE:
+        System.out.println("[!] It's sad to see you go, but consider rejoining soon!");
+        System.out.println("[!] Account has been unregistered.");
+        //sign off / exit to title screen
         break;
       case SHOW_VALID_MOVES_RESPONSE:
         ViewValidMovesResponse vvmr = (ViewValidMovesResponse) message;
@@ -229,6 +237,117 @@ public class CLDriver implements ChadGameDriver {
     pass = keys.nextLine();
 
     return new RegisterMessage(email, pass, nick);
+  }
+
+  /**
+   * Handle active game screen
+   * @param games MenuMessage containing the active games of the user
+   *        games.information should contain the nicknames from the active games
+   * @return MenuMessage object with
+   */
+  public MenuMessage handleActiveGames(MenuMessage games){
+    //show games
+    game.showCurrentGames(games.information);
+
+    String[] info = new String[1];
+    int option = keys.nextInt();
+    info[0] = games.information[option-1];
+
+    return null;
+  }
+
+  /**
+   * Handles the in-game menu interactions
+   * @return the option chosen for the in-game menu
+   */
+  public ViewMessage handleInGame(NetworkMessage message){
+    GameInfo gi = (GameInfo) message;
+    chadGame = new Game(gi.gameBoard, gi.turn);
+    //Check gameover
+    if(chadGame.gameover()){
+      //TODO
+    }
+    //Show the in-game screen
+    int option = 0;
+    while(true) {
+      showGame();
+      option = keys.nextInt();
+      switch (option) {
+        case 1:
+          return handleMovePiece();
+        case 2:
+          return handleGameQuit();
+        case 3:
+          return handleGameResign();
+        default:
+          warningValidOption();
+      }
+    }
+  }
+
+  public ViewMessage handleMovePiece() {
+    String from;
+    String to;
+    System.out.println("Select a piece: ");
+    from = keys.nextLine();
+
+    //Grab valid moves for selected piece
+    //TODO: helper to convert validMoves String into String[]
+    String[] moves = {chadGame.validMoves(from)};
+    game.showValidMoves(moves);
+
+    System.out.println("Select space to move to: ");
+    to = keys.nextLine();
+
+    return new MovePieceMessage(new Point(from), new Point(to));
+  }
+
+  /**
+   * Handles option 2:Quit from in-game menu
+   * @return an instance of ?, returns user to main menu
+   */
+  public ViewMessage handleGameQuit(){
+    return null;
+  }
+
+  /**
+   * Handle option 3:Resign from in-game menu
+   * @return an instance of Resign to inform about resignation
+   */
+  public ViewMessage handleGameResign(){
+    return null;
+  }
+
+  /**
+   * Helper method to show in-game view.
+   * (returns nothing but prints a nice view)
+   */
+  public void showGame(){
+    clearScreen();
+    //TODO: modify showGame() to take the String representation for the gameboard
+//    game.showGameBoard(chadGame.getBoard());
+    game.showInGameMenu();
+  }
+
+  /**
+   * Handle inbox interactions
+   * @param mail array of String that are game invites for the user
+   */
+  public void handleInbox(String[]  mail){
+    menu.viewInvites(mail);
+    return;
+  }
+
+  /**
+   *
+   * @return
+   */
+  public MenuMessage handleOutbox(){
+    menu.requestUsername();
+    String[] info = new String[1];
+    info[0] = keys.nextLine();
+    System.out.println("Invite sent to: " + info[0]);
+    return null;
   }
 
   private void warningValidOption() {
