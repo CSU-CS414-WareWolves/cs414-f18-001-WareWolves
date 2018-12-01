@@ -102,7 +102,8 @@ public class CLDriver implements ChadGameDriver {
       case GAME_REQUEST:
         break;
       case GAME_INFO:
-        handleInGame(message);
+        GameInfo gi = (GameInfo) message;
+        handleInGame(gi.gameBoard, gi.turn);
         break;
       case MOVE:
         break;
@@ -327,31 +328,14 @@ public class CLDriver implements ChadGameDriver {
 
   /**
    * Handles the in-game menu interactions
-   * @return the option chosen for the in-game menu
+   * @param board a String representation from a GameBoard instance
+   * @param turn boolean value to see who's turn it is
    */
-  public ViewMessage handleInGame(NetworkMessage message){
-    GameInfo gi = (GameInfo) message;
-    chadGame = new Game(gi.gameBoard, gi.turn);
+  public void handleInGame(String board, boolean turn){
+    chadGame = new Game(board, turn);
     //Check gameover
     if(chadGame.gameover()){
       //TODO
-    }
-    //Show the in-game screen
-    showGame();
-    int option = 0;
-    while(true) {
-      showGame();
-      option = keys.nextInt();
-      switch (option) {
-        case 1:
-          return handleMovePiece();
-        case 2:
-          return handleGameQuit();
-        case 3:
-          return handleGameResign();
-        default:
-          warningValidOption();
-      }
     }
   }
 
