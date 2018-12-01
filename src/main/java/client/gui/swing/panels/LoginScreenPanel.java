@@ -1,14 +1,19 @@
 package client.gui.swing.panels;
 
 import client.gui.swing.SwingGUIController;
+import client.presenter.controller.messages.LoginResponseMessage;
+import client.presenter.controller.messages.RegisterResponseMessage;
 import client.presenter.controller.messages.ViewMessage;
+import client.presenter.network.messages.LoginResponse;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -20,9 +25,11 @@ public class LoginScreenPanel extends SwingGUIController {
   private JPanel mainPanel;
   private LoginPanel loginPanel;
   private RegisterNewAccountPanel registerNewAccountPanel;
+  private SwingGUIController controller;
 
-  public LoginScreenPanel() {
+  public LoginScreenPanel(SwingGUIController controller) {
     super();
+    this.controller = controller;
     //this.add(mainPanel);
     cardLayout = (CardLayout) mainPanel.getLayout();
     cardLayout.show(mainPanel, "Login");
@@ -32,7 +39,25 @@ public class LoginScreenPanel extends SwingGUIController {
   @Override
   public void sendMessage(ViewMessage message) {
 
-    System.out.println(message.messageType);
+    controller.sendMessage(message);
+
+  }
+
+  @Override
+  public void receiveMessage(ViewMessage message) {
+
+    String messageInfo = "This is a default message!!! I should not be seen";
+
+    if(message instanceof LoginResponseMessage){
+      messageInfo = "The password or email address entered is invalid";
+    }
+
+    if(message instanceof RegisterResponseMessage){
+      RegisterResponseMessage registerResponse = (RegisterResponseMessage) message;
+      messageInfo = Arrays.toString(registerResponse.messages);
+    }
+
+    JOptionPane.showMessageDialog(this, messageInfo);
 
   }
 
@@ -79,7 +104,7 @@ public class LoginScreenPanel extends SwingGUIController {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     //Create and set up the content pane.
-    LoginScreenPanel demo = new LoginScreenPanel();
+    LoginScreenPanel demo = new LoginScreenPanel(new TestGameMenuController());
     frame.add(demo.mainPanel);
 
     //Display the window.

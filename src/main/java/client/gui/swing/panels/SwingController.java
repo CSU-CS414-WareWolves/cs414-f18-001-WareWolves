@@ -12,8 +12,8 @@ import javax.swing.SwingUtilities;
 public class SwingController extends SwingGUIController implements ChadGameDriver {
 
   private JPanel mainPanel;
-  private MainMenuPanel mainMenuPanel1;
-  private LoginScreenPanel loginScreenPanel1;
+  private MainMenuPanel mainMenuPanel;
+  private LoginScreenPanel loginScreenPanel;
 
 
 
@@ -30,6 +30,11 @@ public class SwingController extends SwingGUIController implements ChadGameDrive
 
   @Override
   public void sendMessage(ViewMessage message) {
+
+  }
+
+  @Override
+  public void receiveMessage(ViewMessage message) {
 
   }
 
@@ -69,4 +74,8 @@ public class SwingController extends SwingGUIController implements ChadGameDrive
   }
 
 
+  private void createUIComponents() {
+    mainMenuPanel = new MainMenuPanel(this);
+    loginScreenPanel = new LoginScreenPanel(this);
+  }
 }

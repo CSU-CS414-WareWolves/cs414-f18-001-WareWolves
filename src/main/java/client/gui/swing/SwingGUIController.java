@@ -7,5 +7,6 @@ import javax.swing.JPanel;
 public abstract class SwingGUIController extends JPanel implements ActionListener {
 
   public abstract void sendMessage(ViewMessage message);
+  public abstract void receiveMessage(ViewMessage message);
 
 }

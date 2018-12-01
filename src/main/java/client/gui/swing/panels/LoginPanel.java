@@ -92,35 +92,12 @@ public class LoginPanel extends JPanel {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     //Create and set up the content pane.
-    LoginPanel demo = new LoginPanel(new TestMainLoginPanelController());
+    LoginPanel demo = new LoginPanel(new TestGameMenuController());
     frame.add(demo.LoginPanel);
 
     //Display the window.
     frame.pack();
     frame.setVisible(true);
-  }
-
-  private static class TestMainLoginPanelController extends SwingGUIController {
-
-    @Override
-    public void sendMessage(ViewMessage message) {
-      if (message instanceof LoginMessage) {
-        LoginMessage loginMessage = (LoginMessage) message;
-
-        System.out.println("Email: " + loginMessage.email + " Password: " + loginMessage.password);
-
-      } else {
-        throw new IllegalArgumentException("LoginPanel::Sent did not sent a login message - "
-            + message.messageType);
-      }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-      System.out.println("Tried to change to " + e.getActionCommand());
-
-    }
   }
 
 }

@@ -34,7 +34,11 @@ public class MainMenuPanel extends SwingGUIController {
   private InvitesPanel invitesPanel1;
   private PlayerStatsPanel playerStatsPanel1;
 
-  public MainMenuPanel() {
+  private SwingGUIController controller;
+
+  public MainMenuPanel(SwingGUIController controller) {
+
+    this.controller = controller;
 
     cardLayout = (CardLayout) displayPanel.getLayout();
     cardLayout.show(displayPanel, "Invites");
@@ -70,6 +74,11 @@ public class MainMenuPanel extends SwingGUIController {
       throw new IllegalArgumentException("ActiveGame:: Did not sent a menu message - "
           + message.messageType);
     }
+
+  }
+
+  @Override
+  public void receiveMessage(ViewMessage message) {
 
   }
 
@@ -115,7 +124,7 @@ public class MainMenuPanel extends SwingGUIController {
     frame.setResizable(false);
 
     //Create and set up the content pane.
-    MainMenuPanel demo = new MainMenuPanel();
+    MainMenuPanel demo = new MainMenuPanel(new TestGameMenuController());
     frame.add(demo.mainPanel);
 
     //Display the window.

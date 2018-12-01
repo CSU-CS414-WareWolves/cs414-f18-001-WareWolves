@@ -14,7 +14,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <nested-form id="eac0d" form-file="client/gui/swing/panels/LoginScreenPanel.form" binding="loginScreenPanel1" default-binding="true">
+          <nested-form id="eac0d" form-file="client/gui/swing/panels/LoginScreenPanel.form" binding="loginScreenPanel" custom-create="true">
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
@@ -41,7 +41,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <nested-form id="8b97b" form-file="client/gui/swing/panels/MainMenuPanel.form" binding="mainMenuPanel1" default-binding="true">
+          <nested-form id="8b97b" form-file="client/gui/swing/panels/MainMenuPanel.form" binding="mainMenuPanel" custom-create="true">
             <constraints border-constraint="Center"/>
           </nested-form>
         </children>

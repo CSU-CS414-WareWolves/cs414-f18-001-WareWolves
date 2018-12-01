@@ -59,6 +59,11 @@ public class TestGameMenuController extends SwingGUIController {
   }
 
   @Override
+  public void receiveMessage(ViewMessage message) {
+
+  }
+
+  @Override
   public void actionPerformed(ActionEvent e) {
 
     throw new IllegalArgumentException("ActiveGame:: Tried to send a action - "
