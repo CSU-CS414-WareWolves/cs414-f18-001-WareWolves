@@ -21,17 +21,18 @@ public class CLMenu implements MenuView {
 
   /**
    * Print out all the invites that are currently in the user's inbox
-   * @param mail a collection of invites
+   * @param ids list of ids of invitations
+   * @param players list of usernames the player has an invite from
    */
-  public void viewInvites(String[] mail){
-    if(mail.length == 0 || mail == null){
+  public void viewInvites(int[] ids, String[] players){
+    if(ids.length == 0 || ids == null){
       System.out.println("No invites found!\nSend a game invite from the main menu!");
       return;
     } else {
       StringBuilder res = new StringBuilder();
       res.append("+++ Inbox +++\n");
-      for (int i = 0; i < mail.length; i++) {
-        res.append("[" + i + "]: " + mail[i] + " has invited you to a game!\n");
+      for (int i = 0; i < ids.length; i++) {
+        res.append("[" + ids[i] + "]: " + players[i] + " has invited you to a game!\n");
       }
       System.out.println(res);
     }

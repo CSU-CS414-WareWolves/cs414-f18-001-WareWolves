@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public interface GameView {
   // Prints a list of current games
-  void showCurrentGames(String[] games);
+  void showCurrentGames(int[] ids, String[] players);
 
   // Prints the board from the given state
   void showGameBoard(GameBoard gb);

@@ -21,16 +21,17 @@ public class CLGameView implements GameView {
 
   /**
    * Prints all current games of the user
-   * @param games list of usernames the player has an active game with
+   * @param ids list of ids of the active games
+   * @param players list of usernames the player has an active game with
    */
-  public void showCurrentGames(String[] games){
+  public void showCurrentGames(int[] ids, String[] players){
     //Print the list in a nice fashion
     StringBuilder res = new StringBuilder();
 
     res.append("+++ Select the Game you wish to continue +++\n\n");
-    for(int i=0; i<games.length; i++){
-      res.append("[").append(i+1).append("]: ");
-      res.append(games[i]);
+    for(int i=0; i<players.length; i++){
+      res.append("[").append(ids[i]).append("]: ");
+      res.append(players[i]);
       res.append("\n");
     }
 

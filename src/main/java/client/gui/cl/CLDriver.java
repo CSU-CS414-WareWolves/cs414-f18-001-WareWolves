@@ -6,6 +6,7 @@ import client.Point;
 import client.game.Game;
 import client.game.GameBoard;
 import client.gui.ChadGameDriver;
+import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.MenuMessage;
@@ -15,7 +16,10 @@ import client.presenter.controller.messages.RegisterResponseMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMoves;
 import client.presenter.controller.messages.ViewValidMovesResponse;
+import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.GameInfo;
+import client.presenter.network.messages.InboxRequest;
+import client.presenter.network.messages.InboxResponse;
 import client.presenter.network.messages.NetworkMessage;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
@@ -99,14 +103,18 @@ public class CLDriver implements ChadGameDriver {
       case GAME_REQUEST:
         break;
       case GAME_INFO:
+        handleInGame(message);
         break;
       case MOVE:
         break;
       case ACTIVE_GAMES_REQUEST:
+        //send back a MenuMessage
         break;
       case ACTIVE_GAMES_RESPONSE:
+        handleActiveGames(message);
         break;
       case INVITE_REQUEST:
+        //send back a MenuMessage
         break;
       case INVITE_RESPONSE:
         break;
@@ -115,8 +123,10 @@ public class CLDriver implements ChadGameDriver {
       case REGISTER_RESPONSE:
         break;
       case INBOX_REQUEST:
+        //send back a MenuMessage
         break;
       case INBOX_RESPONSE:
+        handleInbox(message);
         break;
     }
   }
@@ -126,7 +136,6 @@ public class CLDriver implements ChadGameDriver {
    * @param message a ViewMessage with a type and data dependent on its type
    */
   public void handleViewMessage(ViewMessage message){
-
     switch (message.messageType){
       case REGISTER:
         try {
@@ -134,6 +143,7 @@ public class CLDriver implements ChadGameDriver {
         } catch (NoSuchAlgorithmException e) {
           //handle error
         }
+        //give presenter rm
         break;
       case LOGIN:
         try {
@@ -141,6 +151,7 @@ public class CLDriver implements ChadGameDriver {
         } catch (NoSuchAlgorithmException e) {
           //handle error
         }
+        //give presenter lm
         break;
       case UNREGISTER:
         menu.unregisterUser();
@@ -191,20 +202,27 @@ public class CLDriver implements ChadGameDriver {
 
   }
 
+
   private void handleMenuMessage(MenuMessage message) {
     switch (message.menuType){
       case LOGOUT:
         System.exit(0);
         break;
       case PLAYER_STATS:
+        //TODO
+        menu.showStats("",0,0,0,0);
         break;
       case ACTIVE_GAMES:
+        //TODO
         break;
       case INVITES:
+        //TODO
         break;
       case SELECT_GAME:
+        //TODO
         break;
       case SEND_INVITE:
+        //TODO
         break;
     }
   }
@@ -250,19 +268,20 @@ public class CLDriver implements ChadGameDriver {
 
   /**
    * Handle active game screen
-   * @param games MenuMessage containing the active games of the user
+   * @param gs MenuMessage containing the active games of the user
    *        games.information should contain the nicknames from the active games
    * @return MenuMessage object with
    */
-  public MenuMessage handleActiveGames(MenuMessage games){
+  public MenuMessage handleActiveGames(NetworkMessage gs){
     //show games
-    game.showCurrentGames(games.information);
-
-    String[] info = new String[1];
+    ActiveGameResponse games = (ActiveGameResponse) gs;
+    game.showCurrentGames(games.gameIDs, games.opponents);
+    String[] info = new String[2];
     int option = keys.nextInt();
-    info[0] = games.information[option-1];
 
-    return null;
+    info[0] = Integer.toString(games.gameIDs[option]);
+    info[1] = games.opponents[option];
+    return new MenuMessage(MenuMessageTypes.SELECT_GAME, info);
   }
 
   /**
@@ -345,10 +364,11 @@ public class CLDriver implements ChadGameDriver {
 
   /**
    * Handle inbox interactions
-   * @param mail array of String that are game invites for the user
+   * @param message an InboxResponse with
    */
-  public void handleInbox(String[]  mail){
-    menu.viewInvites(mail);
+  public void handleInbox(NetworkMessage message){
+    InboxResponse ir = (InboxResponse) message;
+    menu.viewInvites(ir.inviteIDs, ir.recipients);
     return;
   }
 
