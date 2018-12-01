@@ -22,6 +22,7 @@ import client.presenter.network.messages.InboxRequest;
 import client.presenter.network.messages.InboxResponse;
 import client.presenter.network.messages.LoginResponse;
 import client.presenter.network.messages.NetworkMessage;
+import client.presenter.network.messages.RegisterResponse;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
@@ -101,6 +102,7 @@ public class CLDriver implements ChadGameDriver {
         handleViewMessage(new LoginResponseMessage(lr.success, lr.nickname));
         break;
       case LOGOUT:
+
         break;
       case REGISTER:
         break;
@@ -127,9 +129,11 @@ public class CLDriver implements ChadGameDriver {
       case RESIGN:
         break;
       case REGISTER_RESPONSE:
+        RegisterResponse rr = (RegisterResponse) message;
+        handleViewMessage(new RegisterResponseMessage(rr.success, new String[]{}));
         break;
       case INBOX_REQUEST:
-        //send back a MenuMessage
+
         break;
       case INBOX_RESPONSE:
         handleInbox(message);
@@ -193,7 +197,7 @@ public class CLDriver implements ChadGameDriver {
         break;
       case UNREGISTER_RESPONSE:
         System.out.println("[!] It's sad to see you go, but consider rejoining soon!");
-        System.out.println("[!] Account has been unregistered.");
+        System.out.println("[!!] Account has been unregistered.");
         //sign off / exit to title screen
         break;
       case SHOW_VALID_MOVES_RESPONSE:

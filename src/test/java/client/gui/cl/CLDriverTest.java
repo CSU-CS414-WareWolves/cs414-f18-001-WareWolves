@@ -50,12 +50,6 @@ class CLDriverTest {
 
   @Test
   void handleLoginMenu() {
-    try {
-      ViewMessage check = driver.handleLoginMenu();
-      assertTrue(check instanceof LoginMessage);
-    } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
-    }
   }
 
   @Test
