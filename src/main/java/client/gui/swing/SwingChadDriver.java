@@ -3,9 +3,11 @@ package client.gui.swing;
 import client.game.Game;
 import client.gui.ChadGameDriver;
 import client.presenter.controller.messages.LoginMessage;
+import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.RegisterMessage;
+import client.presenter.controller.messages.RegisterResponseMessage;
 import client.presenter.controller.messages.UnregisterMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMoves;
@@ -33,6 +35,10 @@ public class SwingChadDriver implements ChadGameDriver{
    * The Swing GUI / View
    */
   private GameJPanel gamePanel;
+  /**
+   * The view controller
+   */
+  private ChadGameDriver viewDriver;
   /**
    * The game / Model
    */
@@ -68,13 +74,20 @@ public class SwingChadDriver implements ChadGameDriver{
         int emailColon = registerMessage.email.indexOf(':');
         if(nicknameColon != -1 || nicknamePound != -1) {
           // Nickname contains invalid characters
-          // Show error message (Not Implemented)
+          String[] messages = {"Invalid Nickname"};
+          RegisterResponseMessage registerResponseMessage = new RegisterResponseMessage(false, messages);
+          // Send message to gui/cli handle view message
+          viewDriver.handleViewMessage(registerResponseMessage);
         }
         else if (emailColon != -1 || emailPound != -1) {
           // Email contains invalid characters
-          // Show error message (Not Implemented)
+          String[] messages = {"Invalid Email"};
+          RegisterResponseMessage registerResponseMessage = new RegisterResponseMessage(false, messages);
+          // Send message to gui/cli handle view message
+          viewDriver.handleViewMessage(registerResponseMessage);
         }
         else {
+          // Email and nickname do not contain any invalid characters. Send to network manager.
           networkManager.sendMessage(new Register(registerMessage.email, registerMessage.nickname,HashPasswords.SHA1FromString(registerMessage.password)));
         }
         break;
@@ -110,20 +123,7 @@ public class SwingChadDriver implements ChadGameDriver{
         }
         // Send Move to Server
         break;
-      case REGISTER_RESPONSE:
-        break;
-      case LOGIN_RESPONSE:
-        break;
-      case UNREGISTER_RESPONSE:
-        break;
-      case SHOW_VALID_MOVES_RESPONSE:
-        break;
-      case MENU_RESPONSE:
-        break;
-      case MOVE_PIECE_RESPONSE:
-        break;
     }
-
   }
 
   /**
@@ -160,10 +160,13 @@ public class SwingChadDriver implements ChadGameDriver{
         LoginResponse loginResponse = (LoginResponse) message;
         // If the login was successful
         if(loginResponse.success) {
-            this.playerNickname = loginResponse.nickname;
+          this.playerNickname = loginResponse.nickname;
+          LoginResponseMessage loginResponseMessage = new LoginResponseMessage(loginResponse.success, loginResponse.nickname);
+          // Send message to gui/cli handle view message
         }
         else {
-          // Handle login failure (Not Implemented)
+          LoginResponseMessage loginResponseMessage = new LoginResponseMessage(loginResponse.success, loginResponse.nickname);
+          // Send message to gui/cli handle view message
         }
         break;
       case GAME_INFO:
@@ -299,9 +302,12 @@ public class SwingChadDriver implements ChadGameDriver{
 
 
   public static void main(String[] args) {
-
+    if(args[1].equals("cli")){
+      // Instantiate CLI Controller
+    } else if(args[1].equals("gui")){
+      // Instantiate GUI Controller
+    }
     SwingChadDriver app = new SwingChadDriver();
     app.start();
-
   }
 }
