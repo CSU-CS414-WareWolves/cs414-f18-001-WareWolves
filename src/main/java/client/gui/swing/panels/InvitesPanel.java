@@ -1,10 +1,8 @@
 package client.gui.swing.panels;
 
 import client.gui.swing.SwingGUIController;
-import client.gui.swing.info.ActiveGameInfo;
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.MenuMessage;
-import client.presenter.controller.messages.ViewMessage;
 import client.presenter.network.messages.InboxResponse;
 import client.presenter.network.messages.NetworkMessage;
 import java.awt.event.ActionEvent;
@@ -20,10 +18,12 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-public class InvitesPanel extends UpdatableJTableList {
+public class InvitesPanel extends UpdatableJTableInPanel {
 
   private final String[] receivedColumns = {"IDs", "Invite From", "Date Sent"};
   private final String[] sentColumns = {"IDs", "Sent To", "Date Sent"};
+
+  private String nickname;
 
 
   private JPanel mainPanel;
@@ -48,32 +48,47 @@ public class InvitesPanel extends UpdatableJTableList {
     acceptInvite.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        int rowIndex = getGameId(receivedTable);
-        if (rowIndex == -1) {
+        int inviteId = getHiddenID(receivedTable);
+        if (inviteId == -1) {
           return;
         }
-        String inviteId = (String) receivedTableModel.getValueAt(rowIndex, 0);
         controller.sendMessage(new MenuMessage(MenuMessageTypes.INVITES,
-            new String[] {inviteId, String.valueOf(true)}));
+            new String[] {String.valueOf(inviteId), String.valueOf(true)}));
       }
     });
     rejectInvite.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
 
-        int rowIndex = getGameId(receivedTable);
-        if (rowIndex == -1) {
+        int inviteId = getHiddenID(receivedTable);
+        if (inviteId == -1) {
           return;
         }
-        String inviteId = (String) receivedTableModel.getValueAt(rowIndex, 0);
         controller.sendMessage(new MenuMessage(MenuMessageTypes.INVITES,
-            new String[] {inviteId, String.valueOf(false)}));
+            new String[] {String.valueOf(inviteId), String.valueOf(false)}));
       }
     });
     cancelInvite.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        // Send cancel Message
+
+        int inviteId = getHiddenID(sentTable);
+        if (inviteId == -1) {
+          return;
+        }
+        int dialogButton = JOptionPane.YES_NO_OPTION;
+        int dialogResult = JOptionPane
+            .showConfirmDialog(mainPanel, "Are you sure you want to cancel your invite to "
+                + sentTableModel.getValueAt(
+                    sentTable.convertRowIndexToModel(sentTable.getSelectedRow()),1)
+                , "Warning", dialogButton);
+        if (dialogResult == JOptionPane.YES_OPTION) {
+          controller.sendMessage(new MenuMessage(MenuMessageTypes.INVITES,
+              new String[] {String.valueOf(inviteId), String.valueOf(false)}));
+        }
+
+
+
 
 
       }
@@ -96,6 +111,13 @@ public class InvitesPanel extends UpdatableJTableList {
 
     for (int i = 0; i < inboxMessage.inviteIDs.length; i++) {
 
+      if(inboxMessage.senders[i].equals(nickname)){
+        sentTableModel.addRow(new Object[] {inboxMessage.inviteIDs[i],
+            inboxMessage.recipients[i], inboxMessage.sendDates[i]});
+      } else {
+        receivedTableModel.addRow(new Object[] {inboxMessage.inviteIDs[i],
+            inboxMessage.senders[i], inboxMessage.sendDates[i]});
+      }
     }
 
 
@@ -161,6 +183,8 @@ public class InvitesPanel extends UpdatableJTableList {
 
     //Create and set up the content pane.
     InvitesPanel demo = new InvitesPanel(new TestGameMenuController());
+    demo.setNickname("Mac");
+    demo.updateTable(new InboxResponse("16:123:Mac:Dennis:01-01-18#1234:Charlie:Mac:02-14-18"));
     frame.add(demo.mainPanel);
 
     //Display the window.
@@ -169,5 +193,8 @@ public class InvitesPanel extends UpdatableJTableList {
   }
 
 
+  public void setNickname(String nickname) {
+    this.nickname = nickname;
+  }
 }
 

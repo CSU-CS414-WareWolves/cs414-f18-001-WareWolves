@@ -15,4 +15,9 @@ public class PanelTestDriver implements ChadGameDriver {
   public void handleNetMessage(NetworkMessage message) {
 
   }
+
+  @Override
+  public void createAndShowGUI() {
+
+  }
 }

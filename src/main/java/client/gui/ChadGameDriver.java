@@ -13,5 +13,6 @@ public interface ChadGameDriver {
 
   void handleViewMessage(ViewMessage message);
   void handleNetMessage(NetworkMessage message);
+  void createAndShowGUI();
 
 }

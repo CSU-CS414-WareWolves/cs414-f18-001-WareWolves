@@ -3,6 +3,7 @@ package client.gui.swing.panels;
 import client.gui.swing.SwingGUIController;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.MenuMessage;
+import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.ViewMessage;
 import java.awt.event.ActionEvent;
 
@@ -28,10 +29,8 @@ public class TestGameMenuController extends SwingGUIController {
             System.out.println("User attempting to send new invite");
           } else {
             System.out.println("Invite ID: " + menuMessage.information[0] + " Accepting: "
-                + menuMessage.information[0]);
+                + menuMessage.information[1]);
           }
-
-
           break;
 
 
@@ -43,6 +42,15 @@ public class TestGameMenuController extends SwingGUIController {
       LoginMessage loginMessage = (LoginMessage) message;
 
       System.out.println("Email: " + loginMessage.email + " Password: " + loginMessage.password);
+
+    }
+
+    if (message instanceof RegisterMessage) {
+      RegisterMessage registerMessage = (RegisterMessage) message;
+
+      System.out.println("Email: " + registerMessage.email +
+          " Password: " + registerMessage.password +
+          " Nickname: " + registerMessage.nickname);
 
     }
   }

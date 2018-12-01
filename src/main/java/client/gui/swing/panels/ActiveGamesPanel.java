@@ -21,7 +21,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
-public class ActiveGamesPanel extends UpdatableJTableList {
+public class ActiveGamesPanel extends UpdatableJTableInPanel {
 
   private final Object[] columnNames = {"GameID", "Opponent", "Start Date", "Players turn",
       "Game Finished"};
@@ -44,7 +44,7 @@ public class ActiveGamesPanel extends UpdatableJTableList {
       @Override
       public void actionPerformed(ActionEvent e) {
 
-        int gameIndex = getGameId(activeGamesTable);
+        int gameIndex = getHiddenID(activeGamesTable);
         if (gameIndex == -1) {
           return;
         }
@@ -62,7 +62,7 @@ public class ActiveGamesPanel extends UpdatableJTableList {
     playGameButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        int gameIndex = getGameId(activeGamesTable);
+        int gameIndex = getHiddenID(activeGamesTable);
         if (gameIndex != -1) {
           ActiveGameInfo gameInfo = activeGames.get(gameIndex);
           controller
