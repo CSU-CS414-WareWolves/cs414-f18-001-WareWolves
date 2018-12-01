@@ -83,7 +83,9 @@
           <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
-        <properties/>
+        <properties>
+          <autoscrolls value="false"/>
+        </properties>
         <border type="bevel-lowered"/>
         <children>
           <nested-form id="3889b" form-file="client/gui/swing/panels/ActiveGamesPanel.form" binding="activeGamesPanel" custom-create="true">

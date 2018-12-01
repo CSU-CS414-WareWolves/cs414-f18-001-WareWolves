@@ -19,7 +19,7 @@ public class TestGameMenuController extends SwingGUIController {
           System.out.println("Select Game: " + menuMessage.information[0] + " Opponent: "
               + menuMessage.information[2]);
           break;
-        case RESIGN_GAME:
+        case RESIGN:
           System.out.println("Resign Game: " + menuMessage.information[0] + " Opponent: "
               + menuMessage.information[2]);
           break;
@@ -31,6 +31,9 @@ public class TestGameMenuController extends SwingGUIController {
             System.out.println("Invite ID: " + menuMessage.information[0] + " Accepting: "
                 + menuMessage.information[1]);
           }
+          break;
+        case PLAYER_STATS:
+          System.out.println("Request Player Stats: " + menuMessage.information[0]);
           break;
 
 

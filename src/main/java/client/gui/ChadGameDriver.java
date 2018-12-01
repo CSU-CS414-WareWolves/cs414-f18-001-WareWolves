@@ -20,8 +20,6 @@ public interface ChadGameDriver {
    * @param message the message to process
    */
   void handleNetMessage(NetworkMessage message);
-  void createAndShowGUI();
-
   /**
    * Starts up the GUI interface
    */

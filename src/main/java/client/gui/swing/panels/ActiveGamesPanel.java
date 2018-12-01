@@ -55,7 +55,7 @@ public class ActiveGamesPanel extends UpdatableJTableInPanel {
                 + gameInfo.getOpponents(), "Warning", dialogButton);
         if (dialogResult == JOptionPane.YES_OPTION) {
           controller
-              .sendMessage(new MenuMessage(MenuMessageTypes.RESIGN_GAME, gameInfo.getInfoArray()));
+              .sendMessage(new MenuMessage(MenuMessageTypes.RESIGN, gameInfo.getInfoArray()));
         }
       }
     });
@@ -166,45 +166,13 @@ public class ActiveGamesPanel extends UpdatableJTableInPanel {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     //Create and set up the content pane.
-    ActiveGamesPanel demo = new ActiveGamesPanel(new TestMainActiveGameController());
-    //demo.loadTestData(demo);
+    ActiveGamesPanel demo = new ActiveGamesPanel(new TestGameMenuController());
+    demo.loadTestData(demo);
     frame.add(demo.mainPanel);
 
     //Display the window.
     frame.pack();
     frame.setVisible(true);
-  }
-
-  private static class TestMainActiveGameController extends SwingGUIController {
-
-    @Override
-    public void sendMessage(ViewMessage message) {
-      if (message instanceof MenuMessage) {
-        MenuMessage loginMessage = (MenuMessage) message;
-
-        switch (loginMessage.menuType) {
-          case SELECT_GAME:
-            System.out.println("Select Game: " + loginMessage.information[0] + " Opponent: "
-                + loginMessage.information[2]);
-            break;
-          case RESIGN_GAME:
-            System.out.println("Resign Game: " + loginMessage.information[0] + " Opponent: "
-                + loginMessage.information[2]);
-        }
-
-      } else {
-        throw new IllegalArgumentException("ActiveGame:: Did not sent a menu message - "
-            + message.messageType);
-      }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-      throw new IllegalArgumentException("ActiveGame:: Tried to send a action - "
-          + e.getActionCommand());
-
-    }
   }
 
 }

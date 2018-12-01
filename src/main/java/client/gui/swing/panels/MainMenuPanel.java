@@ -47,7 +47,7 @@ public class MainMenuPanel extends SwingGUIController {
   private void createUIComponents() {
     activeGamesPanel = new ActiveGamesPanel(this);
     invitesPanel1 = new InvitesPanel(this);
-    playerStatsPanel1 = new PlayerStatsPanel();
+    playerStatsPanel1 = new PlayerStatsPanel(this);
   }
 
   @Override
@@ -61,7 +61,7 @@ public class MainMenuPanel extends SwingGUIController {
           System.out.println("Select Game: " + loginMessage.information[0] + " Opponent: "
               + loginMessage.information[2]);
           break;
-        case RESIGN_GAME:
+        case RESIGN:
           System.out.println("Resign Game: " + loginMessage.information[0] + " Opponent: "
               + loginMessage.information[2]);
       }
@@ -112,6 +112,7 @@ public class MainMenuPanel extends SwingGUIController {
     //Create and set up the window.
     JFrame frame = new JFrame("Login Panel Test");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setResizable(false);
 
     //Create and set up the content pane.
     MainMenuPanel demo = new MainMenuPanel();
