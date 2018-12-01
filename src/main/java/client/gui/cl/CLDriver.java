@@ -5,16 +5,7 @@ import client.game.Game;
 import client.gui.ChadGameDriver;
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.ViewMessageType;
-import client.presenter.controller.messages.LoginMessage;
-import client.presenter.controller.messages.LoginResponseMessage;
-import client.presenter.controller.messages.MenuMessage;
-import client.presenter.controller.messages.MovePieceMessage;
-import client.presenter.controller.messages.RegisterMessage;
-import client.presenter.controller.messages.RegisterResponseMessage;
-import client.presenter.controller.messages.UnregisterMessage;
-import client.presenter.controller.messages.ViewMessage;
-import client.presenter.controller.messages.ViewValidMoves;
-import client.presenter.controller.messages.ViewValidMovesResponse;
+import client.presenter.controller.messages.*;
 import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.GameInfo;
 import client.presenter.network.messages.InboxResponse;
@@ -22,6 +13,7 @@ import client.presenter.network.messages.LoginResponse;
 import client.presenter.network.messages.NetworkMessage;
 import client.presenter.network.messages.Register;
 import client.presenter.network.messages.RegisterResponse;
+import client.presenter.network.messages.Unregister;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
@@ -84,7 +76,6 @@ public class CLDriver implements ChadGameDriver {
     login.showSplash();
     login.showLogin();
     chadGame = new Game();
-//    setupGame(-1, chadGame.getBoard(), chadGame.getTurn());
   }
 
   /**
@@ -201,8 +192,7 @@ public class CLDriver implements ChadGameDriver {
         }
         break;
       case UNREGISTER_RESPONSE:
-        System.out.println("[!] It's sad to see you go, but consider rejoining soon!");
-        System.out.println("[!!] Account has been unregistered.");
+        handleUnregister();
         //sign off / exit to title screen
         break;
       case SHOW_VALID_MOVES_RESPONSE:
@@ -218,7 +208,10 @@ public class CLDriver implements ChadGameDriver {
 
   }
 
-
+  /**
+   * Handles a given ViewMessage, acts according to the its type
+   * @param message a ViewMessage with a type and data dependent on its type
+   */
   private void handleMenuMessage(MenuMessage message) {
     MenuMessage mm;
     switch (message.menuType){
@@ -289,8 +282,22 @@ public class CLDriver implements ChadGameDriver {
   }
 
   public UnregisterMessage handleUnregister() {
-    //TODO
-    return null;
+    clearScreen();
+    String email;
+    String pass;
+
+    System.out.println("[!] FOR UNREGISTER CONFIRMATION, PLEASE RE-ENTER YOUR ACCOUNT'S CREDENTIALS");
+    System.out.println("E-mail:");
+    email = keys.nextLine();
+    System.out.println("Password:");
+    pass = keys.nextLine();
+
+    try {
+      return new UnregisterMessage(email, pass, nickname);
+    } catch (NoSuchAlgorithmException e) {
+      e.printStackTrace();
+      return null;
+    }
   }
 
   /**
