@@ -6,13 +6,18 @@ import static org.junit.jupiter.api.Assertions.*;
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.ViewMessageType;
 import client.presenter.controller.messages.LoginMessage;
+import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.MenuMessage;
+import client.presenter.controller.messages.MenuMessageResponse;
 import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.MovePieceResponse;
 import client.presenter.controller.messages.RegisterMessage;
+import client.presenter.controller.messages.RegisterResponseMessage;
 import client.presenter.controller.messages.UnregisterMessage;
+import client.presenter.controller.messages.UnregisterResponseMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMoves;
+import client.presenter.controller.messages.ViewValidMovesResponse;
 import java.security.NoSuchAlgorithmException;
 import javax.print.DocFlavor.STRING;
 import org.junit.jupiter.api.DisplayName;
@@ -36,6 +41,16 @@ class ViewMessageFactoryTest {
   }
 
   @Test
+  void createRegisterResponse() {
+    String[] messages = {"Successfully Registered User"};
+    RegisterResponseMessage expected = new RegisterResponseMessage(TEST_SUCCESS, messages);
+
+    String[] info = {Boolean.toString(TEST_SUCCESS), messages[0]};
+    testResponseEquals(expected, info, ViewMessageType.REGISTER_RESPONSE);
+
+  }
+
+  @Test
   void createViewMessageUnregister() throws NoSuchAlgorithmException {
 
     UnregisterMessage expected =
@@ -43,6 +58,16 @@ class ViewMessageFactoryTest {
 
     String[] info = {TEST_LOGIN_EMAIL, TEST_LOGIN_PASSWORD, TEST_NICKNAME};
     testMessageEquals(expected, info, ViewMessageType.UNREGISTER);
+  }
+
+  @Test
+  void createUnregisterResponse() {
+    String[] messages = {"Successfully Unregistered User"};
+    UnregisterResponseMessage expected = new UnregisterResponseMessage(TEST_SUCCESS, messages);
+
+    String[] info = {Boolean.toString(TEST_SUCCESS), messages[0]};
+    testResponseEquals(expected, info, ViewMessageType.UNREGISTER_RESPONSE);
+
   }
 
   @Test
@@ -56,12 +81,30 @@ class ViewMessageFactoryTest {
   }
 
   @Test
+  void createLoginResponse() {
+
+    LoginResponseMessage expected = new LoginResponseMessage(TEST_SUCCESS, TEST_NICKNAME);
+
+    String[] info = {Boolean.toString(TEST_SUCCESS), TEST_NICKNAME};
+    testResponseEquals(expected, info, ViewMessageType.LOGIN_RESPONSE);
+  }
+
+  @Test
   void createViewMessageViewMoves() throws NoSuchAlgorithmException {
 
     ViewValidMoves expected = new ViewValidMoves(FROM_COL, FROM_ROW);
 
     String[] info = {Integer.toString(FROM_COL), Integer.toString(FROM_ROW)};
     testMessageEquals(expected, info, ViewMessageType.SHOW_VALID_MOVES);
+  }
+
+  @Test
+  void createViewValidMovesResponse() {
+    String[] validMoves = {"AACD"};
+    ViewValidMovesResponse expected = new ViewValidMovesResponse(validMoves);
+
+    testResponseEquals(expected, validMoves, ViewMessageType.SHOW_VALID_MOVES_RESPONSE);
+
   }
 
   @Test
@@ -89,9 +132,22 @@ class ViewMessageFactoryTest {
     testMessageEquals(expected, info, ViewMessageType.MENU);
   }
 
+  @DisplayName("testMenuMessageResponse")
+  @ParameterizedTest(name = "Menu type ({0}) should be {0}")
+  @EnumSource(
+      value = MenuMessageTypes.class,
+      names = {"LOGOUT", "PLAYER_STATS", "ACTIVE_GAMES", "INVITES", "SELECT_GAME", "SEND_INVITE"})
+  public void testMenuMessageResponse(MenuMessageTypes menuMessageTypes) {
+    String[] expectInfo = {"TestInfo"};
+    MenuMessageResponse expected = new MenuMessageResponse(menuMessageTypes, expectInfo);
+
+    String[] info = {menuMessageTypes.name(), "TestInfo"};
+
+    testResponseEquals(expected, info, ViewMessageType.MENU_RESPONSE);
+  }
+
   @Test
   void createMovePieceResponse() throws NoSuchAlgorithmException {
-
 
     MovePieceResponse expected =
         new MovePieceResponse(true, TEST_GAME_BOARD);
@@ -102,6 +158,7 @@ class ViewMessageFactoryTest {
 
   /**
    * Tests different types of messages to see if they are created correctly
+   *
    * @param expected the expected message
    * @param info the info to build the message
    * @param type the type of message
@@ -110,6 +167,18 @@ class ViewMessageFactoryTest {
   private void testMessageEquals(ViewMessage expected, String[] info, ViewMessageType type)
       throws NoSuchAlgorithmException {
     ViewMessage result = factory.createViewMessage(type, info);
+    assertEquals(expected, result);
+  }
+
+  /**
+   * Tests different types of responses to see if they are created correctly
+   *
+   * @param expected the expected message
+   * @param info the info to build the message
+   * @param type the type of message
+   */
+  private void testResponseEquals(ViewMessage expected, String[] info, ViewMessageType type) {
+    ViewMessage result = factory.createViewMessageFromServer(type, info);
     assertEquals(expected, result);
   }
 
