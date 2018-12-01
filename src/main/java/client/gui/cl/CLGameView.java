@@ -11,12 +11,12 @@ import java.util.ArrayList;
 public class CLGameView implements GameView {
 
   // Piece representations
-  public static final String WKING = "\u2654";
-  public static final String WQUEEN = "\u2655";
-  public static final String WROOK = "\u2656";
-  public static final String BKING = "\u265A";
-  public static final String BQUEEN = "\u265B";
-  public static final String BROOK = "\u265C";
+  private static final String WKING = "\u2654";
+  private static final String WQUEEN = "\u2655";
+  private static final String WROOK = "\u2656";
+  private static final String BKING = "\u265A";
+  private static final String BQUEEN = "\u265B";
+  private static final String BROOK = "\u265C";
 
 
   /**
