@@ -8,7 +8,7 @@ public interface GameView {
   void showCurrentGames(int[] ids, String[] players);
 
   // Prints the board from the given state
-  void showGameBoard(GameBoard gb);
+  void showGameBoard(String board);
 
   // Prints the valid moves for the current player
   void showValidMoves(String[] list);

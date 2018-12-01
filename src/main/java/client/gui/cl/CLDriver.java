@@ -167,9 +167,6 @@ public class CLDriver implements ChadGameDriver {
       case MOVE_PIECE:
         MovePieceMessage mpm = handleMovePiece();
         //give to Presenter ref
-        //update own board to show
-        chadGame.move(mpm.fromLocation.toString(), mpm.toLocation.toString());
-        showGame();
         // go to main menu
         break;
       case REGISTER_RESPONSE:
@@ -203,6 +200,13 @@ public class CLDriver implements ChadGameDriver {
       case MENU_RESPONSE:
         break;
       case MOVE_PIECE_RESPONSE:
+        MovePieceResponse mpr = (MovePieceResponse) message;
+        if(mpr.success){
+          game.showGameBoard(mpr.gameBoard);
+        }
+        else{
+          System.out.println("[!] Invalid move, please select a valid move for your selected piece");
+        }
         break;
     }
 
@@ -232,7 +236,7 @@ public class CLDriver implements ChadGameDriver {
         //send to Presenter ref
         break;
       case SELECT_GAME:
-        //TODO
+//        handleActiveGames()
         //send to Presenter ref
         break;
       case SEND_INVITE:
@@ -281,6 +285,10 @@ public class CLDriver implements ChadGameDriver {
     return new RegisterMessage(email, pass, nick);
   }
 
+  /**
+   * Handles unregister confirmation for current user
+   * @return an Unregister message
+   */
   public UnregisterMessage handleUnregister() {
     clearScreen();
     String email;

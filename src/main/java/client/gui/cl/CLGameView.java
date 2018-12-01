@@ -40,10 +40,10 @@ public class CLGameView implements GameView {
 
   /**
    * Prints the current state of the board
-   * @param gb An instance of a GameBoard that will be printed with pieces
-   * @return void
+   * @param board a String representation from a GameBoard instance
    */
-  public void showGameBoard(GameBoard gb) {
+  public void showGameBoard(String board) {
+    GameBoard gb = new GameBoard(board);
     char row = 'a';
     StringBuilder res = new StringBuilder();
     for(int i=11; i>=0; --i){
