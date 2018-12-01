@@ -150,9 +150,9 @@ class ViewMessageFactoryTest {
   void createMovePieceResponse() throws NoSuchAlgorithmException {
 
     MovePieceResponse expected =
-        new MovePieceResponse(true, TEST_GAME_BOARD);
+        new MovePieceResponse("Draw", TEST_GAME_BOARD);
 
-    String[] info = {String.valueOf(true), TEST_GAME_BOARD};
+    String[] info = {"Draw", TEST_GAME_BOARD};
     testMessageEquals(expected, info, ViewMessageType.MOVE_PIECE_RESPONSE);
   }
 

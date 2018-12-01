@@ -6,6 +6,7 @@ import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceMessage;
+import client.presenter.controller.messages.MovePieceResponse;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.RegisterResponseMessage;
 import client.presenter.controller.messages.UnregisterMessage;
@@ -62,7 +63,7 @@ public class SwingChadDriver implements ChadGameDriver{
    * Processes a message from the Swing GUI
    * @param message the message to process
    */
-  public void handleViewMessage(ViewMessage message) throws NoSuchAlgorithmException {
+  public void handleViewMessage(ViewMessage message) {
 
     switch (message.messageType){
       case REGISTER:
@@ -88,18 +89,31 @@ public class SwingChadDriver implements ChadGameDriver{
         }
         else {
           // Email and nickname do not contain any invalid characters. Send to network manager.
-          networkManager.sendMessage(new Register(registerMessage.email, registerMessage.nickname,HashPasswords.SHA1FromString(registerMessage.password)));
+          try {
+            networkManager.sendMessage(new Register(registerMessage.email, registerMessage.nickname,
+                HashPasswords.SHA1FromString(registerMessage.password)));
+          } catch(NoSuchAlgorithmException e) {
+            // Do nothing
+          }
         }
         break;
       case LOGIN:
         LoginMessage loginMessage = (LoginMessage) message;
-        networkManager.sendMessage(new Login(loginMessage.email, HashPasswords.SHA1FromString(loginMessage.password)));
+        try {
+          networkManager.sendMessage(new Login(loginMessage.email, HashPasswords.SHA1FromString(loginMessage.password)));
+        } catch(NoSuchAlgorithmException e) {
+          // Do nothing
+        }
         break;
       case UNREGISTER:
         UnregisterMessage unregisterMessage = (UnregisterMessage) message;
-        networkManager.sendMessage(new Unregister(unregisterMessage.email, unregisterMessage.nickname, HashPasswords.SHA1FromString(unregisterMessage.password)));
+        try{
+          networkManager.sendMessage(new Unregister(unregisterMessage.email, unregisterMessage.nickname, HashPasswords.SHA1FromString(unregisterMessage.password)));
+        } catch(NoSuchAlgorithmException e) {
+          // Do nothing
+        }
         break;
-      case SHOW_VALID_MOVES:
+      case SHOW_VALID_MOVES: // Need to change with addition of CLI
         // if the game is over no valid moves
         if(chadGame.gameover()){return;}
         // Find the valid moves
@@ -111,17 +125,43 @@ public class SwingChadDriver implements ChadGameDriver{
       case MENU:
         handleMenuMessage((MenuMessage) message);
         break;
-      case MOVE_PIECE:
+      case MOVE_PIECE: // Need to change with addition of CLI
         MovePieceMessage moves = (MovePieceMessage) message;
-        chadGame.move(moves.fromLocation.toString(), moves.toLocation.toString());
-        setupGame(gameID, chadGame.getBoard(), chadGame.getTurn());
-
-        // Show the winner if the game is over
-        if(chadGame.gameover()){
-          gamePanel.displayMessage(
-              getCurrentPlayer(!chadGame.getTurn()) + " player won the game!");
+        boolean draw = false;
+        boolean ending = false;
+        // Checks to see if the move was successful
+        if(chadGame.move(moves.fromLocation.toString(), moves.toLocation.toString())){
+          setupGame(gameID, chadGame.getBoard(), chadGame.getTurn());
+         // Show the winner if the game is over
+         if (chadGame.gameover()) {
+           ending = true;
+           // Check if draw
+           if (chadGame.isDraw()) {
+             draw = true;
+             // Create message response with draw
+             MovePieceResponse movePieceResponse = new MovePieceResponse("Draw",
+                 chadGame.getBoard());
+             viewDriver.handleViewMessage(movePieceResponse);
+           } else {
+             String winner = getCurrentPlayer(!chadGame.getTurn()) + " player has won.";
+             // Create message response with winner
+             MovePieceResponse movePieceResponse = new MovePieceResponse(winner,
+                 chadGame.getBoard());
+           }
+         }
+           // Send Move to Server
+           // Get piece being moved
+           int index = chadGame.getBoard().indexOf(moves.toLocation.toString());
+           String board = chadGame.getBoard();
+           char piece = board.charAt(index - 1);
+           String moveString = piece + moves.fromLocation.toString() + moves.toLocation.toString();
+           Move move = new Move(gameID, moveString, chadGame.getBoard(), ending, draw);
+           networkManager.sendMessage(move);
+      } else {
+          // Send a move piece response message with an error
+           String error = "Invalid Move";
+           MovePieceResponse movePieceResponse = new MovePieceResponse(error, chadGame.getBoard());
         }
-        // Send Move to Server
         break;
     }
   }
@@ -147,6 +187,8 @@ public class SwingChadDriver implements ChadGameDriver{
         break;
       case SEND_INVITE:
         break;
+      case RESIGN:
+        break;
     }
   }
 
@@ -163,10 +205,12 @@ public class SwingChadDriver implements ChadGameDriver{
           this.playerNickname = loginResponse.nickname;
           LoginResponseMessage loginResponseMessage = new LoginResponseMessage(loginResponse.success, loginResponse.nickname);
           // Send message to gui/cli handle view message
+          viewDriver.handleViewMessage(loginResponseMessage);
         }
         else {
           LoginResponseMessage loginResponseMessage = new LoginResponseMessage(loginResponse.success, loginResponse.nickname);
           // Send message to gui/cli handle view message
+          viewDriver.handleViewMessage(loginResponseMessage);
         }
         break;
       case GAME_INFO:
@@ -176,25 +220,33 @@ public class SwingChadDriver implements ChadGameDriver{
         break;
       case MOVE:
         Move move = (Move) message;
-        // The game has ended
-        if(move.ending) {
-          // The game ends in a draw
-          if(move.draw) {
-            // Show draw (Not Implemented)
+        // Check if the move message is for the current game
+        if(this.gameID == move.gameID) {
+          if (move.ending) {
+            // The game has ended
+            if (move.draw) {
+              // The game ends in a draw
+              // Show draw
+              MovePieceResponse movePieceResponse = new MovePieceResponse("Draw", move.board);
+              viewDriver.handleViewMessage(movePieceResponse);
+            } else {
+              // Show game ending
+              // Creates a string with who won the game
+              String winner = getCurrentPlayer(chadGame.getTurn()) + " player has won.";
+              MovePieceResponse movePieceResponse = new MovePieceResponse(winner, move.board);
+            }
+          } else {
+            // Game has not ended
+            // Handle showing move (Not Implemented)
           }
-          else {
-            // Show game ending (Not Implemented)
-          }
-        }
-        else {
-          // Game has not ended
-          // Handle showing move (Not Implemented)
+        } else {
+          // Not for current game. Do nothing.
         }
         break;
       case ACTIVE_GAMES_RESPONSE:
         ActiveGameResponse activeGameResponse = (ActiveGameResponse) message;
-        // Display Active Games in view with ID, board, opponents, start dates, current turn, color and if it has ended
-        // (Not Implemented)
+        // Send to the view controller to display Active Games in view with ID, board, opponents, start dates, current turn, color and if it has ended
+        viewDriver.handleNetMessage(activeGameResponse);
         break;
       case REGISTER_RESPONSE:
         RegisterResponse registerResponse = (RegisterResponse) message;
@@ -253,7 +305,7 @@ public class SwingChadDriver implements ChadGameDriver{
 
     javax.swing.SwingUtilities.invokeLater(new Runnable() {
       public void run() {
-          createAndShowGUI();
+          viewDriver.createAndShowGUI();
       }
     });
   }

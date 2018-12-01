@@ -6,19 +6,19 @@ import java.util.Objects;
 public class MovePieceResponse extends ViewMessage {
 
   /**
-   * A response of success for the move piece request
+   * A message sent in response to the move piece request
    */
-  public final boolean success;
+  public final String message;
 
   public final String gameBoard;
 
   /**
    * Sets if the request was successful
-   * @param success success of the move piece request
+   * @param message is either who's turn it is, whether white or black has won, or whether it is a draw
    */
-  public MovePieceResponse(boolean success, String board) {
+  public MovePieceResponse(String message, String board) {
     super(ViewMessageType.MOVE_PIECE_RESPONSE);
-    this.success = success;
+    this.message = message;
     this.gameBoard = board;
   }
 
@@ -28,13 +28,13 @@ public class MovePieceResponse extends ViewMessage {
       return false;
     }
     MovePieceResponse other = (MovePieceResponse) o;
-    return success == other.success && gameBoard.equals(other.gameBoard);
+    return message.equals(other.message) && gameBoard.equals(other.gameBoard);
   }
 
   @Override
   public int hashCode() {
 
-    return Objects.hash(success, gameBoard);
+    return Objects.hash(message, gameBoard);
   }
 
 }

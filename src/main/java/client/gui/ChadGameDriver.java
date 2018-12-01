@@ -15,13 +15,12 @@ public interface ChadGameDriver {
    * Processes a given view message based on the message type
    * @param message the message to process
    */
-  void handleViewMessage(ViewMessage message) throws NoSuchAlgorithmException;
+  void handleViewMessage(ViewMessage message);
   /**
    * Processes a given view message based on the message type
    * @param message the message to process
    */
   void handleNetMessage(NetworkMessage message);
-
   /**
    * Starts up the GUI interface
    */

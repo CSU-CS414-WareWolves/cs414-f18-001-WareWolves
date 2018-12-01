@@ -57,10 +57,7 @@ public class ViewMessageFactory {
         return new MovePieceMessage(Integer.parseInt(info[0]), Integer.parseInt(info[1]),
             Integer.parseInt(info[2]), Integer.parseInt(info[3]));
       case MOVE_PIECE_RESPONSE:
-        boolean success = true;
-        if (info[0].equals("false"))
-          success = false;
-        return new MovePieceResponse(success, info[1]);
+        return new MovePieceResponse(info[0], info[1]);
       default:
         throw new IllegalArgumentException("The messageType of " + type.name() + " is not valid");
     }
