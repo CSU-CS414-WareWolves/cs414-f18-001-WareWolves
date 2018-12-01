@@ -125,7 +125,7 @@ public class SwingChadDriver implements ChadGameDriver{
       case MENU:
         handleMenuMessage((MenuMessage) message);
         break;
-      case MOVE_PIECE: // Need to change with addition of CLI
+      case MOVE_PIECE:
         MovePieceMessage moves = (MovePieceMessage) message;
         boolean draw = false;
         boolean ending = false;
@@ -267,12 +267,13 @@ public class SwingChadDriver implements ChadGameDriver{
         break;
       case INBOX_RESPONSE:
         InboxResponse inboxResponse = (InboxResponse) message;
-        // Display inbox of messages with ids, senders, recipients, and send dates (Not Implemented)
+        // Send to the view controller to display inbox of messages with ids, senders, recipients, and send dates
+        viewDriver.handleNetMessage(inboxResponse);
         break;
       case PROFILE_RESPONSE:
         ProfileResponse profileResponse = (ProfileResponse) message;
-        // Display profile with games player played white and black, start and end dates of games, and results of games
-        // (Not Implemented)
+        // Send to the view controller to display profile with games player played white and black, start and end dates of games, and results of games
+        viewDriver.handleNetMessage(profileResponse);
         break;
       case PLAYERS:
         Players players = (Players) message;
