@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public interface MenuView {
   // Print out menu for user to select
-  void showMenu();
+  void showMenu(String player);
 
   // View invites the active player has received
   void viewInvites(int[] ids, String[] players);

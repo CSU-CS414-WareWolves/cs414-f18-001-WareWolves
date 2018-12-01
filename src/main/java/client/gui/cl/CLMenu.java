@@ -7,8 +7,9 @@ public class CLMenu implements MenuView {
   /**
    * Print out menu for user to select an option from
    */
-  public void showMenu(){
+  public void showMenu(String player){
     StringBuilder res = new StringBuilder();
+    res.append("Hello there, "+player+"!");
     res.append("+++ Main Menu +++\n\n");
     res.append("1.[ Resume  Game ]\n");
     res.append("2.[ View Invites ]\n");

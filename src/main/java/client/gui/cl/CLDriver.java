@@ -20,6 +20,7 @@ import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.GameInfo;
 import client.presenter.network.messages.InboxRequest;
 import client.presenter.network.messages.InboxResponse;
+import client.presenter.network.messages.LoginResponse;
 import client.presenter.network.messages.NetworkMessage;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
@@ -29,10 +30,12 @@ public class CLDriver implements ChadGameDriver {
   private CLLogin login;
   private CLMenu menu;
   private CLGameView game;
-  public Scanner keys;
+  private Scanner keys;
+
+  // Active player nickname
+  private String nickname;
 
   private Game chadGame;
-  private String nickname;
   private int gameID;
 
   public CLDriver(CLLogin _login, CLMenu _menu, CLGameView _game){
@@ -91,8 +94,11 @@ public class CLDriver implements ChadGameDriver {
   public void handleNetMessage(NetworkMessage message){
     switch(message.type){
       case LOGIN:
+        //never receives one
         break;
       case LOGIN_RESPONSE:
+        LoginResponse lr = (LoginResponse) message;
+        handleViewMessage(new LoginResponseMessage(lr.success, lr.nickname));
         break;
       case LOGOUT:
         break;
@@ -139,7 +145,7 @@ public class CLDriver implements ChadGameDriver {
     switch (message.messageType){
       case REGISTER:
         try {
-          RegisterMessage rm = (RegisterMessage) handleRegister();
+          RegisterMessage rm = handleRegister();
         } catch (NoSuchAlgorithmException e) {
           //handle error
         }
@@ -169,7 +175,7 @@ public class CLDriver implements ChadGameDriver {
       case REGISTER_RESPONSE:
         RegisterResponseMessage rrm = (RegisterResponseMessage) message;
         if(rrm.success){
-          menu.showMenu();
+          menu.showMenu(nickname);
         }
         else{
           login.failedCreds(1);
@@ -178,7 +184,8 @@ public class CLDriver implements ChadGameDriver {
       case LOGIN_RESPONSE:
         LoginResponseMessage lrm = (LoginResponseMessage) message;
         if(lrm.success){
-          menu.showMenu();
+          this.nickname = lrm.nickname;
+          menu.showMenu(nickname);
         }
         else{
           login.failedCreds(0);
