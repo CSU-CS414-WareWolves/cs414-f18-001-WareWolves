@@ -78,4 +78,9 @@ public class AiDriver implements ChadGameDriver {
         break;
     }
   }
+
+  public static void main(String [] args) throws IOException, NoSuchAlgorithmException {
+    AiDriver driver = new AiDriver(InetAddress.getByName(args[0]), Integer.parseInt(args[1]));
+  }
+
 }
