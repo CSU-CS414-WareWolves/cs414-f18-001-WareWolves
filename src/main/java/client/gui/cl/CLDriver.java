@@ -1,27 +1,26 @@
 package client.gui.cl;
 
-import static java.lang.System.exit;
-
 import client.Point;
 import client.game.Game;
-import client.game.GameBoard;
 import client.gui.ChadGameDriver;
 import client.presenter.controller.MenuMessageTypes;
+import client.presenter.controller.ViewMessageType;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.RegisterResponseMessage;
+import client.presenter.controller.messages.UnregisterMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMoves;
 import client.presenter.controller.messages.ViewValidMovesResponse;
 import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.GameInfo;
-import client.presenter.network.messages.InboxRequest;
 import client.presenter.network.messages.InboxResponse;
 import client.presenter.network.messages.LoginResponse;
 import client.presenter.network.messages.NetworkMessage;
+import client.presenter.network.messages.Register;
 import client.presenter.network.messages.RegisterResponse;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
@@ -102,9 +101,10 @@ public class CLDriver implements ChadGameDriver {
         handleViewMessage(new LoginResponseMessage(lr.success, lr.nickname));
         break;
       case LOGOUT:
-
+        login.showLogout();
         break;
       case REGISTER:
+        //never receives one
         break;
       case UNREGISTER:
         break;
@@ -134,7 +134,6 @@ public class CLDriver implements ChadGameDriver {
         handleViewMessage(new RegisterResponseMessage(rr.success, new String[]{}));
         break;
       case INBOX_REQUEST:
-
         break;
       case INBOX_RESPONSE:
         handleInbox(message);
@@ -287,6 +286,11 @@ public class CLDriver implements ChadGameDriver {
     pass = keys.nextLine();
 
     return new RegisterMessage(email, pass, nick);
+  }
+
+  public UnregisterMessage handleUnregister() {
+    //TODO
+    return null;
   }
 
   /**

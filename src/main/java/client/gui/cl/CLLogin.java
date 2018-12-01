@@ -47,4 +47,8 @@ public class CLLogin implements LoginView {
       System.out.println("[!] Failed registration attempt, please try again.");
     }
   }
+
+  public void showLogout(){
+    System.out.println("[!] Good bye!");
+  }
 }
