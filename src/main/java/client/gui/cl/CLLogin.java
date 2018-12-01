@@ -39,7 +39,12 @@ public class CLLogin implements LoginView {
   /**
    * Informs of a failed login attempt
    */
-  public void failedLogin(){
-    System.out.println("[!] Failed login attempt, please try again.");
+  public void failedCreds(int i){
+    if(i==0) {
+      System.out.println("[!] Failed login attempt, please try again.");
+    }
+    else{
+      System.out.println("[!] Failed registration attempt, please try again.");
+    }
   }
 }

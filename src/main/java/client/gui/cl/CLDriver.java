@@ -11,6 +11,7 @@ import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.RegisterMessage;
+import client.presenter.controller.messages.RegisterResponseMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMoves;
 import client.presenter.controller.messages.ViewValidMovesResponse;
@@ -128,8 +129,18 @@ public class CLDriver implements ChadGameDriver {
 
     switch (message.messageType){
       case REGISTER:
+        try {
+          RegisterMessage rm = (RegisterMessage) handleRegister();
+        } catch (NoSuchAlgorithmException e) {
+          //handle error
+        }
         break;
       case LOGIN:
+        try {
+          LoginMessage lm = handleLogin();
+        } catch (NoSuchAlgorithmException e) {
+          //handle error
+        }
         break;
       case UNREGISTER:
         menu.unregisterUser();
@@ -142,8 +153,16 @@ public class CLDriver implements ChadGameDriver {
         handleMenuMessage((MenuMessage) message);
         break;
       case MOVE_PIECE:
+        handleMovePiece();
         break;
       case REGISTER_RESPONSE:
+        RegisterResponseMessage rrm = (RegisterResponseMessage) message;
+        if(rrm.success){
+          menu.showMenu();
+        }
+        else{
+          login.failedCreds(1);
+        }
         break;
       case LOGIN_RESPONSE:
         LoginResponseMessage lrm = (LoginResponseMessage) message;
@@ -151,7 +170,7 @@ public class CLDriver implements ChadGameDriver {
           menu.showMenu();
         }
         else{
-          login.failedLogin();
+          login.failedCreds(0);
         }
         break;
       case UNREGISTER_RESPONSE:
@@ -190,29 +209,13 @@ public class CLDriver implements ChadGameDriver {
     }
   }
 
-  public ViewMessage handleLoginMenu() throws NoSuchAlgorithmException{
-    int option = 0;
-    while(true) {
-      option = keys.nextInt();
-      switch (option) {
-        case 1:
-          return handleLogin();
-        case 2:
-          return handleRegister();
-        case 3:
-          System.out.println("[!] Good bye.");
-          exit(0);
-        default:
-          warningValidOption();
-      }
-    }
-  }
 
   /**
-   *
-   * @return
+   * Handles login for an existing user
+   * @return a LoginMessage with the user's input
    */
-  private ViewMessage handleLogin() throws NoSuchAlgorithmException {
+  private LoginMessage handleLogin() throws NoSuchAlgorithmException {
+    clearScreen();
     String email;
     String pass;
 
@@ -224,7 +227,13 @@ public class CLDriver implements ChadGameDriver {
     return new LoginMessage(email, pass);
   }
 
-  public ViewMessage handleRegister() throws NoSuchAlgorithmException {
+  /**
+   * Handles registration for a new user
+   * @return a RegisterMessage with the new user's input
+   * @throws NoSuchAlgorithmException
+   */
+  public RegisterMessage handleRegister() throws NoSuchAlgorithmException {
+    clearScreen();
     String email;
     String pass;
     String nick;
@@ -288,17 +297,20 @@ public class CLDriver implements ChadGameDriver {
   public ViewMessage handleMovePiece() {
     String from;
     String to;
-    System.out.println("Select a piece: ");
-    from = keys.nextLine();
-
-    //Grab valid moves for selected piece
-    //TODO: helper to convert validMoves String into String[]
-    String[] moves = {chadGame.validMoves(from)};
-    game.showValidMoves(moves);
-
-    System.out.println("Select space to move to: ");
-    to = keys.nextLine();
-
+    while (true) {
+      System.out.println("~ Select a piece (e.g. \"1a\"): ");
+      from = keys.nextLine();
+      //Display valid moves for selected piece
+      //TODO: helper to convert validMoves String into String[]
+      String[] moves = {chadGame.validMoves(from)};
+      game.showValidMoves(moves);
+      System.out.println("[!] Type \"c\" to cancel piece selection");
+      System.out.println("~ Select space to move to (e.g. \"1a\"): ");
+      to = keys.nextLine();
+      if (!to.equals("c")) {
+        break;
+      }
+    }
     return new MovePieceMessage(new Point(from), new Point(to));
   }
 
@@ -315,6 +327,8 @@ public class CLDriver implements ChadGameDriver {
    * @return an instance of Resign to inform about resignation
    */
   public ViewMessage handleGameResign(){
+    //TODO
+    //************ ViewMessage for resigning game?
     return null;
   }
 
