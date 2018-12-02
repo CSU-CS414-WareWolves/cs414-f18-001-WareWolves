@@ -269,7 +269,6 @@ public class CLDriver implements ChadGameDriver {
     }
   }
 
-
   /**
    * Handles login for an existing user
    * @return a LoginMessage with the user's input
