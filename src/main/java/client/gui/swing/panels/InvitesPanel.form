@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="client.gui.swing.panels.InvitesPanel">
+  <grid id="27dc6" binding="mainPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+    <constraints>
+      <xy x="20" y="20" width="500" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <tabbedpane id="fbf57" binding="sentInvites">
+        <constraints border-constraint="North"/>
+        <properties>
+          <name value="Recieved Invites"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <grid id="51b25" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <tabbedpane title="Recieved Invites"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <grid id="f5b5e" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+                <constraints border-constraint="South"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <hspacer id="50e12">
+                    <constraints/>
+                  </hspacer>
+                  <component id="5d03a" class="javax.swing.JButton" binding="acceptInvite">
+                    <constraints/>
+                    <properties>
+                      <actionCommand value="acceptInvite"/>
+                      <text value="Accept"/>
+                    </properties>
+                  </component>
+                  <hspacer id="722bf">
+                    <constraints/>
+                  </hspacer>
+                  <component id="cc6ba" class="javax.swing.JButton" binding="rejectInvite">
+                    <constraints/>
+                    <properties>
+                      <actionCommand value="rejectInvite"/>
+                      <text value="Reject"/>
+                    </properties>
+                  </component>
+                  <hspacer id="d70c3">
+                    <constraints/>
+                  </hspacer>
+                  <vspacer id="fedb5">
+                    <constraints/>
+                  </vspacer>
+                </children>
+              </grid>
+              <scrollpane id="67aff">
+                <constraints border-constraint="North"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="38f9b" class="javax.swing.JTable" binding="receivedTable" custom-create="true">
+                    <constraints/>
+                    <properties>
+                      <fillsViewportHeight value="true"/>
+                      <focusCycleRoot value="false"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
+            </children>
+          </grid>
+          <grid id="301ee" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <tabbedpane title="Sent Invites"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <scrollpane id="80af5">
+                <constraints border-constraint="North"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="787e9" class="javax.swing.JTable" binding="sentTable" custom-create="true">
+                    <constraints/>
+                    <properties>
+                      <fillsViewportHeight value="true"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
+              <grid id="43095" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+                <constraints border-constraint="Center"/>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <hspacer id="45aa6">
+                    <constraints/>
+                  </hspacer>
+                  <component id="c9fec" class="javax.swing.JButton" binding="newInvite">
+                    <constraints/>
+                    <properties>
+                      <actionCommand value="newInvite"/>
+                      <text value="New Invite"/>
+                    </properties>
+                  </component>
+                  <hspacer id="5cadd">
+                    <constraints/>
+                  </hspacer>
+                  <component id="1c2ba" class="javax.swing.JButton" binding="cancelInvite">
+                    <constraints/>
+                    <properties>
+                      <actionCommand value="cancelInvite"/>
+                      <text value="Cancel Invite"/>
+                    </properties>
+                  </component>
+                  <hspacer id="e689">
+                    <constraints/>
+                  </hspacer>
+                  <vspacer id="8edfc">
+                    <constraints/>
+                  </vspacer>
+                </children>
+              </grid>
+            </children>
+          </grid>
+        </children>
+      </tabbedpane>
+    </children>
+  </grid>
+</form>
