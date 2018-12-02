@@ -366,6 +366,7 @@ public class ChadPresenter implements ChadGameDriver{
 
 
   public static void main(String[] args) {
+    // args[0] = "cli" or "gui", args[1] server host, args[2] server port
     ChadPresenter app = new ChadPresenter(args[1], args[2], args[0]);
     app.start();
   }
