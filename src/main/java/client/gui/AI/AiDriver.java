@@ -5,7 +5,9 @@ import client.gui.ChadGameDriver;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.util.HashPasswords;
 import client.presenter.network.NetworkManager;
-import client.presenter.network.messages.InviteRequest;
+import client.presenter.network.messages.InboxRequest;
+import client.presenter.network.messages.InboxResponse;
+import client.presenter.network.messages.InviteResponse;
 import client.presenter.network.messages.Login;
 import client.presenter.network.messages.Move;
 import client.presenter.network.messages.NetworkMessage;
@@ -23,6 +25,8 @@ public class AiDriver implements ChadGameDriver {
     this.network = new NetworkManager(addr, port, this);
     network.sendMessage(new Login(
         "ai@ai.ai", HashPasswords.SHA1FromString("easymode")));
+    InboxPing inboxChecker = new InboxPing();
+    inboxChecker.run();
   }
 
 
@@ -64,21 +68,30 @@ public class AiDriver implements ChadGameDriver {
           e.printStackTrace();
         }
         break;
-      case ACTIVE_GAMES_RESPONSE:
-        break;
-      case INVITE_REQUEST:
-        break;
-      case INVITE_RESPONSE:
-        break;
-      case REGISTER_RESPONSE:
-        break;
       case INBOX_RESPONSE:
+        InboxResponse response = (InboxResponse) message;
+        for (int i = 0; i < response.inviteIDs.length; ++i){
+          if (response.senders[i].equals("AI")){
+            network.sendMessage(new InviteResponse(response.inviteIDs[i], true));
+          }
+        }
         break;
       default:
         break;
     }
   }
-
+  public class InboxPing extends Thread {
+    public void run() {
+      while (true) {
+        network.sendMessage(new InboxRequest("AI"));
+        try {
+          sleep(10000);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    }
+  }
   public static void main(String [] args) throws IOException, NoSuchAlgorithmException {
     AiDriver driver = new AiDriver(InetAddress.getByName(args[0]), Integer.parseInt(args[1]));
   }
