@@ -2,6 +2,8 @@ package client.presenter;
 
 import client.game.Game;
 import client.gui.ChadGameDriver;
+import client.gui.swing.SwingChadDriver;
+import client.gui.swing.SwingController;
 import client.gui.swing.info.ActiveGameInfo;
 import client.presenter.controller.messages.GameRequestMessage;
 import client.presenter.controller.messages.InviteMessage;
@@ -330,6 +332,7 @@ public class ChadPresenter implements ChadGameDriver{
       // Instantiate CLI Controller
     } else if(userInterface.equals("gui")){
       // Instantiate GUI Controller
+      viewDriver = new SwingController(this);
     }
   }
 
