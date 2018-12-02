@@ -10,8 +10,10 @@ import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.GameInfo;
 import client.presenter.network.messages.GameRequest;
 import client.presenter.network.messages.InboxResponse;
+import client.presenter.network.messages.InviteResponse;
 import client.presenter.network.messages.LoginResponse;
 import client.presenter.network.messages.NetworkMessage;
+import client.presenter.network.messages.ProfileResponse;
 import client.presenter.network.messages.Register;
 import client.presenter.network.messages.RegisterResponse;
 import client.presenter.network.messages.Unregister;
@@ -110,6 +112,10 @@ public class CLDriver implements ChadGameDriver {
         break;
       case MOVE:
         break;
+      case PROFILE_RESPONSE:
+        ProfileResponse pr = (ProfileResponse) message;
+        //TODO
+        break;
       case ACTIVE_GAMES_REQUEST:
         //send back a MenuMessage
         break;
@@ -118,9 +124,12 @@ public class CLDriver implements ChadGameDriver {
         handleActiveGames(agr.gameIDs, agr.opponents);
         break;
       case INVITE_REQUEST:
-        //send back a MenuMessage
+        //possibly not needed?
+        //TODO
         break;
       case INVITE_RESPONSE:
+        InviteResponse ir = (InviteResponse) message;
+        //TODO
         break;
       case RESIGN:
         break;
@@ -129,6 +138,7 @@ public class CLDriver implements ChadGameDriver {
         handleViewMessage(new RegisterResponseMessage(rr.success, new String[]{}));
         break;
       case INBOX_REQUEST:
+        //we don't need this message, only for server
         break;
       case INBOX_RESPONSE:
         handleInbox(message);
@@ -147,6 +157,7 @@ public class CLDriver implements ChadGameDriver {
           RegisterMessage rm = handleRegister();
         } catch (NoSuchAlgorithmException e) {
           //handle error
+          e.printStackTrace();
         }
         //give presenter rm
         break;
@@ -155,6 +166,7 @@ public class CLDriver implements ChadGameDriver {
           LoginMessage lm = handleLogin();
         } catch (NoSuchAlgorithmException e) {
           //handle error
+          e.printStackTrace();
         }
         //give presenter lm
         break;
@@ -237,9 +249,11 @@ public class CLDriver implements ChadGameDriver {
         break;
       case INVITES:
         //TODO
+//        mm = handleInbox();
         //send to Presenter ref
         break;
       case SELECT_GAME:
+        //TODO
 //        handleActiveGames()
         //send to Presenter ref
         break;
@@ -348,10 +362,12 @@ public class CLDriver implements ChadGameDriver {
     while (true) {
       System.out.println("~ Select a piece (e.g. \"1a\"): ");
       from = keys.nextLine();
+
       //Display valid moves for selected piece
       //TODO: helper to convert validMoves String into String[]
       String[] moves = {chadGame.validMoves(from)};
       game.showValidMoves(moves);
+
       System.out.println("[!] Type \"c\" to cancel piece selection");
       System.out.println("~ Select space to move to (e.g. \"1a\"): ");
       to = keys.nextLine();
@@ -386,8 +402,7 @@ public class CLDriver implements ChadGameDriver {
    */
   public void showGame(){
     clearScreen();
-    //TODO: modify showGame() to take the String representation for the gameboard
-//    game.showGameBoard(chadGame.getBoard());
+    game.showGameBoard(chadGame.getBoard());
     game.showInGameMenu();
   }
 
