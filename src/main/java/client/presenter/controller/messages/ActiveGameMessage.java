@@ -7,18 +7,12 @@ import client.presenter.controller.ViewMessageType;
  */
 public class ActiveGameMessage extends ViewMessage {
 
-  /**
-   * The nickname the user wants to see the active games of
-   */
-  public final String nickname;
 
   /**
    * Nickname for the requested games is sent
-   * @param nickname nickname for the requested games
    */
-  public ActiveGameMessage(String nickname) {
+  public ActiveGameMessage() {
     super(ViewMessageType.ACTIVE_GAMES);
-    this.nickname = nickname;
   }
 
   @Override
@@ -27,6 +21,6 @@ public class ActiveGameMessage extends ViewMessage {
       return false;
     }
     ActiveGameMessage other = (ActiveGameMessage) o;
-    return nickname.equals(other.nickname);
+    return this.messageType.equals(other.messageType);
   }
 }

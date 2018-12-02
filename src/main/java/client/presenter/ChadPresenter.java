@@ -19,6 +19,7 @@ import client.presenter.controller.messages.UnregisterMessage;
 import client.presenter.controller.messages.UnregisterResponseMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMoves;
+import client.presenter.controller.messages.ViewValidMovesResponse;
 import client.presenter.network.NetworkManager;
 import client.presenter.network.messages.ActiveGameRequest;
 import client.presenter.network.messages.ActiveGameResponse;
@@ -71,6 +72,8 @@ public class ChadPresenter implements ChadGameDriver{
    * Array of all the nicknames of players in the database
    */
   private String[] players;
+
+  boolean playerColor;
 
 
 
@@ -131,22 +134,22 @@ public class ChadPresenter implements ChadGameDriver{
       case SHOW_VALID_MOVES: // Need to change with addition of CLI
         // if the game is over no valid moves
         if(chadGame.gameover()){return;}
+        if(chadGame.getTurn() != playerColor) {return;}
         // Find the valid moves
         ViewValidMoves validMovesMessage = (ViewValidMoves) message;
         String validMoves = chadGame.validMoves(validMovesMessage.location.toString());
         // Tell GUI to what moves to show
-        gamePanel.setValidMoves(validMoves);
-        break;
-      case MENU:
-        handleMenuMessage((MenuMessage) message);
+        viewDriver.handleViewMessage(new ViewValidMovesResponse(new String [] {validMoves}));
         break;
       case MOVE_PIECE:
         MovePieceMessage moves = (MovePieceMessage) message;
         boolean draw = false;
         boolean ending = false;
+        if(chadGame.getTurn() != playerColor) {
+          viewDriver.handleViewMessage(new MovePieceResponse("'s turn.", chadGame.getBoard()));
+        }
         // Checks to see if the move was successful
         if(chadGame.move(moves.fromLocation.toString(), moves.toLocation.toString())){
-          setupGame(gameID, chadGame.getBoard(), chadGame.getTurn());
          // Show the winner if the game is over
          if (chadGame.gameover()) {
            ending = true;
@@ -154,11 +157,11 @@ public class ChadPresenter implements ChadGameDriver{
            if (chadGame.isDraw()) {
              draw = true;
              // Create message response with draw
-             MovePieceResponse movePieceResponse = new MovePieceResponse("Draw",
+             MovePieceResponse movePieceResponse = new MovePieceResponse("The game has ended in a draw.",
                  chadGame.getBoard());
              viewDriver.handleViewMessage(movePieceResponse);
            } else {
-             String winner = getCurrentPlayer(!chadGame.getTurn()) + " player has won.";
+             String winner =  playerNickname + " has won the game.";
              // Create message response with winner
              MovePieceResponse movePieceResponse = new MovePieceResponse(winner,
                  chadGame.getBoard());
@@ -166,7 +169,7 @@ public class ChadPresenter implements ChadGameDriver{
            }
          } else {
            // Game is not over
-           MovePieceResponse movePieceResponse = new MovePieceResponse("Opponent's turn", chadGame.getBoard());
+           MovePieceResponse movePieceResponse = new MovePieceResponse("'s turn.", chadGame.getBoard());
            viewDriver.handleViewMessage(movePieceResponse);
          }
            // Send Move to Server
@@ -192,14 +195,12 @@ public class ChadPresenter implements ChadGameDriver{
         break;
       case ACTIVE_GAMES:
         // Send a active games request to the net manager
-        ActiveGameMessage activeGames = (ActiveGameMessage) message;
-        ActiveGameRequest activeGameRequest = new ActiveGameRequest(activeGames.nickname);
+        ActiveGameRequest activeGameRequest = new ActiveGameRequest(playerNickname);
         networkManager.sendMessage(activeGameRequest);
         break;
       case INBOX:
         // Send an inbox request to the net manager
-        InboxMessage inboxMessage = (InboxMessage) message;
-        InboxRequest inboxRequest = new InboxRequest(inboxMessage.nickname);
+        InboxRequest inboxRequest = new InboxRequest(playerNickname);
         networkManager.sendMessage(inboxRequest);
         break;
       case GAME_REQUEST:
@@ -364,19 +365,6 @@ public class ChadPresenter implements ChadGameDriver{
           viewDriver.createAndShowGUI();
       }
     });
-  }
-
-  /**
-   * Sets up a game from the database and saves the gameId to use for  move messages to the server
-   * @param gameId the ID for the game
-   * @param boardSetup the current setup of the board
-   * @param turn the current players turn
-   */
-  private void setupGame(int gameId, String boardSetup, boolean turn){
-    this.gameID = gameId;
-    gamePanel.setBoardPieces(boardSetup);
-    String playerTurnMessage = getCurrentPlayer(turn) + " player's turn";
-    gamePanel.setSetGameStatus(playerTurnMessage);
   }
 
   /**
