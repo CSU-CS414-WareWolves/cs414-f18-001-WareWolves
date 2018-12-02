@@ -70,7 +70,7 @@ public class ViewMessageFactory {
       case INBOX:
         return  new InboxMessage();
       case GAME_REQUEST:
-        return new GameRequestMessage(Integer.parseInt(info[0]));
+        return new GameRequestMessage(info);
       case INVITE:
         return new InviteMessage(info[0], info[1]);
       default:

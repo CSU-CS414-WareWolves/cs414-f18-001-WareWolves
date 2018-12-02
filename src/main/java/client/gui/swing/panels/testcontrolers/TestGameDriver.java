@@ -72,10 +72,10 @@ public class TestGameDriver implements ChadGameDriver {
       case MOVE_PIECE:
         MovePieceMessage moves = (MovePieceMessage) message;
         if(game.getTurn() != playerColor){
-          gui.handleViewMessage(new MovePieceResponse(false, game.getBoard()));
+          gui.handleViewMessage(new MovePieceResponse("NOT YOUR TURN", game.getBoard()));
           return;}
         game.move(moves.fromLocation.toString(), moves.toLocation.toString());
-        gui.handleViewMessage(new MovePieceResponse(true, game.getBoard()));
+        gui.handleViewMessage(new MovePieceResponse("You movedm now " + currentGame.getOpponent() + "'s turn", game.getBoard()));
 
         break;
       case REGISTER_RESPONSE:
@@ -119,7 +119,7 @@ public class TestGameDriver implements ChadGameDriver {
         currentGame = new ActiveGameInfo(message.information);
         game =  new Game(currentGame.getGameBoard(), currentGame.getTurn());
         playerColor = currentGame.getColor();
-        gui.handleViewMessage(new MovePieceResponse(true, game.getBoard()));
+        gui.handleViewMessage(new MovePieceResponse(currentGame.getTurn() + "'s turn", game.getBoard()));
         break;
       case SEND_INVITE:
         System.out.println(message.menuType);

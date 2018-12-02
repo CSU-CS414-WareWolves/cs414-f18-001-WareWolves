@@ -99,7 +99,7 @@ class ViewMessageFactoryTest {
   void createViewMessageGameRequest() throws NoSuchAlgorithmException {
 
     GameRequestMessage expected =
-        new GameRequestMessage(1337);
+        new GameRequestMessage(new String[] {"1337"});
 
     String[] info = {"1337"};
     testMessageEquals(expected, info, ViewMessageType.GAME_REQUEST);
