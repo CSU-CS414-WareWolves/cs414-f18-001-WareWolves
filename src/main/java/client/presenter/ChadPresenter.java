@@ -227,7 +227,7 @@ public class ChadPresenter implements ChadGameDriver{
   private void handleMenuMessage(MenuMessage message) {
     switch (message.menuType){
       case LOGOUT:
-        // Send Logout to server
+        // Send LogoutMessage to server
         System.exit(0);
         break;
     }
