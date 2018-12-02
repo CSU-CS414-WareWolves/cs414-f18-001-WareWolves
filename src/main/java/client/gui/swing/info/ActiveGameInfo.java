@@ -2,66 +2,130 @@ package client.gui.swing.info;
 
 public class ActiveGameInfo {
 
-
-  private final int gameIDs;
-  private final String gameBoards;
-  private final String opponents;
-  private final String startDates;
-  private final boolean turns;
+  /**
+   * GameIDs of the game
+   */
+  private final int gameID;
+  /**
+   * String representation of the game board for the games.
+   */
+  private final String gameBoard;
+  /**
+   * Nickname of the opponent for the game.
+   */
+  private final String opponent;
+  /**
+   * Start date of the active game.
+   */
+  private final String startDate;
+  /**
+   * The current turn of the active game.
+   */
+  private final boolean turn;
+  /**
+   * Color of the requesting player for the active game.
+   */
   private final boolean color;
+  /**
+   * Whether or not the active game has been ended. If it is, the requesting player has not seen the results yet.
+   */
   private final boolean ended;
 
-  public ActiveGameInfo(int gameIDs, String gameBoards, String opponents,
-      String startDates, boolean turns, boolean color, boolean ended) {
+  /**
+   * Sets all the information about a game
+   * @param gameID the gameId
+   * @param gameBoard the current board
+   * @param opponent the nickname of the person being played against
+   * @param startDate the start date of the game
+   * @param turn which colors turn it is
+   * @param color the color of the player
+   * @param ended if the game is over
+   */
+  public ActiveGameInfo(int gameID, String gameBoard, String opponent,
+      String startDate, boolean turn, boolean color, boolean ended) {
 
-    if(gameBoards == null || (gameBoards.length()% 3) != 0)
+    // Check for valid data
+    if(gameBoard == null || (gameBoard.length()% 3) != 0)
     {
-      throw new IllegalArgumentException("ActiveGameInfo:: The given game board is not valid " + gameBoards);
+      throw new IllegalArgumentException("ActiveGameInfo:: The given game board is not valid " + gameBoard);
     }
-    if(opponents == null || opponents.length() == 0)
+    if(opponent == null || opponent.length() == 0)
     {
-      throw new IllegalArgumentException("ActiveGameInfo:: The given opponents is not valid " + opponents);
+      throw new IllegalArgumentException("ActiveGameInfo:: The given opponent is not valid " + opponent);
     }
-    this.gameIDs = gameIDs;
-    this.gameBoards = gameBoards;
-    this.opponents = opponents;
-    this.startDates = startDates;
-    this.turns = turns;
+    // Set values
+    this.gameID = gameID;
+    this.gameBoard = gameBoard;
+    this.opponent = opponent;
+    this.startDate = startDate;
+    this.turn = turn;
     this.color = color;
     this.ended = ended;
   }
 
-  public int getGameIDs() {
-    return gameIDs;
+  /**
+   * Gets the gameID
+   * @return the gameId
+   */
+  public int getGameID() {
+    return gameID;
   }
 
-  public String getGameBoards() {
-    return gameBoards;
+  /**
+   * Gets the current board
+   * @return the current board
+   */
+  public String getGameBoard() {
+    return gameBoard;
   }
 
-  public String getOpponents() {
-    return opponents;
+  /**
+   * Gets the opponent nickname
+   * @return the opponent nickname
+   */
+  public String getOpponent() {
+    return opponent;
   }
 
-  public String getStartDates() {
-    return startDates;
+  /**
+   * Gets the start date of the game
+   * @return the start date of the game
+   */
+  public String getStartDate() {
+    return startDate;
   }
 
-  public boolean getTurns() {
-    return turns;
+  /**
+   * Gets the current players turn
+   * @return the current players turn
+   */
+  public boolean getTurn() {
+    return turn;
   }
 
+  /**
+   * Gets the color of the player for this game
+   * @return the color of the player for this game
+   */
   public boolean getColor() {
     return color;
   }
 
+  /**
+   * Gets if the game is over
+   * @return the game is over
+   */
   public boolean getEnded() {
     return ended;
   }
 
+  /**
+   * Gets all the information about a game in a String[] in the same order as the constructor.
+   * @return the information about the game
+   */
   public String[] getInfoArray(){
-    return new String[] {String.valueOf(getGameIDs()), getGameBoards(),
-        getOpponents(), getStartDates(), String.valueOf(getTurns()),
+    return new String[] {String.valueOf(getGameID()), getGameBoard(),
+        getOpponent(), getStartDate(), String.valueOf(getTurn()),
         String.valueOf(getColor()), String.valueOf(getEnded()) };
   }
 }

@@ -5,7 +5,6 @@ import client.gui.swing.SwingGUIController;
 import client.gui.swing.info.ActiveGameInfo;
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.MenuMessage;
-import client.presenter.controller.messages.ViewMessage;
 import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.NetworkMessage;
 import java.awt.event.ActionEvent;
@@ -52,7 +51,7 @@ public class ActiveGamesPanel extends UpdatableJTableInPanel {
         int dialogButton = JOptionPane.YES_NO_OPTION;
         int dialogResult = JOptionPane
             .showConfirmDialog(mainPanel, "Are you sure you want to resign the game against "
-                + gameInfo.getOpponents(), "Warning", dialogButton);
+                + gameInfo.getOpponent(), "Warning", dialogButton);
         if (dialogResult == JOptionPane.YES_OPTION) {
           controller
               .sendMessage(new MenuMessage(MenuMessageTypes.RESIGN, gameInfo.getInfoArray()));
@@ -116,15 +115,15 @@ public class ActiveGamesPanel extends UpdatableJTableInPanel {
     for (Integer game : activeGames.keySet()) {
       String playersTurn;
       ActiveGameInfo gameInfo = activeGames.get(game);
-      if (gameInfo.getColor() == gameInfo.getTurns()) {
+      if (gameInfo.getColor() == gameInfo.getTurn()) {
         playersTurn = "Your turn";
       } else {
-        playersTurn = gameInfo.getOpponents() + "'s turn";
+        playersTurn = gameInfo.getOpponent() + "'s turn";
       }
 
       gameInfoModel.addRow(
-          new Object[]{gameInfo.getGameIDs(), gameInfo.getOpponents(),
-              gameInfo.getStartDates(), playersTurn, gameInfo.getEnded()});
+          new Object[]{gameInfo.getGameID(), gameInfo.getOpponent(),
+              gameInfo.getStartDate(), playersTurn, gameInfo.getEnded()});
 
     }
 
