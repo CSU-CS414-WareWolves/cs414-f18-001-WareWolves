@@ -1,4 +1,4 @@
-package client.gui.swing;
+package client.gui.swing.panels.chadgame;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;

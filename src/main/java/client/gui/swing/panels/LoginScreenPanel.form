@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="client.gui.swing.panels.LoginScreenPanel">
+  <grid id="27dc6" binding="mainPanel" layout-manager="CardLayout" hgap="0" vgap="0" show="9fadc">
+    <constraints>
+      <xy x="20" y="20" width="582" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <nested-form id="9fadc" form-file="client/gui/swing/panels/LoginPanel.form" binding="loginPanel" custom-create="true">
+        <constraints>
+          <card name="Login"/>
+        </constraints>
+      </nested-form>
+      <nested-form id="868a8" form-file="client/gui/swing/panels/RegisterNewAccountPanel.form" binding="registerNewAccountPanel" custom-create="true">
+        <constraints>
+          <card name="newAccount"/>
+        </constraints>
+      </nested-form>
+    </children>
+  </grid>
+</form>

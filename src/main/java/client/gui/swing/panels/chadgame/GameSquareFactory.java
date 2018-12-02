@@ -1,4 +1,4 @@
-package client.gui.swing;
+package client.gui.swing.panels.chadgame;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
