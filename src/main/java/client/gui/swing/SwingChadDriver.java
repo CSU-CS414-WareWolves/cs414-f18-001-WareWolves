@@ -38,6 +38,9 @@ import client.presenter.network.messages.RegisterResponse;
 import client.presenter.controller.util.HashPasswords;
 import client.presenter.network.messages.Unregister;
 import client.presenter.network.messages.UnregisterResponse;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
 import javax.swing.JFrame;
 
@@ -338,10 +341,24 @@ public class SwingChadDriver implements ChadGameDriver{
     }
   }
 
+  public void createAndShowGUI() {
+  }
+
   /**
    * Default constructor will need IP and Port for server
    */
-  public SwingChadDriver(){
+  public SwingChadDriver(String host, String port, String userInterface){
+    try {
+      InetAddress addr = InetAddress.getByName(host);
+      networkManager = new NetworkManager(addr, Integer.parseInt(port), this);
+    } catch (UnknownHostException e) {
+      System.err.println("Unknown Host");
+    } catch (IOException e) { }
+    if(userInterface.equals("cli")){
+      // Instantiate CLI Controller
+    } else if(userInterface.equals("gui")){
+      // Instantiate GUI Controller
+    }
   }
 
   /**
@@ -354,26 +371,6 @@ public class SwingChadDriver implements ChadGameDriver{
           viewDriver.createAndShowGUI();
       }
     });
-  }
-
-  /**
-   * Sets up the Java Swing Frame for the game
-   */
-  public void createAndShowGUI() {
-    //Create and set up the window.
-    JFrame frame = new JFrame("Team Warewolves Chad");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-    gamePanel = new GameJPanel(this);
-    chadGame = new Game();
-
-    setupGame(-1, chadGame.getBoard(), chadGame.getTurn()); // Setup default game for demo
-
-    frame.setContentPane(gamePanel);
-
-    //Display the window.
-    frame.pack();
-    frame.setVisible(true);
   }
 
   /**
@@ -400,12 +397,7 @@ public class SwingChadDriver implements ChadGameDriver{
 
 
   public static void main(String[] args) {
-    if(args[1].equals("cli")){
-      // Instantiate CLI Controller
-    } else if(args[1].equals("gui")){
-      // Instantiate GUI Controller
-    }
-    SwingChadDriver app = new SwingChadDriver();
+    SwingChadDriver app = new SwingChadDriver(args[1], args[2], args[0]);
     app.start();
   }
 }
