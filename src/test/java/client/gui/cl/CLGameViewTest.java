@@ -1,6 +1,8 @@
 package client.gui.cl;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import client.game.Game;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -9,6 +11,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 class CLGameViewTest {
 
   private CLGameView game;
+  private String default_gb = "rdCreDRiHRjIrcCkdDreERhHKiIRjJrcDrdERhIRiJrcERhJreCRjH";
 
   @BeforeEach
   void setUp() {
@@ -17,10 +20,22 @@ class CLGameViewTest {
 
   @Test
   void showCurrentGames() {
+    int[] ids = {23,12};
+    String[] nicks = {"theGameMaster", "AI"};
+    try {
+      game.showCurrentGames(ids, nicks);
+    } catch (Exception e) {
+      fail("");
+    }
   }
 
   @Test
   void showGameBoard() {
+    try {
+      game.showGameBoard(default_gb);
+    } catch (Exception e) {
+      fail("");
+    }
   }
 
   @ParameterizedTest
