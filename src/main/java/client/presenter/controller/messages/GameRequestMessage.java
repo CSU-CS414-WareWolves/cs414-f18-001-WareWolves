@@ -1,6 +1,7 @@
 package client.presenter.controller.messages;
 
 import client.presenter.controller.ViewMessageType;
+import java.util.Arrays;
 
 /**
  * A message from the view with the game id for the requested game
@@ -10,15 +11,12 @@ public class GameRequestMessage extends ViewMessage{
   /**
    * The game id for the requested game
    */
-  public final int gameID;
+  public final String[] gameInfo;
 
-  /**
-   * Game id for the requested game is sent
-   * @param gameID game id of the requested game
-   */
-  public GameRequestMessage(int gameID) {
+
+  public GameRequestMessage(String[] gameInfo) {
     super(ViewMessageType.GAME_REQUEST);
-    this.gameID = gameID;
+    this.gameInfo = gameInfo;
   }
 
   @Override
@@ -27,6 +25,6 @@ public class GameRequestMessage extends ViewMessage{
       return false;
     }
     GameRequestMessage other = (GameRequestMessage) o;
-    return gameID == other.gameID;
+    return Arrays.equals(this.gameInfo, other.gameInfo);
   }
 }
