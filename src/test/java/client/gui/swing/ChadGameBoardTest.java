@@ -40,6 +40,11 @@ class ChadGameBoardTest {
 
     }
 
+    @Override
+    public void createAndShowGUI() {
+
+    }
+
     public void setBoard(String board){
       gamePanel.setBoardPieces(board);
     }

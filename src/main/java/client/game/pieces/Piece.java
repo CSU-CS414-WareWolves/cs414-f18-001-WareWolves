@@ -77,7 +77,7 @@ public abstract class Piece {
   }
 
   private boolean rightOfCapture(Piece P1, Piece P2) {
-    return P1.inOwnCastle() && GameBoard.isWall(P2.getBoardLocation());
+    return P1.inOwnCastle() && P2.onOtherWall();
   }
 
   /**
@@ -103,7 +103,7 @@ public abstract class Piece {
    * Determines if a Point is in its opponent's castle.
    *
    * @param p Point to check.
-   * @return True if P is in this Pieces opponent's castle, false otherwise.
+   * @return True if P is in this Pieces opponent's castle, False otherwise.
    */
   private boolean inOtherCastle(Point p) {
     return this.getColor() ? GameBoard.isWhiteCastle(p) : GameBoard.isBlackCastle(p);
@@ -112,10 +112,20 @@ public abstract class Piece {
   /**
    * Determines if a Piece is in its opponent's castle.
    *
-   * @return True if the piece is in its opponent's castle, false otherwise.
+   * @return True if the piece is in its opponent's castle, False otherwise.
    */
   boolean inOtherCastle() {
     return inOtherCastle(this.getBoardLocation());
+  }
+
+  /**
+   * Determines if a Piece is on its opponent's wall.
+   *
+   * @return True if the piece is on its opponent's wall, False otherwise.
+   */
+  private boolean onOtherWall() {
+    return this.color ? GameBoard.isWhiteWall(this.getBoardLocation())
+        : GameBoard.isBlackWall(this.getBoardLocation());
   }
 
   /**

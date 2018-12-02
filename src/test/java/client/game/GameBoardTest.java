@@ -72,7 +72,8 @@ class GameBoardTest {
   @CsvSource({"aA, false", "lL, false", "dD, false", "aL, false", "bC, true", "bE, true",
       "fD, true", "dF, true", "gI, true", "iG, true", "kJ, true", "hK, true", "hI, false"})
   void testIsWall(String point, boolean expected) {
-    assertEquals(GameBoard.isWall(new Point(point)), expected);
+    assertEquals(GameBoard.isWhiteWall(new Point(point)) || GameBoard.isBlackWall(new Point(point)),
+        expected);
   }
 
   @DisplayName("getPieceAt(int, int)")
@@ -98,14 +99,14 @@ class GameBoardTest {
   void testGetBoard() {
     Set<String> expected = new HashSet<>();
     String expectedString = "RiIrdDKjJkeEQaAqlL";
-    for (int i = 0; i < expectedString.length(); i+=3){
-      expected.add(expectedString.substring(i, i+3));
+    for (int i = 0; i < expectedString.length(); i += 3) {
+      expected.add(expectedString.substring(i, i + 3));
     }
 
     Set<String> actual = new HashSet<>();
     String actualString = board.getBoard();
-    for (int i = 0; i < expectedString.length(); i+=3){
-      actual.add(actualString.substring(i, i+3));
+    for (int i = 0; i < expectedString.length(); i += 3) {
+      actual.add(actualString.substring(i, i + 3));
     }
 
     assertEquals(expected, actual, "GameBoard did not match expected board");
