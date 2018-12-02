@@ -1,9 +1,9 @@
-package client.gui.swing;
+package client.gui.swing.panels.chadgame;
 
 import client.gui.ChadGameDriver;
+import client.gui.swing.SwingChadDriver;
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.MenuMessage;
-import client.presenter.network.messages.GameInfo;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;

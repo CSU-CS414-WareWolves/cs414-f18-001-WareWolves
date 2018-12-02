@@ -1,4 +1,4 @@
-package client.gui.swing;
+package client.gui.swing.panels.chadgame;
 
 import client.gui.ChadGameDriver;
 import client.presenter.controller.messages.MovePieceMessage;
@@ -13,7 +13,6 @@ import java.awt.event.MouseMotionListener;
 import java.util.HashSet;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionListener {

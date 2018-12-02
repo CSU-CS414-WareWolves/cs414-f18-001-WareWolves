@@ -1,15 +1,17 @@
-package client.gui.swing.panels;
+package client.gui.swing;
 
 import client.gui.ChadGameDriver;
-import client.gui.swing.GameJPanel;
-import client.presenter.controller.messages.LoginMessage;
+import client.gui.swing.panels.LoginScreenPanel;
+import client.gui.swing.panels.MainMenuPanel;
+import client.gui.swing.panels.chadgame.GameJPanel;
+import client.gui.swing.panels.testcontrolers.TestGameDriver;
+import client.gui.swing.panels.testcontrolers.TestSwingController;
 import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceResponse;
 import client.presenter.controller.messages.RegisterResponseMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMovesResponse;
-import client.presenter.network.messages.LoginResponse;
 import client.presenter.network.messages.NetworkMessage;
 import java.awt.CardLayout;
 import java.awt.Frame;
@@ -35,6 +37,9 @@ public class SwingController extends Frame implements ChadGameDriver {
 
     cardLayout = (CardLayout) cardPanel.getLayout();
     cardLayout.show(cardPanel, "LoginScreen");
+
+
+
   }
 
 
@@ -172,7 +177,7 @@ public class SwingController extends Frame implements ChadGameDriver {
     menuPanel = new MainMenuPanel(this);
     loginScreenPanel = new LoginScreenPanel(this);
     gameJPanel =  new GameJPanel(this);
-    //gameJPanel.setVisible(false);
+
   }
 
 

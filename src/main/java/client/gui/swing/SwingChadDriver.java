@@ -2,6 +2,7 @@ package client.gui.swing;
 
 import client.game.Game;
 import client.gui.ChadGameDriver;
+import client.gui.swing.panels.chadgame.GameJPanel;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.ViewMessage;

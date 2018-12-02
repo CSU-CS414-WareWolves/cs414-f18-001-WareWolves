@@ -14,6 +14,8 @@ class ActiveGameInfoTest {
   private static final boolean turns = false;
   private static final boolean colors = false;
   private static final boolean ended = false;
+  private static final String[] gameInfo = {String.valueOf(gameIDs), gameBoard, opponents, dates,
+      String.valueOf(turns), String.valueOf(colors), String.valueOf(ended)};
 
   private static ActiveGameInfo testGameInfo;
 
@@ -59,11 +61,7 @@ class ActiveGameInfoTest {
 
   @Test
   void getInfoArray() {
-    String[] expectedInfo = {String.valueOf(gameIDs), gameBoard, opponents, dates,
-        String.valueOf(turns), String.valueOf(colors), String.valueOf(ended)};
-    String[] resultInfo = testGameInfo.getInfoArray();
-    assertArrayEquals(expectedInfo, resultInfo);
-
+    assertArrayEquals(gameInfo,  testGameInfo.getInfoArray());
   }
 
   @Test
@@ -88,6 +86,12 @@ class ActiveGameInfoTest {
   void opponentInvalid() {
     assertThrows(IllegalArgumentException.class, () -> new ActiveGameInfo(gameIDs, gameBoard,
         "", dates, turns, colors, ended));
+  }
+
+  @Test
+  void arrayConstructor(){
+    testGameInfo = new ActiveGameInfo(gameInfo);
+    assertArrayEquals(gameInfo, testGameInfo.getInfoArray());
   }
 
 }

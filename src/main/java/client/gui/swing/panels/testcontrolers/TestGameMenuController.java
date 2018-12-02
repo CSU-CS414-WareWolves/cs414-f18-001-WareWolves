@@ -1,6 +1,5 @@
-package client.gui.swing.panels;
+package client.gui.swing.panels.testcontrolers;
 
-import client.gui.ChadGameDriver;
 import client.gui.swing.SwingGUIController;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.MenuMessage;
@@ -8,12 +7,11 @@ import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.network.messages.NetworkMessage;
 import java.awt.event.ActionEvent;
-import javax.swing.JPanel;
 
-public class TestSwingController implements ChadGameDriver {
+public class TestGameMenuController extends SwingGUIController {
 
   @Override
-  public void handleViewMessage(ViewMessage message) {
+  public void sendMessage(ViewMessage message) {
     if (message instanceof MenuMessage) {
       MenuMessage menuMessage = (MenuMessage) message;
 
@@ -64,13 +62,20 @@ public class TestSwingController implements ChadGameDriver {
   }
 
   @Override
-  public void handleNetMessage(NetworkMessage message) {
+  public void receiveMessage(ViewMessage message) {
 
   }
 
   @Override
-  public void createAndShowGUI() {
+  public void receiveMessage(NetworkMessage message) {
 
   }
 
+  @Override
+  public void actionPerformed(ActionEvent e) {
+
+    throw new IllegalArgumentException("ActiveGame:: Tried to send a action - "
+        + e.getActionCommand());
+
+  }
 }

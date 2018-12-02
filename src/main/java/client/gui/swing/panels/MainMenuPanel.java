@@ -2,6 +2,7 @@ package client.gui.swing.panels;
 
 import client.gui.ChadGameDriver;
 import client.gui.swing.SwingGUIController;
+import client.gui.swing.panels.testcontrolers.TestSwingController;
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.ViewMessage;

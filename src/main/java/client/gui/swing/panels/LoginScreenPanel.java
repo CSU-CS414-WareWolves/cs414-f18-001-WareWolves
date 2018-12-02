@@ -2,13 +2,13 @@ package client.gui.swing.panels;
 
 import client.gui.ChadGameDriver;
 import client.gui.swing.SwingGUIController;
+import client.gui.swing.panels.testcontrolers.TestSwingController;
 import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.RegisterResponseMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.network.messages.NetworkMessage;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;

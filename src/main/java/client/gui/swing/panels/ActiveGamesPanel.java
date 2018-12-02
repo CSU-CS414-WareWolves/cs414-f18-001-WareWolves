@@ -3,6 +3,7 @@ package client.gui.swing.panels;
 
 import client.gui.swing.SwingGUIController;
 import client.gui.swing.info.ActiveGameInfo;
+import client.gui.swing.panels.testcontrolers.TestGameMenuController;
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.network.messages.ActiveGameResponse;

@@ -64,6 +64,18 @@ public class ActiveGameInfo {
   }
 
   /**
+   * Sets all the information about a game from an array of strings in this order
+   * gameID, gameBoard, opponent, startDate, turn, color, ended
+   *
+   * @param gameInfo: the game info
+   */
+  public ActiveGameInfo(String[] gameInfo){
+    this(Integer.parseInt(gameInfo[0]), gameInfo[1], gameInfo[2], gameInfo[3],
+        Boolean.parseBoolean(gameInfo[4]), Boolean.parseBoolean(gameInfo[5]),
+        Boolean.parseBoolean(gameInfo[6]));
+  }
+
+  /**
    * Gets the gameID
    * @return the gameId
    */
