@@ -51,13 +51,14 @@ public class CLMenu implements MenuView {
    */
   public void showPlayers(String[] players) {
     StringBuilder res = new StringBuilder();
+    res.append("+++ Active Players +++\n");
     for(int i=0; i<players.length; i++) {
       res.append(players[i]);
       if((i+1)%3 == 0) {
         res.append(" \n");
       }
       else {
-        res.append(" | ");
+        res.append("  |  ");
       }
     }
     res.append("\n");

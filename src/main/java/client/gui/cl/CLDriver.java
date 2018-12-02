@@ -67,7 +67,7 @@ public class CLDriver implements ChadGameDriver {
    * Creates space for readability of the command-line
    * (returns nothing, but prints a long line and some space for readability)
    */
-  private void clearScreen() {
+  public void clearScreen() {
     System.out.println("\n-----------------------------------------------------------\n");
   }
 
@@ -133,7 +133,6 @@ public class CLDriver implements ChadGameDriver {
         activePlayers = p.players;
         break;
       case PROFILE_REQUEST:
-        menu.showPlayers(activePlayers);
         handleProfile();
         break;
       case PROFILE_RESPONSE:
@@ -419,6 +418,9 @@ public class CLDriver implements ChadGameDriver {
   }
 
   public void handleProfile() {
+    clearScreen();
+    menu.showPlayers(activePlayers);
+    menu.requestUsername();
 
   }
 
