@@ -195,7 +195,7 @@ public class ChadServer extends Thread{
 	
 	
 	public static void main(String[] args) {
-		int port = Integer.parseInt(args[0]);
+		int port = Integer.parseInt(args[1]);
 		ChadServer server = new ChadServer(port);
 		server.start();
 	}
