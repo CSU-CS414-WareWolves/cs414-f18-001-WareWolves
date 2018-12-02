@@ -68,4 +68,6 @@ public class Game {
   public boolean gameover(){
     return gameBoard.gameover();
   }
+
+  public boolean isDraw() { return false; }
 }
