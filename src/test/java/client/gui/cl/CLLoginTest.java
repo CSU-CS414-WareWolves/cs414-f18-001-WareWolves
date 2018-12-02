@@ -37,7 +37,7 @@ class CLLoginTest {
   }
 
   @ParameterizedTest
-  @CsvSource({"1","2"})
+  @CsvSource({"1","0"})
   void failedCreds(int option) {
     try {
       login.failedCreds(option);
