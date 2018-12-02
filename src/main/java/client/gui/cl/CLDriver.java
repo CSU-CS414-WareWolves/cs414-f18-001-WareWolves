@@ -84,21 +84,12 @@ public class CLDriver implements ChadGameDriver {
    */
   public void handleNetMessage(NetworkMessage message){
     switch(message.type){
-      case LOGIN:
-        //never receives one
+      case ACTIVE_GAMES_REQUEST:
+        //send back a MenuMessage
         break;
-      case LOGIN_RESPONSE:
-        LoginResponse lr = (LoginResponse) message;
-        handleViewMessage(new LoginResponseMessage(lr.success, lr.nickname));
-        break;
-      case LOGOUT:
-        login.showLogout();
-        break;
-      case REGISTER:
-        //never receives one
-        break;
-      case UNREGISTER:
-        //shouldn't receive this one either
+      case ACTIVE_GAMES_RESPONSE:
+        ActiveGameResponse agr = (ActiveGameResponse) message;
+        handleActiveGames(agr.gameIDs, agr.opponents);
         break;
       case GAME_REQUEST:
         GameRequest gr = (GameRequest) message;
@@ -109,18 +100,11 @@ public class CLDriver implements ChadGameDriver {
         handleInGame(gi.gameBoard, gi.turn);
         showGame();
         break;
-      case MOVE:
+      case INBOX_REQUEST:
+        //we don't need this message, only for server
         break;
-      case PROFILE_RESPONSE:
-        ProfileResponse pr = (ProfileResponse) message;
-        //TODO
-        break;
-      case ACTIVE_GAMES_REQUEST:
-        //send back a MenuMessage
-        break;
-      case ACTIVE_GAMES_RESPONSE:
-        ActiveGameResponse agr = (ActiveGameResponse) message;
-        handleActiveGames(agr.gameIDs, agr.opponents);
+      case INBOX_RESPONSE:
+        handleInbox(message);
         break;
       case INVITE_REQUEST:
         //possibly not needed?
@@ -130,17 +114,33 @@ public class CLDriver implements ChadGameDriver {
         InviteResponse ir = (InviteResponse) message;
         //TODO
         break;
-      case RESIGN:
+      case LOGIN:
+        //never receives one
+        break;
+      case LOGIN_RESPONSE:
+        LoginResponse lr = (LoginResponse) message;
+        handleViewMessage(new LoginResponseMessage(lr.success, lr.nickname));
+        break;
+      case LOGOUT:
+        login.showLogout();
+        break;
+      case MOVE:
+        break;
+      case PROFILE_RESPONSE:
+        ProfileResponse pr = (ProfileResponse) message;
+        //TODO
+        break;
+      case REGISTER:
+        //never receives one
         break;
       case REGISTER_RESPONSE:
         RegisterResponse rr = (RegisterResponse) message;
         handleViewMessage(new RegisterResponseMessage(rr.success, new String[]{}));
         break;
-      case INBOX_REQUEST:
-        //we don't need this message, only for server
+      case RESIGN:
         break;
-      case INBOX_RESPONSE:
-        handleInbox(message);
+      case UNREGISTER:
+        //shouldn't receive this one either
         break;
     }
   }
@@ -151,13 +151,8 @@ public class CLDriver implements ChadGameDriver {
    */
   public void handleViewMessage(ViewMessage message){
     switch (message.messageType){
-      case REGISTER:
-        try {
-          RegisterMessage rm = handleRegister();
-        } catch (NoSuchAlgorithmException e) {
-          //handle error
-          e.printStackTrace();
-        }
+      case GAME_REQUEST:
+        GameRequestMessage gr = handleSelectGame();
         //give to Presenter ref
         break;
       case LOGIN:
@@ -169,33 +164,6 @@ public class CLDriver implements ChadGameDriver {
         }
         //give to Presenter ref
         break;
-      case UNREGISTER:
-        menu.unregisterUser();
-        UnregisterMessage urm = handleUnregister();
-        //give to Presenter ref
-        break;
-      case GAME_REQUEST:
-        GameRequestMessage gr = handleSelectGame();
-        //give to Presenter ref
-        break;
-      case SHOW_VALID_MOVES:
-        //Give presenter valid moves
-        chadGame.validMoves(((ViewValidMoves)message).location.toString());
-        break;
-      case MOVE_PIECE:
-        MovePieceMessage mpm = handleMovePiece();
-        //give to Presenter ref
-        // go to main menu
-        break;
-      case REGISTER_RESPONSE:
-        RegisterResponseMessage rrm = (RegisterResponseMessage) message;
-        if(rrm.success){
-          menu.showMenu(nickname);
-        }
-        else{
-          login.failedCreds(1);
-        }
-        break;
       case LOGIN_RESPONSE:
         LoginResponseMessage lrm = (LoginResponseMessage) message;
         if(lrm.success){
@@ -206,14 +174,10 @@ public class CLDriver implements ChadGameDriver {
           login.failedCreds(0);
         }
         break;
-      case UNREGISTER_RESPONSE:
-        handleUnregister();
-        //sign off / exit to title screen
-        break;
-      case SHOW_VALID_MOVES_RESPONSE:
-        ViewValidMovesResponse vvmr = (ViewValidMovesResponse) message;
-        String[] validMovesArray1 = vvmr.locations;
-        game.showValidMoves(validMovesArray1);
+      case MOVE_PIECE:
+        MovePieceMessage mpm = handleMovePiece();
+        //give to Presenter ref
+        // go to main menu
         break;
       case MOVE_PIECE_RESPONSE:
         MovePieceResponse mpr = (MovePieceResponse) message;
@@ -225,6 +189,44 @@ public class CLDriver implements ChadGameDriver {
           showGame();
           System.out.println("[!] Invalid move, please select a valid move for your selected piece");
         }
+        break;
+      case REGISTER:
+        try {
+          RegisterMessage rm = handleRegister();
+        } catch (NoSuchAlgorithmException e) {
+          //handle error
+          e.printStackTrace();
+        }
+        //give to Presenter ref
+        break;
+      case REGISTER_RESPONSE:
+        RegisterResponseMessage rrm = (RegisterResponseMessage) message;
+        if(rrm.success){
+          menu.showMenu(nickname);
+        }
+        else{
+          login.failedCreds(1);
+        }
+        break;
+      case SHOW_VALID_MOVES:
+        //Give presenter valid moves
+        //TODO
+        chadGame.validMoves(((ViewValidMoves)message).location.toString());
+        break;
+      case SHOW_VALID_MOVES_RESPONSE:
+        ViewValidMovesResponse vvmr = (ViewValidMovesResponse) message;
+        String[] validMovesArray1 = vvmr.locations;
+        game.showValidMoves(validMovesArray1);
+        break;
+      case UNREGISTER:
+        menu.unregisterUser();
+        UnregisterMessage urm = handleUnregister();
+        //give to Presenter ref
+        break;
+      case UNREGISTER_RESPONSE:
+        handleUnregister();
+        //sign off / exit to title screen
+        //TODO
         break;
     }
   }
