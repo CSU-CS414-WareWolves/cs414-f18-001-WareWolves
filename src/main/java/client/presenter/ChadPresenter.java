@@ -47,10 +47,6 @@ import java.security.NoSuchAlgorithmException;
 public class ChadPresenter implements ChadGameDriver{
 
   /**
-   * The Swing GUI / View
-   */
-  private GameJPanel gamePanel;
-  /**
    * The view controller
    */
   private ChadGameDriver viewDriver;
@@ -220,18 +216,6 @@ public class ChadPresenter implements ChadGameDriver{
     }
   }
 
-  /**
-   * Handles all the menu messages from the gui
-   * @param message the message to process
-   */
-  private void handleMenuMessage(MenuMessage message) {
-    switch (message.menuType){
-      case LOGOUT:
-        // Send Logout to server
-        System.exit(0);
-        break;
-    }
-  }
 
   /**
    * Handles all the messages from NetManager(Not Implemented)
@@ -331,11 +315,13 @@ public class ChadPresenter implements ChadGameDriver{
           // Successfully unregistered
           String[] messages = {"Successfully Unregistered."};
           UnregisterResponseMessage unregisterResponseMessage = new UnregisterResponseMessage(unregisterResponse.success, messages);
+          viewDriver.handleViewMessage(unregisterResponseMessage);
         }
         else {
           // Not successful
           String[] messages = {"Unable to unregister. Please try again."};
           UnregisterResponseMessage unregisterResponseMessage = new UnregisterResponseMessage(unregisterResponse.success, messages);
+          viewDriver.handleViewMessage(unregisterResponseMessage);
         }
         break;
     }
