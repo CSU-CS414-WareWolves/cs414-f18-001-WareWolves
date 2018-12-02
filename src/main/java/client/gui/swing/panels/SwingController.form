@@ -41,9 +41,24 @@
         <properties/>
         <border type="none"/>
         <children>
-          <nested-form id="8b97b" form-file="client/gui/swing/panels/MainMenuPanel.form" binding="mainMenuPanel" custom-create="true">
+          <nested-form id="8b97b" form-file="client/gui/swing/panels/MainMenuPanel.form" binding="menuPanel" custom-create="true">
             <constraints border-constraint="Center"/>
           </nested-form>
+        </children>
+      </grid>
+      <grid id="c90c0" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints>
+          <card name="GameScreen"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <grid id="3b0d9" class="client.gui.swing.GameJPanel" binding="gameJPanel" custom-create="true" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints border-constraint="Center"/>
+            <properties/>
+            <border type="none"/>
+            <children/>
+          </grid>
         </children>
       </grid>
     </children>

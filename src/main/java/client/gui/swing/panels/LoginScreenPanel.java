@@ -1,21 +1,17 @@
 package client.gui.swing.panels;
 
+import client.gui.ChadGameDriver;
 import client.gui.swing.SwingGUIController;
 import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.RegisterResponseMessage;
 import client.presenter.controller.messages.ViewMessage;
-import client.presenter.network.messages.LoginResponse;
+import client.presenter.network.messages.NetworkMessage;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Arrays;
-import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 public class LoginScreenPanel extends SwingGUIController {
@@ -25,12 +21,10 @@ public class LoginScreenPanel extends SwingGUIController {
   private JPanel mainPanel;
   private LoginPanel loginPanel;
   private RegisterNewAccountPanel registerNewAccountPanel;
-  private SwingGUIController controller;
+  private ChadGameDriver controller;
 
-  public LoginScreenPanel(SwingGUIController controller) {
-    super();
+  public LoginScreenPanel(ChadGameDriver controller) {
     this.controller = controller;
-    //this.add(mainPanel);
     cardLayout = (CardLayout) mainPanel.getLayout();
     cardLayout.show(mainPanel, "Login");
 
@@ -39,7 +33,7 @@ public class LoginScreenPanel extends SwingGUIController {
   @Override
   public void sendMessage(ViewMessage message) {
 
-    controller.sendMessage(message);
+    controller.handleViewMessage(message);
 
   }
 
@@ -54,11 +48,16 @@ public class LoginScreenPanel extends SwingGUIController {
 
     if(message instanceof RegisterResponseMessage){
       RegisterResponseMessage registerResponse = (RegisterResponseMessage) message;
-      messageInfo = Arrays.toString(registerResponse.messages);
+      messageInfo = registerResponse.messages[0];
     }
 
-    JOptionPane.showMessageDialog(this, messageInfo);
+    JOptionPane.showMessageDialog(mainPanel, messageInfo);
 
+  }
+
+  @Override
+  public void receiveMessage(NetworkMessage message) {
+    // Not needed for this class
   }
 
   @Override
@@ -104,7 +103,7 @@ public class LoginScreenPanel extends SwingGUIController {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     //Create and set up the content pane.
-    LoginScreenPanel demo = new LoginScreenPanel(new TestGameMenuController());
+    LoginScreenPanel demo = new LoginScreenPanel(new TestSwingController());
     frame.add(demo.mainPanel);
 
     //Display the window.

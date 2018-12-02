@@ -130,19 +130,6 @@ public class ActiveGamesPanel extends UpdatableJTableInPanel {
 
   }
 
-  public static void loadTestData(ActiveGamesPanel testPanel) {
-    ActiveGameResponse testResponse = new ActiveGameResponse(
-        new int[]{111, 222, 333},
-        new String[]{"RiIrdDKjJkeEQaAqlL", "RiIrdDKjJkeEQaAqlL", "RiIrdDKjJkeEQaAqlL"},
-        new String[]{"Me", "Myself", "I"},
-        new String[]{"12/12/12", "13/13/13", "14/14/14"},
-        new boolean[]{true, false, true},
-        new boolean[]{true, true, true},
-        new boolean[]{false, false, true});
-
-    testPanel.updateTable(testResponse);
-
-  }
 
   public static void main(String[] args) {
 
@@ -167,7 +154,6 @@ public class ActiveGamesPanel extends UpdatableJTableInPanel {
 
     //Create and set up the content pane.
     ActiveGamesPanel demo = new ActiveGamesPanel(new TestGameMenuController());
-    demo.loadTestData(demo);
     frame.add(demo.mainPanel);
 
     //Display the window.

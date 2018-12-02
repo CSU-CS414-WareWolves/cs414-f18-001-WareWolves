@@ -42,6 +42,7 @@ public class PlayerStatsPanel extends UpdatableJTableInPanel {
           return;
         }
         currentSelected = profileNickName;
+        playerNickName = profileNickName;
         controller.sendMessage(new MenuMessage(MenuMessageTypes.PLAYER_STATS, new String[] {profileNickName}));
 
       }
