@@ -2,11 +2,16 @@ package client.gui.swing;
 
 import client.game.Game;
 import client.gui.ChadGameDriver;
+import client.presenter.controller.messages.ActiveGameMessage;
+import client.presenter.controller.messages.GameRequestMessage;
+import client.presenter.controller.messages.InboxMessage;
+import client.presenter.controller.messages.InviteMessage;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.MovePieceResponse;
+import client.presenter.controller.messages.ProfileMessage;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.RegisterResponseMessage;
 import client.presenter.controller.messages.UnregisterMessage;
@@ -14,9 +19,13 @@ import client.presenter.controller.messages.UnregisterResponseMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMoves;
 import client.presenter.network.NetworkManager;
+import client.presenter.network.messages.ActiveGameRequest;
 import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.GameInfo;
+import client.presenter.network.messages.GameRequest;
+import client.presenter.network.messages.InboxRequest;
 import client.presenter.network.messages.InboxResponse;
+import client.presenter.network.messages.InviteRequest;
 import client.presenter.network.messages.Login;
 import client.presenter.network.messages.LoginResponse;
 import client.presenter.network.messages.Move;
@@ -129,7 +138,7 @@ public class SwingChadDriver implements ChadGameDriver{
         // Tell GUI to what moves to show
         gamePanel.setValidMoves(validMoves);
         break;
-      case MENU: // Need to change to handle menu messages as view messages
+      case MENU:
         handleMenuMessage((MenuMessage) message);
         break;
       case MOVE_PIECE:
@@ -176,6 +185,35 @@ public class SwingChadDriver implements ChadGameDriver{
           viewDriver.handleViewMessage(movePieceResponse);
         }
         break;
+      case PROFILE:
+        // Send a profile request to the net manager
+        ProfileMessage profile = (ProfileMessage) message;
+        ProfileRequest profileRequest = new ProfileRequest(profile.nickname);
+        networkManager.sendMessage(profileRequest);
+        break;
+      case ACTIVE_GAMES:
+        // Send a active games request to the net manager
+        ActiveGameMessage activeGames = (ActiveGameMessage) message;
+        ActiveGameRequest activeGameRequest = new ActiveGameRequest(activeGames.nickname);
+        networkManager.sendMessage(activeGameRequest);
+        break;
+      case INBOX:
+        // Send an inbox request to the net manager
+        InboxMessage inboxMessage = (InboxMessage) message;
+        InboxRequest inboxRequest = new InboxRequest(inboxMessage.nickname);
+        networkManager.sendMessage(inboxRequest);
+        break;
+      case GAME_REQUEST:
+        // Send a game request to the net manager
+        GameRequestMessage gameRequestMessage = (GameRequestMessage) message;
+        GameRequest gameRequest = new GameRequest(gameRequestMessage.gameID);
+        networkManager.sendMessage(gameRequest);
+        break;
+      case INVITE:
+        // Send an invite request to the net manager
+        InviteMessage inviteMessage = (InviteMessage) message;
+        InviteRequest inviteRequest = new InviteRequest(inviteMessage.sender, inviteMessage.recipient);
+        networkManager.sendMessage(inviteRequest);
     }
   }
 
@@ -185,22 +223,9 @@ public class SwingChadDriver implements ChadGameDriver{
    */
   private void handleMenuMessage(MenuMessage message) {
     switch (message.menuType){
-
       case LOGOUT:
         // Send Logout to server
         System.exit(0);
-        break;
-      case PLAYER_STATS:
-        break;
-      case ACTIVE_GAMES:
-        break;
-      case INVITES:
-        break;
-      case SELECT_GAME:
-        break;
-      case SEND_INVITE:
-        break;
-      case RESIGN:
         break;
     }
   }
