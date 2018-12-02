@@ -5,8 +5,10 @@ import client.gui.swing.GameJPanel;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.MenuMessage;
+import client.presenter.controller.messages.MovePieceResponse;
 import client.presenter.controller.messages.RegisterResponseMessage;
 import client.presenter.controller.messages.ViewMessage;
+import client.presenter.controller.messages.ViewValidMovesResponse;
 import client.presenter.network.messages.LoginResponse;
 import client.presenter.network.messages.NetworkMessage;
 import java.awt.CardLayout;
@@ -21,6 +23,7 @@ public class SwingController extends Frame implements ChadGameDriver {
   private MainMenuPanel menuPanel;
   private LoginScreenPanel loginScreenPanel;
   private GameJPanel gameJPanel;
+  private JPanel cardPanel;
 
   private ChadGameDriver controller;
   private CardLayout cardLayout;
@@ -30,8 +33,8 @@ public class SwingController extends Frame implements ChadGameDriver {
 
     this.controller = controller;
 
-    cardLayout = (CardLayout) mainPanel.getLayout();
-    cardLayout.show(mainPanel, "LoginScreen");
+    cardLayout = (CardLayout) cardPanel.getLayout();
+    cardLayout.show(cardPanel, "LoginScreen");
   }
 
 
@@ -50,17 +53,19 @@ public class SwingController extends Frame implements ChadGameDriver {
         controller.handleViewMessage(message);
         break;
       case SHOW_VALID_MOVES:
+        controller.handleViewMessage(message);
         break;
       case MENU:
         handleMenuMessage((MenuMessage) message);
         break;
       case MOVE_PIECE:
+        controller.handleViewMessage(message);
         break;
       case REGISTER_RESPONSE:
         RegisterResponseMessage registerResponse = (RegisterResponseMessage) message;
         if(registerResponse.success){
           menuPanel.setNickName(registerResponse.messages[0]);
-          cardLayout.show(mainPanel, "MenuScreen");
+          cardLayout.show(cardPanel, "MenuScreen");
         } else {
           loginScreenPanel.receiveMessage(message);
         }
@@ -69,7 +74,7 @@ public class SwingController extends Frame implements ChadGameDriver {
         LoginResponseMessage loginResponse = (LoginResponseMessage) message;
         if(loginResponse.success){
           menuPanel.setNickName(loginResponse.nickname);
-          cardLayout.show(mainPanel, "MenuScreen");
+          cardLayout.show(cardPanel, "MenuScreen");
         } else {
           loginScreenPanel.receiveMessage(message);
         }
@@ -77,10 +82,14 @@ public class SwingController extends Frame implements ChadGameDriver {
       case UNREGISTER_RESPONSE:
         break;
       case SHOW_VALID_MOVES_RESPONSE:
+        ViewValidMovesResponse validMoves = (ViewValidMovesResponse) message;
+        gameJPanel.setValidMoves(validMoves.locations[0]);
         break;
       case MENU_RESPONSE:
         break;
       case MOVE_PIECE_RESPONSE:
+        MovePieceResponse moves = (MovePieceResponse) message;
+        gameJPanel.setBoardPieces(moves.gameBoard);
         break;
     }
 
@@ -93,7 +102,7 @@ public class SwingController extends Frame implements ChadGameDriver {
     switch (message.menuType){
 
       case LOGOUT:
-        cardLayout.show(mainPanel, "MenuScreen");
+        cardLayout.show(cardPanel, "MenuScreen");
         playingGame = false;
         break;
       case PLAYER_STATS:
@@ -112,7 +121,7 @@ public class SwingController extends Frame implements ChadGameDriver {
         //this.revalidate();
         //this.repaint();
         //this.pack();
-        cardLayout.show(mainPanel, "GameScreen");
+        cardLayout.show(cardPanel, "GameScreen");
         playingGame = true;
         break;
       case SEND_INVITE:
