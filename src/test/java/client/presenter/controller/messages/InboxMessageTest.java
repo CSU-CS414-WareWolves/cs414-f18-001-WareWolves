@@ -13,7 +13,7 @@ class InboxMessageTest {
 
   @BeforeEach
   public void setup() {
-    testMessage = new InboxMessage(nickname);
+    testMessage = new InboxMessage();
   }
 
   @Test
@@ -21,8 +21,4 @@ class InboxMessageTest {
     assertEquals(ViewMessageType.INBOX, testMessage.messageType);
   }
 
-  @Test
-  public void testNickname() {
-    assertEquals(nickname, testMessage.nickname);
-  }
 }

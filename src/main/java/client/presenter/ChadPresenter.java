@@ -2,14 +2,10 @@ package client.presenter;
 
 import client.game.Game;
 import client.gui.ChadGameDriver;
-import client.gui.swing.GameJPanel;
-import client.presenter.controller.messages.ActiveGameMessage;
 import client.presenter.controller.messages.GameRequestMessage;
-import client.presenter.controller.messages.InboxMessage;
 import client.presenter.controller.messages.InviteMessage;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.LoginResponseMessage;
-import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.MovePieceResponse;
 import client.presenter.controller.messages.ProfileMessage;
@@ -20,6 +16,7 @@ import client.presenter.controller.messages.UnregisterResponseMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMoves;
 import client.presenter.controller.messages.ViewValidMovesResponse;
+import client.presenter.controller.util.HashPasswords;
 import client.presenter.network.NetworkManager;
 import client.presenter.network.messages.ActiveGameRequest;
 import client.presenter.network.messages.ActiveGameResponse;
@@ -37,7 +34,6 @@ import client.presenter.network.messages.ProfileRequest;
 import client.presenter.network.messages.ProfileResponse;
 import client.presenter.network.messages.Register;
 import client.presenter.network.messages.RegisterResponse;
-import client.presenter.controller.util.HashPasswords;
 import client.presenter.network.messages.Unregister;
 import client.presenter.network.messages.UnregisterResponse;
 import java.io.IOException;
@@ -237,7 +233,7 @@ public class ChadPresenter implements ChadGameDriver{
       case GAME_INFO:
         GameInfo gameInfo = (GameInfo) message;
         chadGame = new Game(gameInfo.gameBoard, gameInfo.turn);
-        setupGame(gameInfo.gameID, chadGame.getBoard(), chadGame.getTurn());
+        //setupGame(gameInfo.gameID, chadGame.getBoard(), chadGame.getTurn());
         break;
       case MOVE:
         Move move = (Move) message;
