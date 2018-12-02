@@ -254,7 +254,7 @@ public class CLDriver implements ChadGameDriver {
         break;
       case SELECT_GAME:
         //TODO
-//        handleActiveGames()
+//        handleSelectGame()
         //send to Presenter ref
         break;
       case SEND_INVITE:
@@ -327,19 +327,29 @@ public class CLDriver implements ChadGameDriver {
   }
 
   /**
-   * Handle active game screen
+   * Shows the user's active games
    * @param ids list of ids of invitations
    * @param opponents list of nicknames the player has an invite from
    * @return MenuMessage object with a String array = {gameId, opponent's nickname}
    */
-  public MenuMessage handleActiveGames(int[] ids, String[] opponents){
-    //show games
+  public void handleActiveGames(int[] ids, String[] opponents){
     game.showCurrentGames(ids, opponents);
+  }
+
+  /**
+   * Handle the game selection screen
+   * @param ids list of ids of invitations
+   * @param opponents list of nicknames the player has an invite from
+   * @return MenuMessage object with a String array = {gameId, opponent's nickname}
+   */
+  public MenuMessage handleSelectGame(int[] ids, String[] opponents) {
     String[] info = new String[2];
     int option = keys.nextInt();
 
     info[0] = Integer.toString(ids[option]);
     info[1] = opponents[option];
+    gameID = ids[option];
+
     return new MenuMessage(MenuMessageTypes.SELECT_GAME, info);
   }
 

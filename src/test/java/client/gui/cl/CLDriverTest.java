@@ -2,7 +2,9 @@ package client.gui.cl;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.LoginMessage;
+import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.ViewMessage;
 import java.io.ByteArrayInputStream;
 import java.security.NoSuchAlgorithmException;
@@ -67,7 +69,9 @@ class CLDriverTest {
 
   @Test
   void handleLogin() {
-    //run driver.handleLogin()
+    //TODO
+    // run driver.handleLogin() and send in input
+    // Do I need to start two threads for this?
 
     setMyIn("user");
     Scanner sc = new Scanner(System.in);
@@ -79,11 +83,6 @@ class CLDriverTest {
 
     sc.close();
     fail("");
-  }
-
-  void setMyIn(String input) {
-    ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-    System.setIn(in);
   }
 
   @Test
@@ -98,7 +97,24 @@ class CLDriverTest {
 
   @Test
   void handleActiveGames() {
-    fail("");
+    int[] ids = {23,12};
+    String[] nicks = {"theGameMaster", "AI"};
+
+    try {
+      driver.handleActiveGames(ids, nicks);
+    } catch(Exception e) {
+      fail("");
+    }
+  }
+
+  @Test
+  void handleSelectGame() {
+    int[] ids = {23,12};
+    String[] nicks = {"theGameMaster", "AI"};
+
+    MenuMessage check = driver.handleSelectGame(ids, nicks);
+
+    assertTrue(check.menuType.equals(MenuMessageTypes.SELECT_GAME));
   }
 
   @Test
@@ -136,4 +152,12 @@ class CLDriverTest {
     fail("");
   }
 
+  /**
+   * Set the input stream for automatic keyboard input
+   * @param input the String that will be set in the input stream
+   */
+  void setMyIn(String input) {
+    ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+    System.setIn(in);
+  }
 }
