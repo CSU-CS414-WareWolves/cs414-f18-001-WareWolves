@@ -41,10 +41,27 @@ public class CLMenu implements MenuView {
 
   /**
    * Request a username from the current player
-   *
    */
   public void requestUsername(){
-    System.out.println("Please enter player's username(type EXIT to leave): ");
+    System.out.println("Please enter player's username (type EXIT to leave): ");
+  }
+
+  /**
+   * Prints all player nicknames that are registered
+   */
+  public void showPlayers(String[] players) {
+    StringBuilder res = new StringBuilder();
+    for(int i=0; i<players.length; i++) {
+      res.append(players[i]);
+      if((i+1)%3 == 0) {
+        res.append(" \n");
+      }
+      else {
+        res.append(" | ");
+      }
+    }
+    res.append("\n");
+    System.out.println(res);
   }
 
   /**

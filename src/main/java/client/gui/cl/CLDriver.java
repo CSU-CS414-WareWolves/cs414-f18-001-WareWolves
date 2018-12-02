@@ -12,6 +12,7 @@ import client.presenter.network.messages.InboxResponse;
 import client.presenter.network.messages.InviteResponse;
 import client.presenter.network.messages.LoginResponse;
 import client.presenter.network.messages.NetworkMessage;
+import client.presenter.network.messages.Players;
 import client.presenter.network.messages.ProfileResponse;
 import client.presenter.network.messages.RegisterResponse;
 import java.security.NoSuchAlgorithmException;
@@ -29,6 +30,7 @@ public class CLDriver implements ChadGameDriver {
 
   private Game chadGame;
   private int gameid;
+  private String[] activePlayers;
 
   public CLDriver(CLLogin _login, CLMenu _menu, CLGameView _game){
     login = _login;
@@ -65,7 +67,7 @@ public class CLDriver implements ChadGameDriver {
    * Creates space for readability of the command-line
    * (returns nothing, but prints a long line and some space for readability)
    */
-  public void clearScreen() {
+  private void clearScreen() {
     System.out.println("\n-----------------------------------------------------------\n");
   }
 
@@ -126,9 +128,18 @@ public class CLDriver implements ChadGameDriver {
         break;
       case MOVE:
         break;
+      case PLAYERS:
+        Players p = (Players) message;
+        activePlayers = p.players;
+        break;
+      case PROFILE_REQUEST:
+        menu.showPlayers(activePlayers);
+        handleProfile();
+        break;
       case PROFILE_RESPONSE:
-        ProfileResponse pr = (ProfileResponse) message;
         //TODO
+        ProfileResponse pr = (ProfileResponse) message;
+//        menu.showStats(pr.whitePlayers)
         break;
       case REGISTER:
         //never receives one
@@ -389,7 +400,7 @@ public class CLDriver implements ChadGameDriver {
    * Takes input from the user to send a number of invites according to their selection
    * @return a MenuMessage of type SEND_INVITE with a String array of nicknames||emails(?)
    */
-  public MenuMessage handleOutbox(){
+  public MenuMessage handleOutbox() {
     clearScreen();
     String bigString = "";
     while (true) {
@@ -405,6 +416,10 @@ public class CLDriver implements ChadGameDriver {
     }
     String[] info = bigString.split(":");
     return new MenuMessage(MenuMessageTypes.SEND_INVITE, info);
+  }
+
+  public void handleProfile() {
+
   }
 
   /**
