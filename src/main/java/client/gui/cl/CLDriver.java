@@ -8,6 +8,7 @@ import client.presenter.controller.ViewMessageType;
 import client.presenter.controller.messages.*;
 import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.GameInfo;
+import client.presenter.network.messages.GameRequest;
 import client.presenter.network.messages.InboxResponse;
 import client.presenter.network.messages.LoginResponse;
 import client.presenter.network.messages.NetworkMessage;
@@ -100,6 +101,8 @@ public class CLDriver implements ChadGameDriver {
       case UNREGISTER:
         break;
       case GAME_REQUEST:
+        GameRequest gr = (GameRequest) message;
+        gameID = gr.gameID;
         break;
       case GAME_INFO:
         GameInfo gi = (GameInfo) message;
@@ -313,7 +316,7 @@ public class CLDriver implements ChadGameDriver {
    * Handle active game screen
    * @param ids list of ids of invitations
    * @param opponents list of nicknames the player has an invite from
-   * @return MenuMessage object with
+   * @return MenuMessage object with a String array = {gameId, opponent's nickname}
    */
   public MenuMessage handleActiveGames(int[] ids, String[] opponents){
     //show games
@@ -425,6 +428,10 @@ public class CLDriver implements ChadGameDriver {
     return new MenuMessage(MenuMessageTypes.SEND_INVITE, info);
   }
 
+  /**
+   * Prints a warning if incorrect input is entered
+   * >>May not be needed in this class<<
+   */
   private void warningValidOption() {
     System.err.println("[!] Please input a valid option\n");
   }

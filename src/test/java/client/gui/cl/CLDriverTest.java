@@ -49,11 +49,53 @@ class CLDriverTest {
   }
 
   @Test
-  void handleLoginMenu() {
+  void createAndShowGUI() {
   }
 
   @Test
-  void handleGame() {
+  void handleNetworkMessage() {
+  }
+
+  @Test
+  void handleViewMessage() {
+  }
+
+  @Test
+  void handleLogin() {
+  }
+
+  @Test
+  void handleRegister() {
+
+  }
+
+  @Test
+  void handleUnregister() {
+
+  }
+
+  @Test
+  void handleActiveGames() {
+  }
+
+  @Test
+  void handleInGame() {
+
+  }
+
+  @Test
+  void handleMovePiece() {
+
+  }
+
+  @Test
+  void handleGameQuit() {
+
+  }
+
+  @Test
+  void handleGameResign() {
+
   }
 
   @Test
@@ -66,10 +108,6 @@ class CLDriverTest {
 
   @Test
   void handleOutbox() {
-  }
-
-  @Test
-  void runView() {
   }
 
 }
