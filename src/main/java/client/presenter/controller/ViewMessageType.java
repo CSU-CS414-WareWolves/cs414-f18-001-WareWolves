@@ -19,5 +19,6 @@ public enum ViewMessageType {
   PROFILE,
   ACTIVE_GAMES,
   INBOX,
-  GAME_REQUEST
+  GAME_REQUEST,
+  INVITE
 }

@@ -5,6 +5,7 @@ import client.presenter.controller.ViewMessageType;
 import client.presenter.controller.messages.ActiveGameMessage;
 import client.presenter.controller.messages.GameRequestMessage;
 import client.presenter.controller.messages.InboxMessage;
+import client.presenter.controller.messages.InviteMessage;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.MenuMessage;
@@ -70,6 +71,8 @@ public class ViewMessageFactory {
         return  new InboxMessage(info[0]);
       case GAME_REQUEST:
         return new GameRequestMessage(Integer.parseInt(info[0]));
+      case INVITE:
+        return new InviteMessage(info[0], info[1]);
       default:
         throw new IllegalArgumentException("The messageType of " + type.name() + " is not valid");
     }

@@ -8,6 +8,7 @@ import client.presenter.controller.ViewMessageType;
 import client.presenter.controller.messages.ActiveGameMessage;
 import client.presenter.controller.messages.GameRequestMessage;
 import client.presenter.controller.messages.InboxMessage;
+import client.presenter.controller.messages.InviteMessage;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.MenuMessage;
@@ -72,6 +73,16 @@ class ViewMessageFactoryTest {
 
     String[] info = {TEST_NICKNAME};
     testMessageEquals(expected, info, ViewMessageType.PROFILE);
+  }
+
+  @Test
+  void createViewMessageInvite() throws NoSuchAlgorithmException {
+
+    InviteMessage expected =
+        new InviteMessage(TEST_NICKNAME, TEST_NICKNAME_2);
+
+    String[] info = {TEST_NICKNAME, TEST_NICKNAME_2};
+    testMessageEquals(expected, info, ViewMessageType.INVITE);
   }
 
   @Test
