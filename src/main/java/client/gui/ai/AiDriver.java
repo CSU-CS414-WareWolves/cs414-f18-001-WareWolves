@@ -1,4 +1,4 @@
-package client.gui.AI;
+package client.gui.ai;
 
 import client.game.Game;
 import client.gui.ChadGameDriver;
@@ -70,8 +70,8 @@ public class AiDriver implements ChadGameDriver {
         break;
       case INBOX_RESPONSE:
         InboxResponse response = (InboxResponse) message;
-        for (int i = 0; i < response.inviteIDs.length; ++i){
-          if (response.senders[i].equals("AI")){
+        for (int i = 0; i < response.inviteIDs.length; ++i) {
+          if (response.senders[i].equals("ai")) {
             network.sendMessage(new InviteResponse(response.inviteIDs[i], true));
           }
         }
@@ -80,10 +80,12 @@ public class AiDriver implements ChadGameDriver {
         break;
     }
   }
+
   public class InboxPing extends Thread {
+
     public void run() {
       while (true) {
-        network.sendMessage(new InboxRequest("AI"));
+        network.sendMessage(new InboxRequest("ai"));
         try {
           sleep(10000);
         } catch (InterruptedException e) {
@@ -92,7 +94,8 @@ public class AiDriver implements ChadGameDriver {
       }
     }
   }
-  public static void main(String [] args) throws IOException, NoSuchAlgorithmException {
+
+  public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
     AiDriver driver = new AiDriver(InetAddress.getByName(args[0]), Integer.parseInt(args[1]));
   }
 
