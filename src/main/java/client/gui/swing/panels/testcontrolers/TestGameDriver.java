@@ -75,7 +75,7 @@ public class TestGameDriver implements ChadGameDriver {
           gui.handleViewMessage(new MovePieceResponse("NOT YOUR TURN", game.getBoard()));
           return;}
         game.move(moves.fromLocation.toString(), moves.toLocation.toString());
-        gui.handleViewMessage(new MovePieceResponse("You movedm now " + currentGame.getOpponent() + "'s turn", game.getBoard()));
+        gui.handleViewMessage(new MovePieceResponse("You moved it is now " + currentGame.getOpponent() + "'s turn", game.getBoard()));
 
         break;
       case REGISTER_RESPONSE:

@@ -16,6 +16,7 @@ import client.presenter.network.messages.NetworkMessage;
 import java.awt.CardLayout;
 import java.awt.Frame;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -94,6 +95,7 @@ public class SwingController extends Frame implements ChadGameDriver {
         break;
       case MOVE_PIECE_RESPONSE:
         MovePieceResponse moves = (MovePieceResponse) message;
+        JOptionPane.showMessageDialog(gameJPanel, moves.message);
         gameJPanel.setBoardPieces(moves.gameBoard);
         break;
     }
