@@ -101,6 +101,7 @@ public class CLDriver implements ChadGameDriver {
         //never receives one
         break;
       case UNREGISTER:
+        //shouldn't receive this one either
         break;
       case GAME_REQUEST:
         GameRequest gr = (GameRequest) message;
@@ -109,6 +110,7 @@ public class CLDriver implements ChadGameDriver {
       case GAME_INFO:
         GameInfo gi = (GameInfo) message;
         handleInGame(gi.gameBoard, gi.turn);
+        showGame();
         break;
       case MOVE:
         break;
@@ -224,11 +226,11 @@ public class CLDriver implements ChadGameDriver {
           game.showGameBoard(mpr.gameBoard);
         }
         else{
+          showGame();
           System.out.println("[!] Invalid move, please select a valid move for your selected piece");
         }
         break;
     }
-
   }
 
   /**
@@ -237,6 +239,8 @@ public class CLDriver implements ChadGameDriver {
    */
   private void handleMenuMessage(MenuMessage message) {
     MenuMessage mm;
+    menu.showMenu(nickname);
+
     switch (message.menuType){
       case LOGOUT:
         System.exit(0);
@@ -424,6 +428,7 @@ public class CLDriver implements ChadGameDriver {
    * @param message an InboxResponse with
    */
   public MenuMessage handleInbox(NetworkMessage message){
+    clearScreen();
     InboxResponse ir = (InboxResponse) message;
     menu.viewInvites(ir.inviteIDs, ir.recipients);
 
@@ -440,6 +445,7 @@ public class CLDriver implements ChadGameDriver {
    * @return a MenuMessage of type SEND_INVITE with a String array of nicknames||emails(?)
    */
   public MenuMessage handleOutbox(){
+    clearScreen();
     String bigString = "";
     while (true) {
       menu.requestUsername();
