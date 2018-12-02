@@ -50,64 +50,72 @@ class CLDriverTest {
 
   @Test
   void createAndShowGUI() {
+    fail("");
   }
 
   @Test
   void handleNetworkMessage() {
+    fail("");
   }
 
   @Test
   void handleViewMessage() {
+    fail("");
   }
 
   @Test
   void handleLogin() {
+    fail("");
   }
 
   @Test
   void handleRegister() {
-
+    fail("");
   }
 
   @Test
   void handleUnregister() {
-
+    fail("");
   }
 
   @Test
   void handleActiveGames() {
+    fail("");
   }
 
   @Test
   void handleInGame() {
-
+    fail("");
   }
 
   @Test
   void handleMovePiece() {
-
+    fail("");
   }
 
   @Test
   void handleGameQuit() {
-
+    fail("");
   }
 
   @Test
   void handleGameResign() {
-
+    fail("");
   }
 
   @Test
   void showGame() {
+    fail("");
   }
 
   @Test
   void handleInbox() {
+    fail("");
   }
 
   @Test
   void handleOutbox() {
+    fail("");
   }
 
 }
