@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.ViewMessage;
+import java.io.ByteArrayInputStream;
 import java.security.NoSuchAlgorithmException;
+import java.util.Scanner;
 import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -65,7 +67,23 @@ class CLDriverTest {
 
   @Test
   void handleLogin() {
+    //run driver.handleLogin()
+
+    setMyIn("user");
+    Scanner sc = new Scanner(System.in);
+    sc.nextLine();
+
+    setMyIn("pswd");
+    sc = new Scanner(System.in);
+    sc.nextLine();
+
+    sc.close();
     fail("");
+  }
+
+  void setMyIn(String input) {
+    ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+    System.setIn(in);
   }
 
   @Test
