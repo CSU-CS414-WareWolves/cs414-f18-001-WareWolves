@@ -178,10 +178,6 @@ public class CLDriver implements ChadGameDriver {
         //Give presenter valid moves
         chadGame.validMoves(((ViewValidMoves)message).location.toString());
         break;
-      case MENU:
-        //merge in Josh's branch for new Menu ViewMessages
-        handleMenuMessage((MenuMessage) message);
-        break;
       case MOVE_PIECE:
         MovePieceMessage mpm = handleMovePiece();
         //give to Presenter ref
@@ -215,11 +211,9 @@ public class CLDriver implements ChadGameDriver {
         String[] validMovesArray1 = vvmr.locations;
         game.showValidMoves(validMovesArray1);
         break;
-      case MENU_RESPONSE:
-        break;
       case MOVE_PIECE_RESPONSE:
         MovePieceResponse mpr = (MovePieceResponse) message;
-        if(mpr.success){
+        if(mpr.message.equals("Opponent's turn")){
           clearScreen();
           game.showGameBoard(mpr.gameBoard);
         }
@@ -227,44 +221,6 @@ public class CLDriver implements ChadGameDriver {
           showGame();
           System.out.println("[!] Invalid move, please select a valid move for your selected piece");
         }
-        break;
-    }
-  }
-
-  /**
-   * Handles a given ViewMessage, acts according to the its type
-   * @param message a ViewMessage with a type and data dependent on its type
-   */
-  private void handleMenuMessage(MenuMessage message) {
-    MenuMessage mm;
-    menu.showMenu(nickname);
-
-    switch (message.menuType){
-      case LOGOUT:
-        System.exit(0);
-        break;
-      case PLAYER_STATS:
-        //TODO
-        menu.showStats("",0,0,0,0);
-        break;
-      case ACTIVE_GAMES:
-        //TODO
-//        handleActiveGames();
-        //send to Presenter ref
-        break;
-      case INVITES:
-        //TODO
-//        mm = handleInbox();
-        //send to Presenter ref
-        break;
-      case SELECT_GAME:
-        //TODO
-//        handleSelectGame()
-        //send to Presenter ref
-        break;
-      case SEND_INVITE:
-        mm = handleOutbox();
-        //send to Presenter ref
         break;
     }
   }
