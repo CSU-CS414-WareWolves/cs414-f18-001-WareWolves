@@ -174,6 +174,10 @@ public class CLDriver implements ChadGameDriver {
         UnregisterMessage urm = handleUnregister();
         //give to Presenter ref
         break;
+      case GAME_REQUEST:
+        GameRequestMessage gr = handleSelectGame();
+        //give to Presenter ref
+        break;
       case SHOW_VALID_MOVES:
         //Give presenter valid moves
         chadGame.validMoves(((ViewValidMoves)message).location.toString());
@@ -298,19 +302,11 @@ public class CLDriver implements ChadGameDriver {
 
   /**
    * Handle the game selection screen
-   * @param ids list of ids of invitations
-   * @param opponents list of nicknames the player has an invite from
-   * @return MenuMessage object with a String array = {gameId, opponent's nickname}
+   * @return a GameRequestMessage with chosen gameID
    */
-  public MenuMessage handleSelectGame(int[] ids, String[] opponents) {
-    String[] info = new String[2];
+  public GameRequestMessage handleSelectGame() {
     int option = keys.nextInt();
-
-    info[0] = Integer.toString(ids[option]);
-    info[1] = opponents[option];
-    gameid = ids[option];
-
-    return new MenuMessage(MenuMessageTypes.SELECT_GAME, info);
+    return new GameRequestMessage(option);
   }
 
   /**
