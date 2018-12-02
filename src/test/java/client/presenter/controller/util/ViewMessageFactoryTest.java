@@ -11,6 +11,7 @@ import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MenuMessageResponse;
 import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.MovePieceResponse;
+import client.presenter.controller.messages.ProfileMessage;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.RegisterResponseMessage;
 import client.presenter.controller.messages.UnregisterMessage;
@@ -58,6 +59,16 @@ class ViewMessageFactoryTest {
 
     String[] info = {TEST_LOGIN_EMAIL, TEST_LOGIN_PASSWORD, TEST_NICKNAME};
     testMessageEquals(expected, info, ViewMessageType.UNREGISTER);
+  }
+
+  @Test
+  void createViewMessageProfile() throws NoSuchAlgorithmException {
+
+    ProfileMessage expected =
+        new ProfileMessage(TEST_NICKNAME);
+
+    String[] info = {TEST_NICKNAME};
+    testMessageEquals(expected, info, ViewMessageType.PROFILE);
   }
 
   @Test

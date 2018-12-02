@@ -22,6 +22,7 @@ import client.presenter.network.messages.LoginResponse;
 import client.presenter.network.messages.Move;
 import client.presenter.network.messages.NetworkMessage;
 import client.presenter.network.messages.Players;
+import client.presenter.network.messages.ProfileRequest;
 import client.presenter.network.messages.ProfileResponse;
 import client.presenter.network.messages.Register;
 import client.presenter.network.messages.RegisterResponse;

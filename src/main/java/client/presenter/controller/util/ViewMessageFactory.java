@@ -8,6 +8,7 @@ import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MenuMessageResponse;
 import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.MovePieceResponse;
+import client.presenter.controller.messages.ProfileMessage;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.RegisterResponseMessage;
 import client.presenter.controller.messages.UnregisterMessage;
@@ -58,6 +59,8 @@ public class ViewMessageFactory {
             Integer.parseInt(info[2]), Integer.parseInt(info[3]));
       case MOVE_PIECE_RESPONSE:
         return new MovePieceResponse(info[0], info[1]);
+      case PROFILE:
+        return new ProfileMessage(info[0]);
       default:
         throw new IllegalArgumentException("The messageType of " + type.name() + " is not valid");
     }
