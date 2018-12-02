@@ -112,9 +112,10 @@ class CLDriverTest {
     int[] ids = {23,12};
     String[] nicks = {"theGameMaster", "AI"};
 
-    MenuMessage check = driver.handleSelectGame(ids, nicks);
-
-    assertTrue(check.menuType.equals(MenuMessageTypes.SELECT_GAME));
+//    MenuMessage check = driver.handleSelectGame(ids, nicks);
+//
+//    assertTrue(check.menuType.equals(MenuMessageTypes.SELECT_GAME));
+    fail("");
   }
 
   @Test

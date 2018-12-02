@@ -161,7 +161,7 @@ public class CLDriver implements ChadGameDriver {
           //handle error
           e.printStackTrace();
         }
-        //give presenter rm
+        //give to Presenter ref
         break;
       case LOGIN:
         try {
@@ -223,6 +223,7 @@ public class CLDriver implements ChadGameDriver {
       case MOVE_PIECE_RESPONSE:
         MovePieceResponse mpr = (MovePieceResponse) message;
         if(mpr.success){
+          clearScreen();
           game.showGameBoard(mpr.gameBoard);
         }
         else{
