@@ -1,6 +1,7 @@
 package client.gui.swing;
 
 import client.gui.ChadGameDriver;
+import client.presenter.ChadPresenter;
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.network.messages.GameInfo;
@@ -121,7 +122,7 @@ public class GameJPanel extends JPanel implements ActionListener {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     //Create and set up the content pane.
-    GameJPanel demo = new GameJPanel(new SwingChadDriver());
+    GameJPanel demo = new GameJPanel(new ChadPresenter());
     frame.add(demo);
 
     //Display the window.

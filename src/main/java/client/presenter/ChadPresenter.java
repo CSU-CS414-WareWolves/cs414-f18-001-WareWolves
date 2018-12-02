@@ -1,7 +1,8 @@
-package client.gui.swing;
+package client.presenter;
 
 import client.game.Game;
 import client.gui.ChadGameDriver;
+import client.gui.swing.GameJPanel;
 import client.presenter.controller.messages.ActiveGameMessage;
 import client.presenter.controller.messages.GameRequestMessage;
 import client.presenter.controller.messages.InboxMessage;
@@ -42,9 +43,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
-import javax.swing.JFrame;
 
-public class SwingChadDriver implements ChadGameDriver{
+public class ChadPresenter implements ChadGameDriver{
 
   /**
    * The Swing GUI / View
@@ -347,7 +347,7 @@ public class SwingChadDriver implements ChadGameDriver{
   /**
    * Default constructor will need IP and Port for server
    */
-  public SwingChadDriver(String host, String port, String userInterface){
+  public ChadPresenter(String host, String port, String userInterface){
     try {
       InetAddress addr = InetAddress.getByName(host);
       networkManager = new NetworkManager(addr, Integer.parseInt(port), this);
@@ -359,6 +359,13 @@ public class SwingChadDriver implements ChadGameDriver{
     } else if(userInterface.equals("gui")){
       // Instantiate GUI Controller
     }
+  }
+
+  /**
+   * Default Constructor no arguments
+   */
+  public ChadPresenter() {
+
   }
 
   /**
@@ -397,7 +404,7 @@ public class SwingChadDriver implements ChadGameDriver{
 
 
   public static void main(String[] args) {
-    SwingChadDriver app = new SwingChadDriver(args[1], args[2], args[0]);
+    ChadPresenter app = new ChadPresenter(args[1], args[2], args[0]);
     app.start();
   }
 }
