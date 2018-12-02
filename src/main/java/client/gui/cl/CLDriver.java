@@ -168,16 +168,19 @@ public class CLDriver implements ChadGameDriver {
           //handle error
           e.printStackTrace();
         }
-        //give presenter lm
+        //give to Presenter ref
         break;
       case UNREGISTER:
         menu.unregisterUser();
+        UnregisterMessage urm = handleUnregister();
+        //give to Presenter ref
         break;
       case SHOW_VALID_MOVES:
         //Give presenter valid moves
         chadGame.validMoves(((ViewValidMoves)message).location.toString());
         break;
       case MENU:
+        //merge in Josh's branch for new Menu ViewMessages
         handleMenuMessage((MenuMessage) message);
         break;
       case MOVE_PIECE:
