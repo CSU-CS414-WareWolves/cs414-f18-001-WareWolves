@@ -18,7 +18,6 @@ public class CLGameView implements GameView {
   private static final String BQUEEN = "\u265B";
   private static final String BROOK = "\u265C";
 
-
   /**
    * Prints all current games of the user
    * @param ids list of ids of the active games
@@ -82,7 +81,7 @@ public class CLGameView implements GameView {
    * @param p An instance of a Piece
    * @return ASCII representation of Piece
    */
-  public static String pieceToCharacter(Piece p){
+  public String pieceToCharacter(Piece p){
     if (p == null)
       return "\u2610";
     if (p.getClass() == Rook.class){

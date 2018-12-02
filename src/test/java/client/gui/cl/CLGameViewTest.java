@@ -3,6 +3,9 @@ package client.gui.cl;
 import static org.junit.jupiter.api.Assertions.*;
 
 import client.game.Game;
+import client.game.pieces.King;
+import client.game.pieces.Piece;
+import client.game.pieces.Rook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,6 +15,9 @@ class CLGameViewTest {
 
   private CLGameView game;
   private String default_gb = "rdCreDRiHRjIrcCkdDreERhHKiIRjJrcDrdERhIRiJrcERhJreCRjH";
+  // Piece representations
+  private static final String WKING = "\u2654";
+  private static final String BKING = "\u265A";
 
   @BeforeEach
   void setUp() {
@@ -52,16 +58,38 @@ class CLGameViewTest {
     assertFalse(game.checkWall(row,col));
   }
 
-  @Test
-  void pieceToCharacter() {
+  @ParameterizedTest
+  @CsvSource({"kdD","KdD"})
+  void pieceToCharacter(String s) {
+    Piece p = new King(s);
+    String check = game.pieceToCharacter(p);
+    if(p.getColor()) {
+      assertEquals(check, BKING);
+    }
+    else {
+      assertEquals(check, WKING);
+    }
   }
 
   @Test
   void showValidMoves() {
+    String[] moves = {"bB","eE","dD","aA"};
+    try {
+      game.showValidMoves(moves);
+    } catch(Exception e) {
+      e.printStackTrace();
+      fail("");
+    }
   }
 
   @Test
   void showInGameMenu() {
+    try {
+      game.showInGameMenu();
+    } catch(Exception e) {
+      e.printStackTrace();
+      fail("");
+    }
   }
 
 }
