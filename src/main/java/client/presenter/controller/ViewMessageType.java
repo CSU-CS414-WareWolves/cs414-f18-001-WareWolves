@@ -18,5 +18,6 @@ public enum ViewMessageType {
   MOVE_PIECE_RESPONSE,
   PROFILE,
   ACTIVE_GAMES,
-  INBOX
+  INBOX,
+  GAME_REQUEST
 }

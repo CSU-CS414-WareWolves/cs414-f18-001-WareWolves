@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.ViewMessageType;
 import client.presenter.controller.messages.ActiveGameMessage;
+import client.presenter.controller.messages.GameRequestMessage;
 import client.presenter.controller.messages.InboxMessage;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.LoginResponseMessage;
@@ -81,6 +82,16 @@ class ViewMessageFactoryTest {
 
     String[] info = {TEST_NICKNAME};
     testMessageEquals(expected, info, ViewMessageType.INBOX);
+  }
+
+  @Test
+  void createViewMessageGameRequest() throws NoSuchAlgorithmException {
+
+    GameRequestMessage expected =
+        new GameRequestMessage(1337);
+
+    String[] info = {"1337"};
+    testMessageEquals(expected, info, ViewMessageType.GAME_REQUEST);
   }
 
   @Test

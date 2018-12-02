@@ -3,6 +3,7 @@ package client.presenter.controller.util;
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.ViewMessageType;
 import client.presenter.controller.messages.ActiveGameMessage;
+import client.presenter.controller.messages.GameRequestMessage;
 import client.presenter.controller.messages.InboxMessage;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.LoginResponseMessage;
@@ -67,6 +68,8 @@ public class ViewMessageFactory {
         return new ActiveGameMessage(info[0]);
       case INBOX:
         return  new InboxMessage(info[0]);
+      case GAME_REQUEST:
+        return new GameRequestMessage(Integer.parseInt(info[0]));
       default:
         throw new IllegalArgumentException("The messageType of " + type.name() + " is not valid");
     }
