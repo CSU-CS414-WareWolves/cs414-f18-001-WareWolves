@@ -181,14 +181,8 @@ public class CLDriver implements ChadGameDriver {
         break;
       case MOVE_PIECE_RESPONSE:
         MovePieceResponse mpr = (MovePieceResponse) message;
-        if(mpr.message.equals("Opponent's turn")){
-          clearScreen();
-          game.showGameBoard(mpr.gameBoard);
-        }
-        else{
-          showGame();
-          System.out.println("[!] Invalid move, please select a valid move for your selected piece");
-        }
+        game.showGameBoard(mpr.gameBoard);
+        System.out.println(mpr.message);
         break;
       case REGISTER:
         try {
