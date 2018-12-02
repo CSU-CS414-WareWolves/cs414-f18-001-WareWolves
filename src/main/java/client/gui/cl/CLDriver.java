@@ -4,7 +4,6 @@ import client.Point;
 import client.game.Game;
 import client.gui.ChadGameDriver;
 import client.presenter.controller.MenuMessageTypes;
-import client.presenter.controller.ViewMessageType;
 import client.presenter.controller.messages.*;
 import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.GameInfo;
@@ -14,9 +13,7 @@ import client.presenter.network.messages.InviteResponse;
 import client.presenter.network.messages.LoginResponse;
 import client.presenter.network.messages.NetworkMessage;
 import client.presenter.network.messages.ProfileResponse;
-import client.presenter.network.messages.Register;
 import client.presenter.network.messages.RegisterResponse;
-import client.presenter.network.messages.Unregister;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
@@ -31,7 +28,7 @@ public class CLDriver implements ChadGameDriver {
   private String nickname;
 
   private Game chadGame;
-  private int gameID;
+  private int gameid;
 
   public CLDriver(CLLogin _login, CLMenu _menu, CLGameView _game){
     login = _login;
@@ -105,7 +102,7 @@ public class CLDriver implements ChadGameDriver {
         break;
       case GAME_REQUEST:
         GameRequest gr = (GameRequest) message;
-        gameID = gr.gameID;
+        gameid = gr.gameID;
         break;
       case GAME_INFO:
         GameInfo gi = (GameInfo) message;
@@ -356,7 +353,7 @@ public class CLDriver implements ChadGameDriver {
 
     info[0] = Integer.toString(ids[option]);
     info[1] = opponents[option];
-    gameID = ids[option];
+    gameid = ids[option];
 
     return new MenuMessage(MenuMessageTypes.SELECT_GAME, info);
   }
