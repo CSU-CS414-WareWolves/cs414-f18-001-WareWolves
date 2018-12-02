@@ -10,6 +10,7 @@ import client.presenter.controller.messages.MovePieceResponse;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.RegisterResponseMessage;
 import client.presenter.controller.messages.UnregisterMessage;
+import client.presenter.controller.messages.UnregisterResponseMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMoves;
 import client.presenter.network.NetworkManager;
@@ -57,6 +58,11 @@ public class SwingChadDriver implements ChadGameDriver{
    * The network manager that handles messages to the server
    */
   private NetworkManager networkManager; // Initialize (Not Implemented)
+  /**
+   * Array of all the nicknames of players in the database
+   */
+  private String[] players;
+
 
 
   /**
@@ -122,7 +128,7 @@ public class SwingChadDriver implements ChadGameDriver{
         // Tell GUI to what moves to show
         gamePanel.setValidMoves(validMoves);
         break;
-      case MENU:
+      case MENU: // Need to change to handle menu messages as view messages
         handleMenuMessage((MenuMessage) message);
         break;
       case MOVE_PIECE:
@@ -147,7 +153,12 @@ public class SwingChadDriver implements ChadGameDriver{
              // Create message response with winner
              MovePieceResponse movePieceResponse = new MovePieceResponse(winner,
                  chadGame.getBoard());
+             viewDriver.handleViewMessage(movePieceResponse);
            }
+         } else {
+           // Game is not over
+           MovePieceResponse movePieceResponse = new MovePieceResponse("Opponent's turn", chadGame.getBoard());
+           viewDriver.handleViewMessage(movePieceResponse);
          }
            // Send Move to Server
            // Get piece being moved
@@ -161,6 +172,7 @@ public class SwingChadDriver implements ChadGameDriver{
           // Send a move piece response message with an error
            String error = "Invalid Move";
            MovePieceResponse movePieceResponse = new MovePieceResponse(error, chadGame.getBoard());
+          viewDriver.handleViewMessage(movePieceResponse);
         }
         break;
     }
@@ -203,15 +215,10 @@ public class SwingChadDriver implements ChadGameDriver{
         // If the login was successful
         if(loginResponse.success) {
           this.playerNickname = loginResponse.nickname;
-          LoginResponseMessage loginResponseMessage = new LoginResponseMessage(loginResponse.success, loginResponse.nickname);
-          // Send message to gui/cli handle view message
-          viewDriver.handleViewMessage(loginResponseMessage);
         }
-        else {
-          LoginResponseMessage loginResponseMessage = new LoginResponseMessage(loginResponse.success, loginResponse.nickname);
-          // Send message to gui/cli handle view message
-          viewDriver.handleViewMessage(loginResponseMessage);
-        }
+        LoginResponseMessage loginResponseMessage = new LoginResponseMessage(loginResponse.success, loginResponse.nickname);
+        // Send message to gui/cli handle view message
+        viewDriver.handleViewMessage(loginResponseMessage);
         break;
       case GAME_INFO:
         GameInfo gameInfo = (GameInfo) message;
@@ -234,10 +241,12 @@ public class SwingChadDriver implements ChadGameDriver{
               // Creates a string with who won the game
               String winner = getCurrentPlayer(chadGame.getTurn()) + " player has won.";
               MovePieceResponse movePieceResponse = new MovePieceResponse(winner, move.board);
+              viewDriver.handleViewMessage(movePieceResponse);
             }
           } else {
-            // Game has not ended
-            // Handle showing move (Not Implemented)
+            // Game is not over
+            MovePieceResponse movePieceResponse = new MovePieceResponse("Your turn", chadGame.getBoard());
+            viewDriver.handleViewMessage(movePieceResponse);
           }
         } else {
           // Not for current game. Do nothing.
@@ -252,16 +261,23 @@ public class SwingChadDriver implements ChadGameDriver{
         RegisterResponse registerResponse = (RegisterResponse) message;
         if(registerResponse.success) {
           // Successful Register
-          // Display successful register (Not Implemented)
+          String[] messages = {"Sucessfully Registered."};
+          RegisterResponseMessage registerResponseMessage = new RegisterResponseMessage(registerResponse.success, messages);
+          viewDriver.handleViewMessage(registerResponseMessage);
         }
         else {
           if(registerResponse.reason) {
             // Nickname already taken
-            // Display unsuccessful register nickname taken (Not Implemented)
+            String[] messages = {"Could not register. Nickname already in use."};
+            RegisterResponseMessage registerResponseMessage = new RegisterResponseMessage(registerResponse.success, messages);
+            viewDriver.handleViewMessage(registerResponseMessage);
           }
           else {
             // Email already taken
             // Display unsuccessful register email taken (Not Implemented)
+            String[] messages = {"Could not register. Email already in use."};
+            RegisterResponseMessage registerResponseMessage = new RegisterResponseMessage(registerResponse.success, messages);
+            viewDriver.handleViewMessage(registerResponseMessage);
           }
         }
         break;
@@ -277,17 +293,20 @@ public class SwingChadDriver implements ChadGameDriver{
         break;
       case PLAYERS:
         Players players = (Players) message;
-        // Store player array (Not Implemented)
+        // Store player array
+        this.players = players.players;
         break;
       case UNREGISTER_RESPONSE:
         UnregisterResponse unregisterResponse = (UnregisterResponse) message;
         if(unregisterResponse.success) {
           // Successfully unregistered
-          // Display unregistered success (Not Implemented)
+          String[] messages = {"Successfully Unregistered."};
+          UnregisterResponseMessage unregisterResponseMessage = new UnregisterResponseMessage(unregisterResponse.success, messages);
         }
         else {
           // Not successful
-          // Display unregistered unsuccessful (Not Implemented)
+          String[] messages = {"Unable to unregister. Please try again."};
+          UnregisterResponseMessage unregisterResponseMessage = new UnregisterResponseMessage(unregisterResponse.success, messages);
         }
         break;
     }
