@@ -66,12 +66,12 @@ public class ViewMessageFactory {
       case PROFILE:
         return new ProfileMessage(info[0]);
       case ACTIVE_GAMES:
-        return new ActiveGameMessage(info[0]);
+        return new ActiveGameMessage();
       case INBOX:
-        return  new InboxMessage(info[0]);
+        return  new InboxMessage();
       case GAME_REQUEST:
-        return new GameRequestMessage(Integer.parseInt(info[0]));
-      case INVITE:
+        return new GameRequestMessage(info);
+      case NEW_INVITE:
         return new InviteMessage(info[0], info[1]);
       default:
         throw new IllegalArgumentException("The messageType of " + type.name() + " is not valid");

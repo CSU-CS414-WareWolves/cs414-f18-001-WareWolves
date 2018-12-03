@@ -1,6 +1,7 @@
 package client.gui.swing;
 
 import client.gui.ChadGameDriver;
+import client.gui.swing.panels.chadgame.ChadGameBoard;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.network.messages.NetworkMessage;
 import java.awt.event.MouseEvent;

@@ -24,7 +24,6 @@ import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMoves;
 import client.presenter.controller.messages.ViewValidMovesResponse;
 import java.security.NoSuchAlgorithmException;
-import javax.print.DocFlavor.STRING;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -82,16 +81,16 @@ class ViewMessageFactoryTest {
         new InviteMessage(TEST_NICKNAME, TEST_NICKNAME_2);
 
     String[] info = {TEST_NICKNAME, TEST_NICKNAME_2};
-    testMessageEquals(expected, info, ViewMessageType.INVITE);
+    testMessageEquals(expected, info, ViewMessageType.NEW_INVITE);
   }
 
   @Test
   void createViewMessageInbox() throws NoSuchAlgorithmException {
 
     InboxMessage expected =
-        new InboxMessage(TEST_NICKNAME);
+        new InboxMessage();
 
-    String[] info = {TEST_NICKNAME};
+    String[] info = {};
     testMessageEquals(expected, info, ViewMessageType.INBOX);
   }
 
@@ -99,7 +98,7 @@ class ViewMessageFactoryTest {
   void createViewMessageGameRequest() throws NoSuchAlgorithmException {
 
     GameRequestMessage expected =
-        new GameRequestMessage(1337);
+        new GameRequestMessage(new String[] {"1337"});
 
     String[] info = {"1337"};
     testMessageEquals(expected, info, ViewMessageType.GAME_REQUEST);
@@ -109,9 +108,9 @@ class ViewMessageFactoryTest {
   void createViewMessageActiveGames() throws NoSuchAlgorithmException {
 
     ActiveGameMessage expected =
-        new ActiveGameMessage(TEST_NICKNAME);
+        new ActiveGameMessage();
 
-    String[] info = {TEST_NICKNAME};
+    String[] info = {};
     testMessageEquals(expected, info, ViewMessageType.ACTIVE_GAMES);
   }
 

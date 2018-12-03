@@ -81,6 +81,7 @@ public class ChadServer extends Thread{
 			if (key.isReadable()) {
 				ByteBuffer buff = ByteBuffer.allocate(5000);
 				SocketChannel s = (SocketChannel)key.channel();
+
 				int read = 0;
 				while(buff.hasRemaining() && read !=-1) {
 					read = s.read(buff);
@@ -110,15 +111,23 @@ public class ChadServer extends Thread{
 					Players players = query.getPlayers();
 					sock.write(ByteBuffer.allocate(4).putInt(players.length));
 					sock.write(ByteBuffer.wrap(players.getDataString().getBytes()));
+
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			case LOGOUT: sessions.remove(new Logout(msg, 0).nickname);
 			case REGISTER: try {
-				RegisterResponse response = query.register(new Register(msg));
+				Register register = new Register(msg);
+				RegisterResponse response = query.register(register);
 				sock.write(ByteBuffer.allocate(4).putInt(response.length));
 				sock.write(ByteBuffer.wrap(response.getDataString().getBytes()));
+				if(response.success){
+					sessions.put(register.nickname, sock);
+					Players players = query.getPlayers();
+					sock.write(ByteBuffer.allocate(4).putInt(players.length));
+					sock.write(ByteBuffer.wrap(players.getDataString().getBytes()));	
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -195,7 +204,7 @@ public class ChadServer extends Thread{
 	
 	
 	public static void main(String[] args) {
-		int port = Integer.parseInt(args[0]);
+		int port = Integer.parseInt(args[1]);
 		ChadServer server = new ChadServer(port);
 		server.start();
 	}

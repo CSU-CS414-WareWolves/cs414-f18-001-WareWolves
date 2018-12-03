@@ -5,7 +5,7 @@
 
   <!--
   <groupId>edu.colostate.cs.cs414.warewolves</groupId>
-  <artifactId>warewolves-chad</artifactId>
+  <artifactId>warewolves-chadgame</artifactId>
   <version>1.0</version>
 -->
   <properties>
@@ -50,6 +50,19 @@
           </dependency>
         </dependencies>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+              <mainClass>client.presenter.ai.AiDriver</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+
     </plugins>
 
   </build>

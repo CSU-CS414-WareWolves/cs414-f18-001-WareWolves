@@ -20,6 +20,7 @@ public enum ViewMessageType {
   ACTIVE_GAMES,
   INBOX,
   GAME_REQUEST,
-  INVITE,
+  NEW_INVITE,
+  INVITE_RESPONSE,
   LOGOUT
 }

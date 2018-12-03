@@ -7,18 +7,12 @@ import client.presenter.controller.ViewMessageType;
  */
 public class InboxMessage extends ViewMessage {
 
-  /**
-   * The nickname the user wants to see the inbox of
-   */
-  public final String nickname;
 
   /**
    * Nickname for the requested inbox is sent
-   * @param nickname nickname for the requested inbox
    */
-  public InboxMessage(String nickname) {
+  public InboxMessage() {
     super(ViewMessageType.INBOX);
-    this.nickname = nickname;
   }
 
   @Override
@@ -27,6 +21,6 @@ public class InboxMessage extends ViewMessage {
       return false;
     }
     InboxMessage other = (InboxMessage) o;
-    return nickname.equals(other.nickname);
+    return this.messageType.equals(other.messageType);
   }
 }

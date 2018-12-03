@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 class GameRequestMessageTest {
 
-  private static final int gameID = 1337;
+  private static final String[] gameID = {"1337"};
   private static GameRequestMessage testMessage;
 
   @BeforeEach
@@ -23,6 +23,6 @@ class GameRequestMessageTest {
 
   @Test
   public void testGameID() {
-    assertEquals(gameID, testMessage.gameID);
+    assertEquals(gameID, testMessage.gameInfo);
   }
 }
