@@ -44,30 +44,6 @@ public class CLDriver implements ChadGameDriver {
   }
 
   /**
-   * Gets CLDriver's CLLogin instance
-   * @return class instance of CLLogin
-   */
-  public CLLogin getLogin() {
-    return login;
-  }
-
-  /**
-   * Gets CLDriver's CLMenu instance
-   * @return class instance of CLMenu
-   */
-  public CLMenu getMenu() {
-    return menu;
-  }
-
-  /**
-   * Gets CLDriver's CLGameView instance
-   * @return class instance of CLGameView
-   */
-  public CLGameView getGame() {
-    return game;
-  }
-
-  /**
    * Creates space for readability of the command-line
    * (returns nothing, but prints a long line and some space for readability)
    */
@@ -149,7 +125,7 @@ public class CLDriver implements ChadGameDriver {
 //        controller.handleViewMessage(pm);
         break;
       case PROFILE_RESPONSE:
-        //TODO
+        //TODO: ask what this data is
         ProfileResponse pr = (ProfileResponse) message;
 //        menu.showStats(pr.whitePlayers, pr.blackPlayers, pr.results, pr.startDates, pr.endDates);
         break;
@@ -215,8 +191,7 @@ public class CLDriver implements ChadGameDriver {
         }
         break;
       case REGISTER_RESPONSE:
-        //TODO
-        //ask about this message?
+        //TODO: ask about this message also
         RegisterResponseMessage rrm = (RegisterResponseMessage) message;
         if(rrm.success){
           System.out.println(rrm.messages);
@@ -230,7 +205,7 @@ public class CLDriver implements ChadGameDriver {
         break;
       case SHOW_VALID_MOVES:
         //Give presenter valid moves
-        //TODO
+        //TODO: valid move parser
         chadGame.validMoves(((ViewValidMoves)message).location.toString());
         break;
       case SHOW_VALID_MOVES_RESPONSE:
@@ -239,13 +214,23 @@ public class CLDriver implements ChadGameDriver {
         game.showValidMoves(validMovesArray1);
         break;
       case UNREGISTER:
+        clearScreen();
         menu.unregisterUser();
         UnregisterMessage urm = handleUnregister();
         controller.handleViewMessage(urm);
         break;
       case UNREGISTER_RESPONSE:
-        handleUnregister();
-        //TODO
+        UnregisterResponseMessage urrm = (UnregisterResponseMessage) message;
+        if(urrm.success) {
+          //return to title screen on success
+          System.out.println(urrm.messages);
+          handleTitleScreen();
+        } else {
+          //return to main menu on fail
+          System.out.println(urrm.messages);
+          ViewMessage vm2 = handleMenu();
+          controller.handleViewMessage(vm2);
+        }
         break;
     }
   }
@@ -322,8 +307,7 @@ public class CLDriver implements ChadGameDriver {
         case 6:
           //Logout
           System.out.println("[!] Hope to see you again soon!");
-          //TODO
-          //merge new messages
+          //TODO: return new, updated Logout message
 //          return new LogoutMessage();
           break;
         default:
@@ -340,7 +324,6 @@ public class CLDriver implements ChadGameDriver {
    * @return an Unregister message
    */
   public UnregisterMessage handleUnregister() {
-    clearScreen();
     String email;
     String pass;
 
@@ -349,7 +332,7 @@ public class CLDriver implements ChadGameDriver {
     email = keys.nextLine();
     System.out.println("Password:");
     pass = keys.nextLine();
-    
+
     try {
       return new UnregisterMessage(email, pass, nickname);
     } catch (NoSuchAlgorithmException e) {
@@ -392,8 +375,7 @@ public class CLDriver implements ChadGameDriver {
         return handleMenu();
       }
       else if(from.toUpperCase().equals("RESIGN")) {
-        //TODO
-        //merge in new messages
+        //TODO: return new, updated Logout message
 //        return new ResignMessage();
         return handleMenu();
       }
@@ -439,7 +421,7 @@ public class CLDriver implements ChadGameDriver {
 
     info[0] = Integer.toString(ids[option]);
     info[1] = senders[option];
-    //TODO: NEED ACCEPT_INVITE
+    //TODO: return new Accept_Invite message
     return new MenuMessage(MenuMessageTypes.SELECT_GAME, info);
   }
 

@@ -25,28 +25,6 @@ class CLDriverTest {
   @BeforeEach
   void setUp(){
     driver = new CLDriver(new ChadPresenter());
-
-    login = new CLLogin();
-    menu = new CLMenu();
-    game = new CLGameView();
-  }
-
-  @Test
-  void getLogin() {
-    CLLogin temp = driver.getLogin();
-    Assert.assertTrue(temp.equals(login));
-  }
-
-  @Test
-  void getMenu() {
-    CLMenu temp = driver.getMenu();
-    Assert.assertTrue(temp.equals(menu));
-  }
-
-  @Test
-  void getGame() {
-    CLGameView temp = driver.getGame();
-    Assert.assertTrue(temp.equals(game));
   }
 
   @Test
@@ -71,8 +49,7 @@ class CLDriverTest {
 
   @Test
   void handleLogin() {
-    //TODO
-    // run driver.handleLogin() and send in input
+    //TODO: run driver.handleLogin() and send in input
     // Do I need to start two threads for this?
 
     setMyIn("user");
@@ -88,12 +65,10 @@ class CLDriverTest {
 
   @Test
   void handleRegister() {
-
   }
 
   @Test
   void handleUnregister() {
-
   }
 
   @Test
