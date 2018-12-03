@@ -8,13 +8,10 @@ import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.*;
 import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.GameInfo;
-import client.presenter.network.messages.GameRequest;
 import client.presenter.network.messages.InboxResponse;
 import client.presenter.network.messages.InviteResponse;
-import client.presenter.network.messages.LoginResponse;
 import client.presenter.network.messages.NetworkMessage;
 import client.presenter.network.messages.Players;
-import client.presenter.network.messages.ProfileRequest;
 import client.presenter.network.messages.ProfileResponse;
 import client.presenter.network.messages.RegisterResponse;
 import java.security.NoSuchAlgorithmException;
@@ -151,11 +148,6 @@ public class CLDriver implements ChadGameDriver {
       case REGISTER_RESPONSE:
         RegisterResponse rr = (RegisterResponse) message;
         handleViewMessage(new RegisterResponseMessage(rr.success, new String[]{}));
-        break;
-      case SEE_RESULTS:
-        break;
-      case UNREGISTER:
-        //shouldn't receive this one either
         break;
     }
   }
