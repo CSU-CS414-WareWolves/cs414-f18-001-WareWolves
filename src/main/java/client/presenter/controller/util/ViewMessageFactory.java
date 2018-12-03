@@ -71,7 +71,7 @@ public class ViewMessageFactory {
         return  new InboxMessage();
       case GAME_REQUEST:
         return new GameRequestMessage(info);
-      case INVITE:
+      case NEW_INVITE:
         return new InviteMessage(info[0], info[1]);
       default:
         throw new IllegalArgumentException("The messageType of " + type.name() + " is not valid");

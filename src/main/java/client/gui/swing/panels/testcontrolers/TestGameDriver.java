@@ -8,6 +8,7 @@ import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.MovePieceResponse;
+import client.presenter.controller.messages.ProfileMessage;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.RegisterResponseMessage;
 import client.presenter.controller.messages.ViewMessage;
@@ -15,7 +16,6 @@ import client.presenter.controller.messages.ViewValidMoves;
 import client.presenter.controller.messages.ViewValidMovesResponse;
 import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.InboxResponse;
-import client.presenter.network.messages.LoginResponse;
 import client.presenter.network.messages.NetworkMessage;
 import client.presenter.network.messages.Players;
 import client.presenter.network.messages.ProfileResponse;
@@ -90,23 +90,29 @@ public class TestGameDriver implements ChadGameDriver {
         break;
       case MOVE_PIECE_RESPONSE:
         break;
+      case PROFILE:
+        ProfileMessage profileMessage = (ProfileMessage) message;
+        System.out.println(message.messageType + " " + profileMessage.nickname);
+        gui.handleNetMessage(new ProfileResponse("18:testUser2:testUser:01-01-18:01-01-18:true#testUser:testUser2:02-14-18:02-14-18:false" ));
+        break;
+      case ACTIVE_GAMES:
+        System.out.println(message.messageType);
+        gui.handleNetMessage( new ActiveGameResponse("10:123:RiIrdDKjJkeEQaAqlL:testUser:01-01-18:true:false:false#1234:RiIrdDKjJkeEQaAqlL:testUser2:02-14-18:false:false:false"));
+        break;
+      case INBOX:
+        break;
+      case GAME_REQUEST:
+        break;
+      case NEW_INVITE:
+        break;
+      case LOGOUT:
+        break;
     }
   }
 
   private void handleMenuMessage(MenuMessage message) {
 
     switch (message.menuType){
-
-      case LOGOUT:
-        break;
-      case PLAYER_STATS:
-        System.out.println(message.menuType + " " + message.information[0]);
-        gui.handleNetMessage(new ProfileResponse("18:testUser2:testUser:01-01-18:01-01-18:true#testUser:testUser2:02-14-18:02-14-18:false" ));
-        break;
-      case ACTIVE_GAMES:
-        System.out.println(message.menuType);
-        gui.handleNetMessage( new ActiveGameResponse("10:123:RiIrdDKjJkeEQaAqlL:testUser:01-01-18:true:false:false#1234:RiIrdDKjJkeEQaAqlL:testUser2:02-14-18:false:false:false"));
-        break;
       case INVITES:
         if(message.information.length == 0){
           System.out.println(message.menuType + " inbox");

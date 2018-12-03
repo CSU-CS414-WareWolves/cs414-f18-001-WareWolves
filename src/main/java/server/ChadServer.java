@@ -81,6 +81,7 @@ public class ChadServer extends Thread{
 			if (key.isReadable()) {
 				ByteBuffer buff = ByteBuffer.allocate(5000);
 				SocketChannel s = (SocketChannel)key.channel();
+
 				int read = 0;
 				while(buff.hasRemaining() && read !=-1) {
 					read = s.read(buff);
@@ -110,6 +111,7 @@ public class ChadServer extends Thread{
 					Players players = query.getPlayers();
 					sock.write(ByteBuffer.allocate(4).putInt(players.length));
 					sock.write(ByteBuffer.wrap(players.getDataString().getBytes()));
+
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

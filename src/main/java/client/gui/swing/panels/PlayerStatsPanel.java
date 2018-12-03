@@ -4,6 +4,7 @@ import client.gui.swing.SwingGUIController;
 import client.gui.swing.panels.testcontrolers.TestGameMenuController;
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.MenuMessage;
+import client.presenter.controller.messages.ProfileMessage;
 import client.presenter.network.messages.NetworkMessage;
 import client.presenter.network.messages.Players;
 import client.presenter.network.messages.ProfileResponse;
@@ -44,7 +45,7 @@ public class PlayerStatsPanel extends UpdatableJTableInPanel {
         }
         currentSelected = profileNickName;
         playerNickName = profileNickName;
-        controller.sendMessage(new MenuMessage(MenuMessageTypes.PLAYER_STATS, new String[] {profileNickName}));
+        controller.sendMessage(new ProfileMessage(profileNickName));
 
       }
     });

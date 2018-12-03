@@ -19,7 +19,7 @@ public class InviteMessage extends ViewMessage {
    * @param recipient nickname fo the recipient
    */
   public InviteMessage(String sender, String recipient) {
-    super(ViewMessageType.INVITE);
+    super(ViewMessageType.NEW_INVITE);
     this.sender = sender;
     this.recipient = recipient;
   }

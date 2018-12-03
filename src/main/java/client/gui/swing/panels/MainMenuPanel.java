@@ -4,7 +4,9 @@ import client.gui.ChadGameDriver;
 import client.gui.swing.SwingGUIController;
 import client.gui.swing.panels.testcontrolers.TestSwingController;
 import client.presenter.controller.MenuMessageTypes;
+import client.presenter.controller.messages.ActiveGameMessage;
 import client.presenter.controller.messages.MenuMessage;
+import client.presenter.controller.messages.ProfileMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.network.messages.NetworkMessage;
 import client.presenter.network.messages.Players;
@@ -55,6 +57,15 @@ public class MainMenuPanel extends SwingGUIController {
   @Override
   public void sendMessage(ViewMessage message) {
 
+    switch (message.messageType){
+      case PROFILE:
+        ProfileMessage profileMessage = (ProfileMessage) message;
+        controller.handleViewMessage(message);
+        System.out.println("View Stats: " + profileMessage.nickname);
+        break;
+
+    }
+
     if (message instanceof MenuMessage) {
       MenuMessage menuMessage = (MenuMessage) message;
 
@@ -68,10 +79,6 @@ public class MainMenuPanel extends SwingGUIController {
           controller.handleViewMessage(message);
           System.out.println("Resign Game: " + menuMessage.information[0] + " Opponent: "
               + menuMessage.information[2]);
-          break;
-        case PLAYER_STATS:
-          controller.handleViewMessage(message);
-          System.out.println("View Stats: " + menuMessage.information[0]);
           break;
         case INVITES:
           if(menuMessage.information.length == 0){
@@ -153,7 +160,7 @@ public class MainMenuPanel extends SwingGUIController {
     switch (e.getActionCommand()) {
       case "viewGames":
         cardLayout.show(displayPanel, "Games");
-        controller.handleViewMessage(new MenuMessage(MenuMessageTypes.ACTIVE_GAMES, new String[] {nickName}));
+        controller.handleViewMessage(new ActiveGameMessage());
         break;
       case "viewProfiles":
         cardLayout.show(displayPanel, "Stats");

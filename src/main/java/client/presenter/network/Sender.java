@@ -32,7 +32,7 @@ public class Sender {
 	 */
 	public boolean sendToServer(NetworkMessage msg) {
 		try {
-			outToServer.writeInt(msg.length);
+			//outToServer.writeInt(msg.length);
 			outToServer.write(msg.getDataString().getBytes());
 			outToServer.flush();
 			return true;
