@@ -88,6 +88,7 @@ public class CLDriver implements ChadGameDriver {
    *
    */
   public void handleTitleScreen() {
+    clearScreen();
     int option = 0;
     try {
       while (true) {
@@ -101,7 +102,12 @@ public class CLDriver implements ChadGameDriver {
             break;
           case 3:
             //handleLogout();
-            handleLogin();
+            break;
+          default:
+            warningValidOption();
+            login.showSplash();
+            login.showLogin();
+            clearScreen();
         }
       }
     } catch(NoSuchAlgorithmException e) {
