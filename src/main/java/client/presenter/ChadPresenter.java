@@ -77,6 +77,7 @@ public class ChadPresenter implements ChadGameDriver{
    */
   public void handleViewMessage(ViewMessage message) {
 
+    System.out.println(message.messageType);
     switch (message.messageType){
       case REGISTER:
         RegisterMessage registerMessage = (RegisterMessage) message;
@@ -87,35 +88,27 @@ public class ChadPresenter implements ChadGameDriver{
         int emailColon = registerMessage.email.indexOf(':');
         if(nicknameColon != -1 || nicknamePound != -1) {
           // Nickname contains invalid characters
-          String[] messages = {"Invalid Nickname"};
+          String[] messages = {"Invalid Nickname - Nickname can not have # or : in it"};
           RegisterResponseMessage registerResponseMessage = new RegisterResponseMessage(false, messages);
           // Send message to gui/cli handle view message
           viewDriver.handleViewMessage(registerResponseMessage);
         }
         else if (emailColon != -1 || emailPound != -1) {
           // Email contains invalid characters
-          String[] messages = {"Invalid Email"};
+          String[] messages = {"Invalid Email - Emails can not have # or : in them"};
           RegisterResponseMessage registerResponseMessage = new RegisterResponseMessage(false, messages);
           // Send message to gui/cli handle view message
           viewDriver.handleViewMessage(registerResponseMessage);
         }
         else {
           // Email and nickname do not contain any invalid characters. Send to network manager.
-          try {
             networkManager.sendMessage(new Register(registerMessage.email, registerMessage.nickname,
-                HashPasswords.SHA1FromString(registerMessage.password)));
-          } catch(NoSuchAlgorithmException e) {
-            // Do nothing
-          }
+                registerMessage.password));
         }
         break;
       case LOGIN:
         LoginMessage loginMessage = (LoginMessage) message;
-        try {
-          networkManager.sendMessage(new Login(loginMessage.email, HashPasswords.SHA1FromString(loginMessage.password)));
-        } catch(NoSuchAlgorithmException e) {
-          // Do nothing
-        }
+        networkManager.sendMessage(new Login(loginMessage.email, loginMessage.password));
         break;
       case UNREGISTER:
         UnregisterMessage unregisterMessage = (UnregisterMessage) message;
@@ -218,6 +211,7 @@ public class ChadPresenter implements ChadGameDriver{
    * @param message the message to process
    */
   public void handleNetMessage(NetworkMessage message){
+    System.out.println("handleNetMessage:: " + message.type);
     switch (message.type){
       case LOGIN_RESPONSE:
         LoginResponse loginResponse = (LoginResponse) message;

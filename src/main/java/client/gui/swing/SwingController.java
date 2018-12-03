@@ -46,6 +46,7 @@ public class SwingController extends Frame implements ChadGameDriver {
 
   @Override
   public void handleViewMessage(ViewMessage message) {
+    System.out.println("handleViewMessage:: " + message.messageType);
 
     switch (message.messageType){
 
@@ -143,7 +144,7 @@ public class SwingController extends Frame implements ChadGameDriver {
 
   @Override
   public void handleNetMessage(NetworkMessage message) {
-
+    System.out.println("handleViewMessage:: " + message.type);
     switch (message.type){
 
       case LOGIN_RESPONSE:
@@ -204,10 +205,8 @@ public class SwingController extends Frame implements ChadGameDriver {
     //Create and set up the window.
     JFrame frame = new JFrame("Login Panel Test");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    TestGameDriver control = new TestGameDriver();
     //Create and set up the content pane.
-    SwingController demo = new SwingController(control);
-    control.setGui(demo);
+    SwingController demo = new SwingController(controller);
 
 
     frame.add(demo.mainPanel);
