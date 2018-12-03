@@ -136,6 +136,7 @@ public class CLDriver implements ChadGameDriver {
       case INVITE_RESPONSE:
         InviteResponse ir = (InviteResponse) message;
         //TODO
+        //merge in Josiah's new messages in branch
         break;
       case LOGOUT:
         login.showLogout();
