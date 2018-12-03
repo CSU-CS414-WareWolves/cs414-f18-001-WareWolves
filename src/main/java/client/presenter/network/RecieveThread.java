@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.net.Socket;
 
 import client.presenter.network.messages.*;
+import java.util.Observable;
+import java.util.Observer;
 
-public class RecieveThread extends Thread{
+public class RecieveThread extends Observable implements Runnable{
 	/**
 	 * A Socket connected to the server
 	 */
@@ -18,7 +20,7 @@ public class RecieveThread extends Thread{
 	/**
 	 * NetworkManager in charge of the RecieveThread, used to pass recieved messages up.
 	 */
-	private NetworkManager mgmt;
+	private Observer mgmt;
 	
 	
 	/**
@@ -107,8 +109,8 @@ public class RecieveThread extends Thread{
         break;
 		}
 		if(message!=null)
-			mgmt.sendToPresenter(message);
+			mgmt.update(this, message);
 	}
-	
+
 	
 }
