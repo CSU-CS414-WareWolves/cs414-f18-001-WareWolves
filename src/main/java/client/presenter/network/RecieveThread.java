@@ -42,15 +42,24 @@ public class RecieveThread extends Thread{
 		int dataLen;
 		while(!Thread.currentThread().isInterrupted()) {
 			try {
-        System.out.println("RecieveThread:: Reading Message");
-			  String items = din.readUTF();
-			  System.out.println(items);
-				dataLen = din.readInt();
-				byte[] bytes = new byte[dataLen];
-				din.readFully(bytes, 0, dataLen);
-				String msg = new String(bytes);
-				System.out.println("RecieveThread:: Got Message");
-				parseMessage(msg);
+        //System.out.println("RecieveThread:: Reading Message");
+        //System.out.println(sock.getRemoteSocketAddress().toString());
+
+        if(din.available() != 0){
+          System.out.println("Data InputStream: " + din.available());
+          byte[] bytes = new byte[10000];
+          din.read(bytes);
+          String msg = new String(bytes).trim();
+          System.out.println(msg);
+          parseMessage(msg);
+        }
+
+				//dataLen = din.read();
+				//byte[] bytes = new byte[dataLen];
+				//din.readFully(bytes, 0, dataLen);
+				//String msg = new String(bytes);
+				//System.out.println("RecieveThread:: Got Message");
+
 			} catch (IOException e) {
 				System.err.println(e.getMessage());
         Thread.currentThread().interrupt();
