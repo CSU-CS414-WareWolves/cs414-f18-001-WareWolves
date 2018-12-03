@@ -38,14 +38,20 @@ public class Query {
 		try	{//Connect to DB 
 			Class.forName(driver);
 			Connection conn = DriverManager.getConnection(theURL, user, pass);	
+			System.out.println("connection made");
 			try{
 				Statement st = conn.createStatement();
+				System.out.println("statement made");
 				try {//Check if username and hashedPass match
 					String query = "SELECT * FROM users where email = '"+ msg.email +"' AND hashedPass = '"+msg.passwordAttempt+"';";       
 					ResultSet rs = st.executeQuery(query);
+					System.out.println("query executed");
 					try{//check if rs is empty
-						if(rs.first())
+						System.out.println("check rs");
+						if(rs.first()){
+							System.out.println("in rs");
 							ret = new LoginResponse(true, rs.getString("nickname"));
+						}
 					} finally { rs.close(); }
 				} finally { st.close(); }
 			} finally { conn.close(); }

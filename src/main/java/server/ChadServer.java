@@ -80,15 +80,15 @@ public class ChadServer extends Thread{
 				this.accept(key);
 			if (key.isReadable()) {
 				ByteBuffer buff = ByteBuffer.allocate(5000);
+				buff.clear();
 				SocketChannel s = (SocketChannel)key.channel();
 				int read = 0;
-				while(buff.hasRemaining() && read !=-1) {
-					read = s.read(buff);
-				}
-				int len = buff.getInt();
-				byte[] msg = new byte[len];
-				String message = new String(buff.get(msg).array());
-				parseMessage(message, s);
+				read = s.read(buff);
+				byte[] msg = new byte[1000];
+				String message = new String(buff.get(msg).array()).trim();
+				System.out.println(message);
+				if(read > 0)
+					parseMessage(message, s);
 			}
 		} catch (CancelledKeyException e) {
 			// If key gets canceled it means the client has disconnected
@@ -103,8 +103,9 @@ public class ChadServer extends Thread{
 		switch(mt) {
 			case LOGIN: try {
 				LoginResponse response = query.loginCheck(new Login(msg));
-				sock.write(ByteBuffer.allocate(4).putInt(response.length));
+				//sock.write(ByteBuffer.allocate(4).putInt(response.length));
 				sock.write(ByteBuffer.wrap(response.getDataString().getBytes()));
+				System.out.println(response.getDataString());
 				if(response.success) {
 					sessions.put(response.nickname, sock);
 					Players players = query.getPlayers();
@@ -114,13 +115,25 @@ public class ChadServer extends Thread{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			break;
 			case LOGOUT: sessions.remove(new Logout(msg, 0).nickname);
-			case REGISTER: try {
-				RegisterResponse response = query.register(new Register(msg));
-				sock.write(ByteBuffer.allocate(4).putInt(response.length));
-				sock.write(ByteBuffer.wrap(response.getDataString().getBytes()));
-			} catch (IOException e) {
-				e.printStackTrace();
+			break;
+			case REGISTER:{
+				try {
+					Register register = new Register(msg);
+					RegisterResponse response = query.register(register);
+					sock.write(ByteBuffer.allocate(4).putInt(response.length));
+					sock.write(ByteBuffer.wrap(response.getDataString().getBytes()));
+					if(response.success){
+						sessions.put(register.nickname, sock);
+						Players players = query.getPlayers();
+						sock.write(ByteBuffer.allocate(4).putInt(players.length));
+						sock.write(ByteBuffer.wrap(players.getDataString().getBytes()));	
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				break;
 			}
 			case UNREGISTER: try {
 				UnregisterResponse response = query.unregister(new Unregister(msg));
@@ -129,6 +142,7 @@ public class ChadServer extends Thread{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			break;
 			case GAME_REQUEST: try {
 				GameInfo response = query.getGame(new GameRequest(msg).gameID);
 				sock.write(ByteBuffer.allocate(4).putInt(response.length));
@@ -136,6 +150,7 @@ public class ChadServer extends Thread{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			break;
 			case MOVE: {//Upper case is black, lower case is white
 				Move move = new Move(msg);
 				boolean color = Character.isUpperCase(move.move.charAt(0));
@@ -149,6 +164,7 @@ public class ChadServer extends Thread{
 					}
 				}
 			}
+			break;
 			case ACTIVE_GAMES_REQUEST: try {
 				ActiveGameResponse response = query.getActiveGames(new ActiveGameRequest(msg).nickname);
 				sock.write(ByteBuffer.allocate(4).putInt(response.length));
@@ -156,9 +172,13 @@ public class ChadServer extends Thread{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			break;
 			case INVITE_REQUEST: query.addInvite(new InviteRequest(msg));
+			break;
 			case INVITE_RESPONSE: query.updateInvite(new InviteResponse(msg));
+			break;
 			case RESIGN: query.resign(new Resign(msg));
+			break;
 			case INBOX_REQUEST: try {
 				InboxResponse response = query.getInbox(new InboxRequest(msg, 0).nickname);
 				sock.write(ByteBuffer.allocate(4).putInt(response.length));
@@ -166,6 +186,7 @@ public class ChadServer extends Thread{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			break;
 			case PROFILE_REQUEST: try {
 				ProfileResponse response = query.getProfile(new ProfileRequest(msg, 0).nickname);
 				sock.write(ByteBuffer.allocate(4).putInt(response.length));
@@ -173,7 +194,9 @@ public class ChadServer extends Thread{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			break;
 			case SEE_RESULTS: query.setResults(new SeeResults(msg));
+			break;
 			default: System.err.println("Could not parse message type of: "+mt+", with contents: "+msg);break;
 		}
 	}
@@ -195,7 +218,7 @@ public class ChadServer extends Thread{
 	
 	
 	public static void main(String[] args) {
-		int port = Integer.parseInt(args[0]);
+		int port = Integer.parseInt(args[1]);
 		ChadServer server = new ChadServer(port);
 		server.start();
 	}
