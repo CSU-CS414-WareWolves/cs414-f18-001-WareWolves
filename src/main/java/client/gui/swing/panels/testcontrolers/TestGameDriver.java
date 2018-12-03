@@ -96,9 +96,6 @@ public class TestGameDriver implements ChadGameDriver {
   private void handleMenuMessage(MenuMessage message) {
 
     switch (message.menuType){
-
-      case LOGOUT:
-        break;
       case PLAYER_STATS:
         System.out.println(message.menuType + " " + message.information[0]);
         gui.handleNetMessage(new ProfileResponse("18:testUser2:testUser:01-01-18:01-01-18:true#testUser:testUser2:02-14-18:02-14-18:false" ));

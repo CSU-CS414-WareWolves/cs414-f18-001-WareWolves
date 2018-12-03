@@ -42,6 +42,9 @@ public class RecieveThread extends Thread{
 		int dataLen;
 		while(!Thread.currentThread().isInterrupted()) {
 			try {
+        System.out.println("RecieveThread:: Reading Message");
+			  String items = din.readUTF();
+			  System.out.println(items);
 				dataLen = din.readInt();
 				byte[] bytes = new byte[dataLen];
 				din.readFully(bytes, 0, dataLen);
@@ -50,6 +53,7 @@ public class RecieveThread extends Thread{
 				parseMessage(msg);
 			} catch (IOException e) {
 				System.err.println(e.getMessage());
+        Thread.currentThread().interrupt();
 			}
 		}
 	}

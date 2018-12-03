@@ -93,10 +93,6 @@ public class SwingChadDriver implements ChadGameDriver{
   private void handleMenuMessage(MenuMessage message) {
     switch (message.menuType){
 
-      case LOGOUT:
-        // Send Logout to server
-        System.exit(0);
-        break;
       case PLAYER_STATS:
         break;
       case ACTIVE_GAMES:
