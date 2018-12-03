@@ -89,9 +89,9 @@ class ViewMessageFactoryTest {
   void createViewMessageInbox() throws NoSuchAlgorithmException {
 
     InboxMessage expected =
-        new InboxMessage(TEST_NICKNAME);
+        new InboxMessage();
 
-    String[] info = {TEST_NICKNAME};
+    String[] info = {};
     testMessageEquals(expected, info, ViewMessageType.INBOX);
   }
 
@@ -99,7 +99,7 @@ class ViewMessageFactoryTest {
   void createViewMessageGameRequest() throws NoSuchAlgorithmException {
 
     GameRequestMessage expected =
-        new GameRequestMessage(1337);
+        new GameRequestMessage(new String[] {"1337"});
 
     String[] info = {"1337"};
     testMessageEquals(expected, info, ViewMessageType.GAME_REQUEST);
@@ -109,9 +109,9 @@ class ViewMessageFactoryTest {
   void createViewMessageActiveGames() throws NoSuchAlgorithmException {
 
     ActiveGameMessage expected =
-        new ActiveGameMessage(TEST_NICKNAME);
+        new ActiveGameMessage();
 
-    String[] info = {TEST_NICKNAME};
+    String[] info = {};
     testMessageEquals(expected, info, ViewMessageType.ACTIVE_GAMES);
   }
 

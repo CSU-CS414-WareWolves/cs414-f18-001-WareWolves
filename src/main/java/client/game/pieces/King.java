@@ -10,7 +10,7 @@ public class King extends Piece {
   }
   public King(String king){super(king);}
   /**
-   * Finds the valid moves for a King in chad chess. The King cannot leave its castle, and moves as
+   * Finds the valid moves for a King in chadgame chess. The King cannot leave its castle, and moves as
    * a combination of a King and Knight in normal chess. The King can capture any opponent piece
    * that it can land on.
    *
