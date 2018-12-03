@@ -57,11 +57,12 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>client.gui.ai.AiDriver</mainClass>
+              <mainClass>client.presenter.ai.AiDriver</mainClass>
             </manifest>
           </archive>
         </configuration>
       </plugin>
+
     </plugins>
 
   </build>
