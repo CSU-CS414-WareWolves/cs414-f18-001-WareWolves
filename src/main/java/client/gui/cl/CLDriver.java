@@ -284,7 +284,7 @@ public class CLDriver implements ChadGameDriver {
     String email;
     String pass;
 
-    System.out.println("[!] FOR UNREGISTER CONFIRMATION, PLEASE RE-ENTER YOUR ACCOUNT'S CREDENTIALS");
+    menu.unregisterUser();
     System.out.println("E-mail:");
     email = keys.nextLine();
     System.out.println("Password:");

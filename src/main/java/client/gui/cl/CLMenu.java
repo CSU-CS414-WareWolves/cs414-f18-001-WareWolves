@@ -95,9 +95,7 @@ public class CLMenu implements MenuView {
   public void unregisterUser(){
     StringBuilder res = new StringBuilder();
     res.append("+++ Unregister +++");
-    res.append(">>> Are you sure you want to UNREGISTER?\n>>> Your game record will be deleted\n");
-    res.append("1.[      YES!     ]\n");
-    res.append("2.[      NO!!     ]\n");
+    res.append("[!] FOR UNREGISTER CONFIRMATION, PLEASE RE-ENTER YOUR ACCOUNT'S CREDENTIALS");
     System.out.println(res);
   }
 }
