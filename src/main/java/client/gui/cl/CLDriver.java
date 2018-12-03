@@ -121,16 +121,16 @@ public class CLDriver implements ChadGameDriver {
    */
   public void handleNetMessage(NetworkMessage message){
     switch(message.type){
-      case ACTIVE_GAMES_RESPONSE: //yes
+      case ACTIVE_GAMES_RESPONSE:
         ActiveGameResponse agr = (ActiveGameResponse) message;
         handleActiveGames(agr.gameIDs, agr.opponents);
+        controller.handleViewMessage(handleSelectGame());
         break;
       case GAME_INFO:
         GameInfo gi = (GameInfo) message;
         handleInGame(gi.gameBoard, gi.turn);
-        showGame();
         break;
-      case INBOX_RESPONSE: //yes
+      case INBOX_RESPONSE:
         handleInbox(message);
         break;
       case INVITE_RESPONSE:
@@ -146,7 +146,7 @@ public class CLDriver implements ChadGameDriver {
         Players p = (Players) message;
         activePlayers = p.players;
         break;
-      case PROFILE_RESPONSE: //yes
+      case PROFILE_RESPONSE:
         //TODO
         ProfileResponse pr = (ProfileResponse) message;
 //        menu.showStats(pr.whitePlayers, pr.blackPlayers, pr.results, pr.startDates, pr.endDates);
@@ -166,7 +166,7 @@ public class CLDriver implements ChadGameDriver {
     switch (message.messageType){
       case GAME_REQUEST:
         GameRequestMessage gr = handleSelectGame();
-        //give to Presenter ref
+        controller.handleViewMessage(gr);
         break;
       case LOGIN:
         try {
@@ -180,8 +180,12 @@ public class CLDriver implements ChadGameDriver {
       case LOGIN_RESPONSE:
         LoginResponseMessage lrm = (LoginResponseMessage) message;
         if(lrm.success){
+          //if login successful, print main menu
+          //-send presenter a message for option chose
           this.nickname = lrm.nickname;
           menu.showMenu(nickname);
+          ViewMessage vm = handleMenu();
+          controller.handleViewMessage(vm);
         }
         else {
           login.failedCreds(0);
@@ -196,15 +200,25 @@ public class CLDriver implements ChadGameDriver {
         MovePieceResponse mpr = (MovePieceResponse) message;
         game.showGameBoard(mpr.gameBoard);
         System.out.println(mpr.message);
+        if(mpr.message.contains(nickname)) {
+          //if user's turn, make move
+          chadGame = new Game(mpr.gameBoard, true);
+          MovePieceMessage mp = handleMovePiece();
+          controller.handleViewMessage(mp);
+        }
+        else {
+          //else, jump back to main menu after showing gameboard
+          controller.handleViewMessage(handleMenu());
+        }
         break;
       case REGISTER:
         try {
           RegisterMessage rm = handleRegister();
+          controller.handleViewMessage(rm);
         } catch (NoSuchAlgorithmException e) {
           //handle error
           e.printStackTrace();
         }
-        //give to Presenter ref
         break;
       case REGISTER_RESPONSE:
         RegisterResponseMessage rrm = (RegisterResponseMessage) message;
@@ -228,11 +242,10 @@ public class CLDriver implements ChadGameDriver {
       case UNREGISTER:
         menu.unregisterUser();
         UnregisterMessage urm = handleUnregister();
-        //give to Presenter ref
+        controller.handleViewMessage(urm);
         break;
       case UNREGISTER_RESPONSE:
         handleUnregister();
-        //sign off / exit to title screen
         //TODO
         break;
     }
@@ -280,6 +293,45 @@ public class CLDriver implements ChadGameDriver {
     pass = keys.nextLine();
 
     return new RegisterMessage(email, pass, nick);
+  }
+
+  /**
+   * Handles main menu interactions
+   * @return a ViewMessage corresponding to the option chosen
+   */
+  public ViewMessage handleMenu(){
+    int option;
+    while(true) {
+      option = keys.nextInt();
+      menu.showMenu(nickname);
+      switch (option) {
+        case 1:
+          //Should be able to have nickname in message
+          //TODO
+          return new ActiveGameMessage();
+        case 2:
+          //View Inbox
+          return new InboxMessage();
+        case 3:
+          //Send outbox
+          return handleOutbox();
+        case 4:
+          //View Stats
+          return handleProfile();
+        case 5:
+          //Unregister
+          return handleUnregister();
+        case 6:
+          //Logout
+          System.out.println("[!] Hope to see you again soon!");
+          return new MenuMessage(MenuMessageTypes.LOGOUT, null);
+        default:
+          clearScreen();
+          warningValidOption();
+          menu.showMenu(nickname);
+          break;
+      }
+    }
   }
 
   /**
@@ -331,7 +383,8 @@ public class CLDriver implements ChadGameDriver {
    */
   public void handleInGame(String board, boolean turn){
     chadGame = new Game(board, turn);
-    //Check gameover
+    showGame();
+    //Check game over
     if(chadGame.gameover()){
       //TODO
     }
@@ -401,29 +454,21 @@ public class CLDriver implements ChadGameDriver {
 
     info[0] = Integer.toString(ir.inviteIDs[option]);
     info[1] = ir.recipients[option];
-    return new MenuMessage(MenuMessageTypes.INVITES, info);
+    //TODO: NEED ACCEPT_INVITE
+    return new MenuMessage(MenuMessageTypes.SELECT_GAME, info);
   }
 
   /**
    * Takes input from the user to send a number of invites according to their selection
    * @return a MenuMessage of type SEND_INVITE with a String array of nicknames||emails(?)
    */
-  public MenuMessage handleOutbox() {
+  public InviteMessage handleOutbox() {
     clearScreen();
-    String bigString = "";
-    while (true) {
-      menu.requestUsername();
-      String temp = keys.nextLine();
-      if(temp.toUpperCase().equals("EXIT")){
-        break;
-      }
-      else {
-        System.out.println("Invite will be sent to: " + temp);
-        bigString += temp + ":";
-      }
-    }
-    String[] info = bigString.split(":");
-    return new MenuMessage(MenuMessageTypes.SEND_INVITE, info);
+    String info = "";
+    menu.requestUsername();
+    info = keys.nextLine();
+    System.out.println("Invite will be sent to: " + info);
+    return new InviteMessage(nickname, info);
   }
 
   public ProfileMessage handleProfile() {
