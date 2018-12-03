@@ -183,8 +183,9 @@ public class CLDriver implements ChadGameDriver {
           this.nickname = lrm.nickname;
           menu.showMenu(nickname);
         }
-        else{
+        else {
           login.failedCreds(0);
+          handleTitleScreen();
         }
         break;
       case MOVE_PIECE:
