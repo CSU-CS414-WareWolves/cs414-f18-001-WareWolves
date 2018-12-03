@@ -10,7 +10,8 @@ public interface MenuView {
   void viewInvites(int[] ids, String[] players);
 
   // Shows the current users profile
-  void showStats(String username, int total, int wgames, int tgames, int lgames);
+  void showStats();
+//  void showStats(String username, int total, int wgames, int tgames, int lgames);
 
   // Unregisters a user
   void unregisterUser();

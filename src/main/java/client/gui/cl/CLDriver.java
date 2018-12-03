@@ -13,6 +13,7 @@ import client.presenter.network.messages.InviteResponse;
 import client.presenter.network.messages.LoginResponse;
 import client.presenter.network.messages.NetworkMessage;
 import client.presenter.network.messages.Players;
+import client.presenter.network.messages.ProfileRequest;
 import client.presenter.network.messages.ProfileResponse;
 import client.presenter.network.messages.RegisterResponse;
 import java.security.NoSuchAlgorithmException;
@@ -133,12 +134,13 @@ public class CLDriver implements ChadGameDriver {
         activePlayers = p.players;
         break;
       case PROFILE_REQUEST:
-        handleProfile();
+        ProfileMessage pm = handleProfile();
+        //give to Presenter ref
         break;
       case PROFILE_RESPONSE:
         //TODO
         ProfileResponse pr = (ProfileResponse) message;
-//        menu.showStats(pr.whitePlayers)
+//        menu.showStats(pr.whitePlayers, pr.blackPlayers, pr.results, pr.startDates, pr.endDates);
         break;
       case REGISTER:
         //never receives one
@@ -417,11 +419,12 @@ public class CLDriver implements ChadGameDriver {
     return new MenuMessage(MenuMessageTypes.SEND_INVITE, info);
   }
 
-  public void handleProfile() {
+  public ProfileMessage handleProfile() {
     clearScreen();
     menu.showPlayers(activePlayers);
     menu.requestUsername();
-
+    String nick = keys.nextLine();
+    return new ProfileMessage(nick);
   }
 
   /**

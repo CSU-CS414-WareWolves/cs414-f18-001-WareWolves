@@ -67,24 +67,25 @@ public class CLMenu implements MenuView {
 
   /**
    * Print the profile of the player selected,
-   * @param username
-   * @param total
-   * @param wgames
-   * @param tgames
-   * @param lgames
+//   * @param username
+//   * @param total
+//   * @param wgames
+//   * @param tgames
+//   * @param lgames
    */
-  public void showStats(String username, int total, int wgames, int tgames, int lgames){
+  public void showStats(){
     //This is the format that it will be printed as
     StringBuilder res = new StringBuilder();
     res.append("+++ View Profile +++\n\n");
-    res.append("| - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
-    res.append("| Username: "+username+"\n");
-    res.append("| - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
-    res.append("| Games  : "+total+"\n");
-    res.append("| Wins   : "+wgames+"\n");
-    res.append("| Ties   : "+tgames+"\n");
-    res.append("| Losses : "+lgames+"\n");
-    res.append("| - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+    res.append("");
+//    res.append("| - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
+//    res.append("| Username: "+username+"\n");
+//    res.append("| - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
+//    res.append("| Games  : "+total+"\n");
+//    res.append("| Wins   : "+wgames+"\n");
+//    res.append("| Ties   : "+tgames+"\n");
+//    res.append("| Losses : "+lgames+"\n");
+//    res.append("| - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
     System.out.println(res);
   }
 
