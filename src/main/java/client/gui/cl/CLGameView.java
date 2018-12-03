@@ -8,7 +8,7 @@ import client.game.pieces.Rook;
 import client.gui.GameView;
 import java.util.ArrayList;
 
-public class CLGameView implements GameView {
+public class CLGameView {
 
   // Piece representations
   private static final String WKING = "\u2654";

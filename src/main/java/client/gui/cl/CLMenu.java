@@ -3,7 +3,7 @@ package client.gui.cl;
 import client.gui.MenuView;
 import java.util.ArrayList;
 
-public class CLMenu implements MenuView {
+public class CLMenu {
   /**
    * Print out menu for user to select an option from
    */
@@ -25,15 +25,15 @@ public class CLMenu implements MenuView {
    * @param ids list of ids of invitations
    * @param players list of nicknames the player has an invite from
    */
-  public void viewInvites(int[] ids, String[] players){
-    if(ids.length == 0 || ids == null){
+  public void viewInvites(int[] ids, String[] dates, String[] players){
+    if(ids.length == 0 || ids == null || ids[0] == -1){
       System.out.println("No invites found!\nSend a game invite from the main menu!");
       return;
     } else {
       StringBuilder res = new StringBuilder();
       res.append("+++ Inbox +++\n");
       for (int i = 0; i < ids.length; i++) {
-        res.append("[" + ids[i] + "]: " + players[i] + " has invited you to a game!\n");
+        res.append("[" + ids[i] + "]: "+ dates[i] + " - " + players[i] + " has invited you to a game!\n");
       }
       System.out.println(res);
     }

@@ -132,12 +132,8 @@ public class CLDriver implements ChadGameDriver {
         showGame();
         break;
       case INBOX_RESPONSE:
-        handleInbox(message);
-        break;
-      case INVITE_RESPONSE:
-        InviteResponse ir = (InviteResponse) message;
-        //TODO
-        //merge in Josiah's new messages in branch
+        InboxResponse ir = (InboxResponse) message;
+        controller.handleViewMessage(handleInbox(ir.inviteIDs, ir.sendDates, ir.senders));
         break;
       case LOGOUT:
         login.showLogout();
@@ -406,24 +402,6 @@ public class CLDriver implements ChadGameDriver {
   }
 
   /**
-   * Handles option 2:Quit from in-game menu
-   * @return an instance of ?, returns user to main menu
-   */
-  public ViewMessage handleGameQuit(){
-    return null;
-  }
-
-  /**
-   * Handle option 3:Resign from in-game menu
-   * @return an instance of Resign to inform about resignation
-   */
-  public ViewMessage handleGameResign(){
-    //TODO
-    //************ ViewMessage for resigning game?
-    return null;
-  }
-
-  /**
    * Helper method to show in-game view.
    * (returns nothing but prints a nice view)
    */
@@ -435,18 +413,20 @@ public class CLDriver implements ChadGameDriver {
 
   /**
    * Handle inbox interactions
-   * @param message an InboxResponse with
+   * @param ids array with ids for games
+   * @param dates array with invite received dates
+   * @param senders array with challenger nicknames
+   * @return an AcceptInvite message with chosen id/nickname
    */
-  public MenuMessage handleInbox(NetworkMessage message){
+  public MenuMessage handleInbox(int[] ids, String[] dates, String[] senders){
     clearScreen();
-    InboxResponse ir = (InboxResponse) message;
-    menu.viewInvites(ir.inviteIDs, ir.recipients);
+    menu.viewInvites(ids, dates, senders);
 
     String[] info = new String[2];
     int option = keys.nextInt();
 
-    info[0] = Integer.toString(ir.inviteIDs[option]);
-    info[1] = ir.recipients[option];
+    info[0] = Integer.toString(ids[option]);
+    info[1] = senders[option];
     //TODO: NEED ACCEPT_INVITE
     return new MenuMessage(MenuMessageTypes.SELECT_GAME, info);
   }

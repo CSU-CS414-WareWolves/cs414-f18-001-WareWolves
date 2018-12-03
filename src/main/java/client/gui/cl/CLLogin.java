@@ -2,7 +2,7 @@ package client.gui.cl;
 
 import client.gui.LoginView;
 
-public class CLLogin implements LoginView {
+public class CLLogin {
   //
   public void showSplash() {
     StringBuilder res = new StringBuilder();
