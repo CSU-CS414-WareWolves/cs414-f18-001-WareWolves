@@ -109,6 +109,7 @@ public class ChadServer extends Thread{
 				if(response.success) {
 					sessions.put(response.nickname, sock);
 					Players players = query.getPlayers();
+					System.out.println(players.getDataString());
 					sock.write(ByteBuffer.allocate(4).putInt(players.length));
 					sock.write(ByteBuffer.wrap(players.getDataString().getBytes()));
 				}
