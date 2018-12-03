@@ -81,6 +81,7 @@ public class ChadServer extends Thread{
 			if (key.isReadable()) {
 				ByteBuffer buff = ByteBuffer.allocate(5000);
 				SocketChannel s = (SocketChannel)key.channel();
+
 				int read = 0;
 				while(buff.hasRemaining() && read !=-1) {
 					read = s.read(buff);

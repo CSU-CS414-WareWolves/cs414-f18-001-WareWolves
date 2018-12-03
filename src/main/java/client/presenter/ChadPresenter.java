@@ -211,7 +211,7 @@ public class ChadPresenter implements ChadGameDriver{
    * @param message the message to process
    */
   public void handleNetMessage(NetworkMessage message){
-    System.out.println("handleNetMessage:: " + message.type);
+    System.out.println("Presenter::handleNetMessage:: " + message.type);
     switch (message.type){
       case LOGIN_RESPONSE:
         LoginResponse loginResponse = (LoginResponse) message;

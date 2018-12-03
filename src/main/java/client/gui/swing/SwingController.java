@@ -99,6 +99,16 @@ public class SwingController extends Frame implements ChadGameDriver {
         JOptionPane.showMessageDialog(gameJPanel, moves.message);
         gameJPanel.setBoardPieces(moves.gameBoard);
         break;
+      case PROFILE:
+        break;
+      case ACTIVE_GAMES:
+        break;
+      case INBOX:
+        break;
+      case GAME_REQUEST:
+        break;
+      case INVITE:
+        break;
     }
 
 

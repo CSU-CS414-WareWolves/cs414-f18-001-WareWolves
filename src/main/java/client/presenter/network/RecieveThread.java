@@ -46,6 +46,7 @@ public class RecieveThread extends Thread{
 				byte[] bytes = new byte[dataLen];
 				din.readFully(bytes, 0, dataLen);
 				String msg = new String(bytes);
+				System.out.println("RecieveThread:: Got Message");
 				parseMessage(msg);
 			} catch (IOException e) {
 				System.err.println(e.getMessage());
@@ -61,16 +62,36 @@ public class RecieveThread extends Thread{
 		NET_MESSAGE_TYPE mt = NET_MESSAGE_TYPE.fromInt(Integer.parseInt(msg.split(":")[0]));
 		NetworkMessage message = null;
 		switch(mt) {
-			case LOGIN_RESPONSE: message = new LoginResponse(msg);
-			case GAME_INFO: message = new GameInfo(msg);
-			case MOVE: message = new Move(msg);
-			case ACTIVE_GAMES_RESPONSE: message = new ActiveGameResponse(msg);
-			case REGISTER_RESPONSE: new RegisterResponse(msg);
-			case INBOX_RESPONSE: message = new InboxResponse(msg);
-			case PROFILE_RESPONSE: message = new ProfileResponse(msg);
-			case PLAYERS: message = new Players(msg);
-			case UNREGISTER_RESPONSE: new UnregisterResponse(msg);
-			default: System.err.println("Could not parse message: "+msg);
+			case LOGIN_RESPONSE:
+			  message = new LoginResponse(msg);
+			  break;
+      case GAME_INFO:
+        message = new GameInfo(msg);
+        break;
+			case MOVE:
+			  message = new Move(msg);
+        break;
+			case ACTIVE_GAMES_RESPONSE:
+			  message = new ActiveGameResponse(msg);
+        break;
+			case REGISTER_RESPONSE:
+        message = new RegisterResponse(msg);
+        break;
+			case INBOX_RESPONSE:
+			  message = new InboxResponse(msg);
+        break;
+			case PROFILE_RESPONSE:
+			  message = new ProfileResponse(msg);
+        break;
+			case PLAYERS:
+			  message = new Players(msg);
+        break;
+			case UNREGISTER_RESPONSE:
+			  new UnregisterResponse(msg);
+        break;
+			default:
+			  System.err.println("Could not parse message: "+msg);
+        break;
 		}
 		if(message!=null)
 			mgmt.sendToPresenter(message);
