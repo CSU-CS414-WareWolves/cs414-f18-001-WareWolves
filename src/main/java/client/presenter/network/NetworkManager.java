@@ -12,7 +12,7 @@ public class NetworkManager {
 	private Socket sock;
 	private Sender send;
 	private RecieveThread recv;
-	private ChadPresenter presenter;
+	private ChadGameDriver presenter;
 	
 	/**
 	 * @constructor
@@ -20,7 +20,7 @@ public class NetworkManager {
 	 * @param port Port that server is listening on
 	 * @throws IOException 
 	 */
-	public NetworkManager(InetAddress addr, int port, ChadPresenter presenter) throws IOException {
+	public NetworkManager(InetAddress addr, int port, ChadGameDriver presenter) throws IOException {
 		sock = new Socket(addr, port);
 		send = new Sender(sock);
 		recv = new RecieveThread(sock, this);

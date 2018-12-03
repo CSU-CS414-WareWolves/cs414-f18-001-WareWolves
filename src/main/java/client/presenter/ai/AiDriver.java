@@ -2,6 +2,7 @@ package client.presenter.ai;
 
 import client.game.Game;
 import client.gui.ChadGameDriver;
+import client.presenter.ChadPresenter;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.util.HashPasswords;
 import client.presenter.network.NetworkManager;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
 
 public class AiDriver implements ChadGameDriver {
@@ -36,6 +38,10 @@ public class AiDriver implements ChadGameDriver {
     inboxChecker.run();
   }
 
+  @Override
+  public void createAndShowGUI() {
+
+  }
 
   @Override
   public void handleViewMessage(ViewMessage message) {
@@ -82,7 +88,7 @@ public class AiDriver implements ChadGameDriver {
       case INBOX_RESPONSE:
         InboxResponse response = (InboxResponse) message;
         for (int i = 0; i < response.inviteIDs.length; ++i) {
-          if (response.senders[i].equals("ai")) {
+          if (response.senders[i].equals("AI")) {
             System.out.println("Received invite from " + response.senders[i]);
             network.sendMessage(new InviteResponse(response.inviteIDs[i], true));
           }
@@ -93,12 +99,14 @@ public class AiDriver implements ChadGameDriver {
     }
   }
 
+
+
   public class InboxPing extends Thread {
 
     public void run() {
       while (true) {
         System.out.println("Check for invites...");
-        if (!network.sendMessage(new InboxRequest("ai")))
+        if (!network.sendMessage(new InboxRequest("AI")))
           System.exit(1);
         try {
           sleep(10000);
@@ -110,7 +118,7 @@ public class AiDriver implements ChadGameDriver {
   }
 
   public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
-    AiDriver driver = new AiDriver(InetAddress.getByName(args[1]), Integer.parseInt(args[2]));
+    AiDriver driver = new AiDriver(InetAddress.getByName(args[0]), Integer.parseInt(args[1]));
   }
 
 }
