@@ -34,7 +34,13 @@ class CLDriverTest {
 
   @Test
   void createAndShowGUI() {
-
+    try {
+//      setMyIn("3");
+//      driver.createAndShowGUI();
+    } catch(Exception e) {
+      e.printStackTrace();
+      fail("");
+    }
   }
 
   @Test
