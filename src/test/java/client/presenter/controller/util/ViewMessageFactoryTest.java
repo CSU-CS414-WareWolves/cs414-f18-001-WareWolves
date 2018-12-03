@@ -24,7 +24,6 @@ import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMoves;
 import client.presenter.controller.messages.ViewValidMovesResponse;
 import java.security.NoSuchAlgorithmException;
-import javax.print.DocFlavor.STRING;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -82,7 +81,7 @@ class ViewMessageFactoryTest {
         new InviteMessage(TEST_NICKNAME, TEST_NICKNAME_2);
 
     String[] info = {TEST_NICKNAME, TEST_NICKNAME_2};
-    testMessageEquals(expected, info, ViewMessageType.INVITE);
+    testMessageEquals(expected, info, ViewMessageType.NEW_INVITE);
   }
 
   @Test

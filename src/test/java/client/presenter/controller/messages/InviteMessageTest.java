@@ -18,7 +18,7 @@ class InviteMessageTest {
 
   @Test
   public void testType() {
-    assertEquals(ViewMessageType.INVITE, testMessage.messageType);
+    assertEquals(ViewMessageType.NEW_INVITE, testMessage.messageType);
   }
 
   @Test

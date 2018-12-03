@@ -4,7 +4,6 @@ import client.gui.ChadGameDriver;
 import client.gui.swing.panels.LoginScreenPanel;
 import client.gui.swing.panels.MainMenuPanel;
 import client.gui.swing.panels.chadgame.GameJPanel;
-import client.gui.swing.panels.testcontrolers.TestGameDriver;
 import client.gui.swing.panels.testcontrolers.TestSwingController;
 import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.MenuMessage;
@@ -38,10 +37,8 @@ public class SwingController extends Frame implements ChadGameDriver {
 
     cardLayout = (CardLayout) cardPanel.getLayout();
     cardLayout.show(cardPanel, "LoginScreen");
-
-
-
   }
+
 
 
   @Override
@@ -100,14 +97,17 @@ public class SwingController extends Frame implements ChadGameDriver {
         gameJPanel.setBoardPieces(moves.gameBoard);
         break;
       case PROFILE:
+        controller.handleViewMessage(message);
         break;
       case ACTIVE_GAMES:
+        controller.handleViewMessage(message);
         break;
       case INBOX:
         break;
       case GAME_REQUEST:
         break;
-      case INVITE:
+      case NEW_INVITE:
+        controller.handleViewMessage(message);
         break;
     }
 
@@ -122,15 +122,6 @@ public class SwingController extends Frame implements ChadGameDriver {
       case LOGOUT:
         cardLayout.show(cardPanel, "MenuScreen");
         playingGame = false;
-        break;
-      case PLAYER_STATS:
-        controller.handleViewMessage(message);
-        break;
-      case ACTIVE_GAMES:
-        controller.handleViewMessage(message);
-        break;
-      case INVITES:
-        controller.handleViewMessage(message);
         break;
       case SELECT_GAME:
         controller.handleViewMessage(message);
