@@ -3,6 +3,7 @@ package client.gui.cl;
 import client.Point;
 import client.game.Game;
 import client.gui.ChadGameDriver;
+import client.presenter.ChadPresenter;
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.*;
 import client.presenter.network.messages.ActiveGameResponse;
@@ -21,6 +22,8 @@ import java.util.Scanner;
 
 public class CLDriver implements ChadGameDriver {
 
+  private ChadPresenter controller;
+
   private CLLogin login;
   private CLMenu menu;
   private CLGameView game;
@@ -33,10 +36,11 @@ public class CLDriver implements ChadGameDriver {
   private int gameid;
   private String[] activePlayers;
 
-  public CLDriver(CLLogin _login, CLMenu _menu, CLGameView _game){
-    login = _login;
-    menu = _menu;
-    game = _game;
+  public CLDriver(ChadPresenter _controller){
+    controller = _controller;
+    login = new CLLogin();
+    menu = new CLMenu();
+    game = new CLGameView();
     keys = new Scanner(System.in);
   }
 
@@ -79,6 +83,33 @@ public class CLDriver implements ChadGameDriver {
     login.showSplash();
     login.showLogin();
     chadGame = new Game();
+
+    handleTitleScreen();
+  }
+
+  /**
+   *
+   */
+  public void handleTitleScreen() {
+    int option = 0;
+    try {
+      while (true) {
+        option = keys.nextInt();
+        switch (option) {
+          case 1:
+            controller.handleViewMessage(handleLogin());
+            break;
+          case 2:
+            controller.handleViewMessage(handleRegister());
+            break;
+          case 3:
+            //handleLogout();
+            handleLogin();
+        }
+      }
+    } catch(NoSuchAlgorithmException e) {
+      e.printStackTrace();
+    }
   }
 
   /**
@@ -87,42 +118,21 @@ public class CLDriver implements ChadGameDriver {
    */
   public void handleNetMessage(NetworkMessage message){
     switch(message.type){
-      case ACTIVE_GAMES_REQUEST:
-        //send back a MenuMessage
-        break;
-      case ACTIVE_GAMES_RESPONSE:
+      case ACTIVE_GAMES_RESPONSE: //yes
         ActiveGameResponse agr = (ActiveGameResponse) message;
         handleActiveGames(agr.gameIDs, agr.opponents);
-        break;
-      case GAME_REQUEST:
-        GameRequest gr = (GameRequest) message;
-        gameid = gr.gameID;
         break;
       case GAME_INFO:
         GameInfo gi = (GameInfo) message;
         handleInGame(gi.gameBoard, gi.turn);
         showGame();
         break;
-      case INBOX_REQUEST:
-        //we don't need this message, only for server
-        break;
-      case INBOX_RESPONSE:
+      case INBOX_RESPONSE: //yes
         handleInbox(message);
-        break;
-      case INVITE_REQUEST:
-        //possibly not needed?
-        //TODO
         break;
       case INVITE_RESPONSE:
         InviteResponse ir = (InviteResponse) message;
         //TODO
-        break;
-      case LOGIN:
-        //never receives one
-        break;
-      case LOGIN_RESPONSE:
-        LoginResponse lr = (LoginResponse) message;
-        handleViewMessage(new LoginResponseMessage(lr.success, lr.nickname));
         break;
       case LOGOUT:
         login.showLogout();
@@ -133,23 +143,16 @@ public class CLDriver implements ChadGameDriver {
         Players p = (Players) message;
         activePlayers = p.players;
         break;
-      case PROFILE_REQUEST:
-        ProfileMessage pm = handleProfile();
-        //give to Presenter ref
-        break;
-      case PROFILE_RESPONSE:
+      case PROFILE_RESPONSE: //yes
         //TODO
         ProfileResponse pr = (ProfileResponse) message;
 //        menu.showStats(pr.whitePlayers, pr.blackPlayers, pr.results, pr.startDates, pr.endDates);
-        break;
-      case REGISTER:
-        //never receives one
         break;
       case REGISTER_RESPONSE:
         RegisterResponse rr = (RegisterResponse) message;
         handleViewMessage(new RegisterResponseMessage(rr.success, new String[]{}));
         break;
-      case RESIGN:
+      case SEE_RESULTS:
         break;
       case UNREGISTER:
         //shouldn't receive this one either
@@ -170,11 +173,11 @@ public class CLDriver implements ChadGameDriver {
       case LOGIN:
         try {
           LoginMessage lm = handleLogin();
+          controller.handleViewMessage(lm);
         } catch (NoSuchAlgorithmException e) {
           //handle error
           e.printStackTrace();
         }
-        //give to Presenter ref
         break;
       case LOGIN_RESPONSE:
         LoginResponseMessage lrm = (LoginResponseMessage) message;
@@ -188,8 +191,7 @@ public class CLDriver implements ChadGameDriver {
         break;
       case MOVE_PIECE:
         MovePieceMessage mpm = handleMovePiece();
-        //give to Presenter ref
-        // go to main menu
+        controller.handleViewMessage(mpm);
         break;
       case MOVE_PIECE_RESPONSE:
         MovePieceResponse mpr = (MovePieceResponse) message;
@@ -243,11 +245,13 @@ public class CLDriver implements ChadGameDriver {
    */
   public LoginMessage handleLogin() throws NoSuchAlgorithmException {
     clearScreen();
-    String email;
-    String pass;
+    String email = "";
+    String pass = "";
 
     System.out.println("Enter your e-mail:");
-    email = keys.nextLine();
+    while(email.equals("")) {
+      email = keys.nextLine();
+    }
     System.out.println("Enter your password:");
     pass = keys.nextLine();
 
@@ -261,14 +265,18 @@ public class CLDriver implements ChadGameDriver {
    */
   public RegisterMessage handleRegister() throws NoSuchAlgorithmException {
     clearScreen();
-    String email;
-    String pass;
-    String nick;
+    String email = "";
+    String pass = "";
+    String nick = "";
 
     System.out.println("Please enter a valid e-mail:");
-    email = keys.nextLine();
+    while(email.equals("")) {
+      email = keys.nextLine();
+    }
     System.out.println("Enter a unique nickname:");
-    nick = keys.nextLine();
+    while(nick.equals("")) {
+      nick = keys.nextLine();
+    }
     System.out.println("Enter a strong password:");
     pass = keys.nextLine();
 
@@ -314,7 +322,7 @@ public class CLDriver implements ChadGameDriver {
    */
   public GameRequestMessage handleSelectGame() {
     int option = keys.nextInt();
-    return new GameRequestMessage(option);
+    return new GameRequestMessage(new String[]{Integer.toString(option)});
   }
 
   /**

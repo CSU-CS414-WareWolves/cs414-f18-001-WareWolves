@@ -2,6 +2,7 @@ package client.gui.cl;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import client.presenter.ChadPresenter;
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.MenuMessage;
@@ -23,10 +24,11 @@ class CLDriverTest {
 
   @BeforeEach
   void setUp(){
+    driver = new CLDriver(new ChadPresenter());
+
     login = new CLLogin();
     menu = new CLMenu();
     game = new CLGameView();
-    driver = new CLDriver(login, menu, game);
   }
 
   @Test
