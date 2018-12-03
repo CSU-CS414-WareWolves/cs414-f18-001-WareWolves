@@ -128,7 +128,8 @@ public class CLDriver implements ChadGameDriver {
         break;
       case GAME_INFO:
         GameInfo gi = (GameInfo) message;
-        handleInGame(gi.gameBoard, gi.turn);
+        chadGame = new Game(gi.gameBoard, gi.turn);
+        showGame();
         break;
       case INBOX_RESPONSE:
         handleInbox(message);
@@ -194,23 +195,15 @@ public class CLDriver implements ChadGameDriver {
         }
         break;
       case MOVE_PIECE:
-        MovePieceMessage mpm = handleMovePiece();
+        ViewMessage mpm = handleMovePiece();
         controller.handleViewMessage(mpm);
         break;
       case MOVE_PIECE_RESPONSE:
         MovePieceResponse mpr = (MovePieceResponse) message;
         game.showGameBoard(mpr.gameBoard);
         System.out.println(mpr.message);
-        if(mpr.message.contains(nickname)) {
-          //if user's turn, make move
-          chadGame = new Game(mpr.gameBoard, true);
-          MovePieceMessage mp = handleMovePiece();
-          controller.handleViewMessage(mp);
-        }
-        else {
-          //else, jump back to main menu after showing gameboard
-          controller.handleViewMessage(handleMenu());
-        }
+
+        controller.handleViewMessage(handleMenu());
         break;
       case REGISTER:
         try {
@@ -307,14 +300,13 @@ public class CLDriver implements ChadGameDriver {
       menu.showMenu(nickname);
       switch (option) {
         case 1:
-          //Should be able to have nickname in message
-          //TODO
+          //View Active Games
           return new ActiveGameMessage();
         case 2:
           //View Inbox
           return new InboxMessage();
         case 3:
-          //Send outbox
+          //Send Outbox
           return handleOutbox();
         case 4:
           //View Stats
@@ -378,25 +370,25 @@ public class CLDriver implements ChadGameDriver {
   }
 
   /**
-   * Handles the in-game menu interactions
-   * @param board a String representation from a GameBoard instance
-   * @param turn boolean value to see who's turn it is
+   * Handle in-game interactions with the board
+   * @return a ViewMessage corresponding to the user's actions
    */
-  public void handleInGame(String board, boolean turn){
-    chadGame = new Game(board, turn);
-    showGame();
-    //Check game over
-    if(chadGame.gameover()){
-      //TODO
-    }
-  }
-
-  public MovePieceMessage handleMovePiece() {
+  public ViewMessage handleMovePiece() {
     String from;
     String to;
     while (true) {
       System.out.println("~ Select a piece (e.g. \"1a\"): ");
       from = keys.nextLine();
+      //check for exit or resignation
+      if(from.toUpperCase().equals("EXIT")) {
+        return handleMenu();
+      }
+      else if(from.toUpperCase().equals("RESIGN")) {
+        //TODO
+        //merge in new messages
+//        return new ResignMessage();
+        return handleMenu();
+      }
 
       //Display valid moves for selected piece
       //TODO: helper to convert validMoves String into String[]

@@ -117,6 +117,6 @@ public class CLGameView implements GameView {
    * Print in-game menu for player's benefit
    */
   public void showInGameMenu(){
-    System.out.println("~[1. Move   ]~~[2. Exit   ]~~[3. Resign  ]~\n");
+    System.out.println("~[ Type QUIT to leave ]~[ Type RESIGN to forfeit ]~\n");
   }
 }
