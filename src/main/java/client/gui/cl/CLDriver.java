@@ -38,6 +38,8 @@ public class CLDriver implements ChadGameDriver {
     login = new CLLogin();
     menu = new CLMenu();
     game = new CLGameView();
+
+    activePlayers = new String[]{};
     keys = new Scanner(System.in);
   }
 
@@ -143,6 +145,8 @@ public class CLDriver implements ChadGameDriver {
       case PLAYERS:
         Players p = (Players) message;
         activePlayers = p.players;
+//        ProfileMessage pm = handleProfile();
+//        controller.handleViewMessage(pm);
         break;
       case PROFILE_RESPONSE:
         //TODO
@@ -198,8 +202,8 @@ public class CLDriver implements ChadGameDriver {
         MovePieceResponse mpr = (MovePieceResponse) message;
         game.showGameBoard(mpr.gameBoard);
         System.out.println(mpr.message);
-
-        controller.handleViewMessage(handleMenu());
+        ViewMessage vm = handleMenu();
+        controller.handleViewMessage(vm);
         break;
       case REGISTER:
         try {
@@ -211,9 +215,14 @@ public class CLDriver implements ChadGameDriver {
         }
         break;
       case REGISTER_RESPONSE:
+        //TODO
+        //ask about this message?
         RegisterResponseMessage rrm = (RegisterResponseMessage) message;
         if(rrm.success){
+          System.out.println(rrm.messages);
           menu.showMenu(nickname);
+          ViewMessage vmm = handleMenu();
+          controller.handleViewMessage(vmm);
         }
         else{
           login.failedCreds(1);
@@ -313,7 +322,10 @@ public class CLDriver implements ChadGameDriver {
         case 6:
           //Logout
           System.out.println("[!] Hope to see you again soon!");
-          return new MenuMessage(MenuMessageTypes.LOGOUT, null);
+          //TODO
+          //merge new messages
+//          return new LogoutMessage();
+          break;
         default:
           clearScreen();
           warningValidOption();
@@ -337,7 +349,7 @@ public class CLDriver implements ChadGameDriver {
     email = keys.nextLine();
     System.out.println("Password:");
     pass = keys.nextLine();
-
+    
     try {
       return new UnregisterMessage(email, pass, nickname);
     } catch (NoSuchAlgorithmException e) {
