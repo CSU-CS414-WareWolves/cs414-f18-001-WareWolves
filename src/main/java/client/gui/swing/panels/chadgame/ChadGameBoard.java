@@ -1,4 +1,4 @@
-package client.gui.swing;
+package client.gui.swing.panels.chadgame;
 
 import client.gui.ChadGameDriver;
 import client.presenter.controller.messages.MovePieceMessage;
@@ -13,7 +13,6 @@ import java.awt.event.MouseMotionListener;
 import java.util.HashSet;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionListener {
@@ -192,6 +191,9 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
    * @param e info about the mouse location
    */
   public void mousePressed(MouseEvent e){
+
+    if(e.getButton() != 1) {return;}
+
     // Debug Mouse location
     System.out.println("x:" + e.getX() +" y:" +e.getY());
     // Clear previous moves info
@@ -246,6 +248,7 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
   public void mouseReleased(MouseEvent e) {
     // Not moving a piece
     if(movingChessPiece == null){return;}
+    if(e.getButton() != 1) {return;}
 
     movingChessPiece.setVisible(false); // stop sudden jumps in the piece location
 

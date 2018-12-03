@@ -2,6 +2,7 @@ package client.gui.swing;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import client.gui.swing.panels.chadgame.ChessPieceFactory;
 import javax.swing.JLabel;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

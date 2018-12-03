@@ -9,12 +9,12 @@ import org.junit.jupiter.api.Test;
 
 class MovePieceResponseTest {
 
-  private static final boolean success = true;
+  private static final String message = "Draw";
   private static MovePieceResponse testMessage;
 
   @BeforeEach
   public void setup() {
-    testMessage = new MovePieceResponse(success, TEST_GAME_BOARD);
+    testMessage = new MovePieceResponse(message, TEST_GAME_BOARD);
   }
 
   @Test
@@ -24,7 +24,7 @@ class MovePieceResponseTest {
 
   @Test
   public void testSuccess() {
-    assertEquals(success, testMessage.success);
+    assertTrue(message.equals(testMessage.message));
   }
 
 }

@@ -13,7 +13,7 @@ public class Queen extends LinePiece {
   }
 
   /**
-   * Finds all the valid moves for a Queen in chad chess. A Queen moves along vertical, horizontal,
+   * Finds all the valid moves for a Queen in chadgame chess. A Queen moves along vertical, horizontal,
    * and diagonal lines. A Queen can only capture a enemy non-King piece if the Queen is on an enemy
    * wall and the other piece is in its own castle, or the queen is in its own castle and the other
    * piece is on the wall. A Queen can always put a King in check if no other pieces are between the

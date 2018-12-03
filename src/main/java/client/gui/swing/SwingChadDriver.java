@@ -2,6 +2,7 @@ package client.gui.swing;
 
 import client.game.Game;
 import client.gui.ChadGameDriver;
+import client.gui.swing.panels.chadgame.GameJPanel;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.ViewMessage;
@@ -174,7 +175,7 @@ public class SwingChadDriver implements ChadGameDriver{
   /**
    * Sets up the Java Swing Frame for the game
    */
-  private void createAndShowGUI() {
+  public void createAndShowGUI() {
     //Create and set up the window.
     JFrame frame = new JFrame("Team Warewolves Chad");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

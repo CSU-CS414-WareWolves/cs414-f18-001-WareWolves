@@ -5,12 +5,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.ViewMessageType;
+import client.presenter.controller.messages.ActiveGameMessage;
+import client.presenter.controller.messages.GameRequestMessage;
+import client.presenter.controller.messages.InboxMessage;
+import client.presenter.controller.messages.InviteMessage;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MenuMessageResponse;
 import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.MovePieceResponse;
+import client.presenter.controller.messages.ProfileMessage;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.RegisterResponseMessage;
 import client.presenter.controller.messages.UnregisterMessage;
@@ -58,6 +63,56 @@ class ViewMessageFactoryTest {
 
     String[] info = {TEST_LOGIN_EMAIL, TEST_LOGIN_PASSWORD, TEST_NICKNAME};
     testMessageEquals(expected, info, ViewMessageType.UNREGISTER);
+  }
+
+  @Test
+  void createViewMessageProfile() throws NoSuchAlgorithmException {
+
+    ProfileMessage expected =
+        new ProfileMessage(TEST_NICKNAME);
+
+    String[] info = {TEST_NICKNAME};
+    testMessageEquals(expected, info, ViewMessageType.PROFILE);
+  }
+
+  @Test
+  void createViewMessageInvite() throws NoSuchAlgorithmException {
+
+    InviteMessage expected =
+        new InviteMessage(TEST_NICKNAME, TEST_NICKNAME_2);
+
+    String[] info = {TEST_NICKNAME, TEST_NICKNAME_2};
+    testMessageEquals(expected, info, ViewMessageType.INVITE);
+  }
+
+  @Test
+  void createViewMessageInbox() throws NoSuchAlgorithmException {
+
+    InboxMessage expected =
+        new InboxMessage();
+
+    String[] info = {};
+    testMessageEquals(expected, info, ViewMessageType.INBOX);
+  }
+
+  @Test
+  void createViewMessageGameRequest() throws NoSuchAlgorithmException {
+
+    GameRequestMessage expected =
+        new GameRequestMessage(new String[] {"1337"});
+
+    String[] info = {"1337"};
+    testMessageEquals(expected, info, ViewMessageType.GAME_REQUEST);
+  }
+
+  @Test
+  void createViewMessageActiveGames() throws NoSuchAlgorithmException {
+
+    ActiveGameMessage expected =
+        new ActiveGameMessage();
+
+    String[] info = {};
+    testMessageEquals(expected, info, ViewMessageType.ACTIVE_GAMES);
   }
 
   @Test
@@ -150,9 +205,9 @@ class ViewMessageFactoryTest {
   void createMovePieceResponse() throws NoSuchAlgorithmException {
 
     MovePieceResponse expected =
-        new MovePieceResponse(true, TEST_GAME_BOARD);
+        new MovePieceResponse("Draw", TEST_GAME_BOARD);
 
-    String[] info = {String.valueOf(true), TEST_GAME_BOARD};
+    String[] info = {"Draw", TEST_GAME_BOARD};
     testMessageEquals(expected, info, ViewMessageType.MOVE_PIECE_RESPONSE);
   }
 
