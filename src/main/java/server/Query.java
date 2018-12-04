@@ -398,16 +398,22 @@ public class Query {
 						}
 					}
 					if(color) {
-						query = "SELET * FROM activeGames WHERE gameID = "+msg.gameID+";";
+						query = "UPDATE activeGames SET turn = false WHERE gameID = "+msg.gameID+";"; 
+						st.executeUpdate(query);
+						query = "SELECT * FROM activeGames WHERE gameID = "+msg.gameID+";";
 						ResultSet rs = st.executeQuery(query);
 						try{//Check if rs is empty
+							rs.first();
 							ret = rs.getString("whitePlayer");
 						} finally { rs.close(); }
 					}
 					else {
-						query = "SELET * FROM activeGames WHERE gameID = "+msg.gameID+";";
+						query = "UPDATE activeGames SET turn = true WHERE gameID = "+msg.gameID+";"; 
+						st.executeUpdate(query);
+						query = "SELECT * FROM activeGames WHERE gameID = "+msg.gameID+";";
 						ResultSet rs = st.executeQuery(query);
 						try{//Check if rs is empty
+							rs.first();
 							ret = rs.getString("blackPlayer");
 						} finally { rs.close(); }
 					}
@@ -651,7 +657,7 @@ public class Query {
 			try{
 				Statement st = conn.createStatement();
 				try {//Check if username and hashedPass match
-					String query = "SELECT * FROM activeGames WHERE whitePlayer = '"+ nickname +"';";       
+					String query = "SELECT * FROM activeGames WHERE ended = false AND whitePlayer = '"+ nickname +"';";       
 					ResultSet rs = st.executeQuery(query);
 					try{//check if rs is empty
 						if(rs.first()) {
@@ -673,7 +679,7 @@ public class Query {
 							}
 						}
 					} finally { rs.close(); }
-					query = "SELECT * FROM activeGames WHERE blackPlayer = '"+ nickname +"';";
+					query = "SELECT * FROM activeGames WHERE ended = false AND blackPlayer = '"+ nickname +"';";
 					rs = st.executeQuery(query);
 					try{//check if rs is empty
 						if(rs.first()) {
