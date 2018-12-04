@@ -30,7 +30,7 @@ public class Query {
 	
 	/**
 	 * Check a login request and craft response to it.
-	 * @param msg Login message recieved from the server.
+	 * @param msg Login message received from the server.
 	 * @return LoginResponse message for the given Login request message.
 	 */
 	public LoginResponse loginCheck(Login msg) {
@@ -316,7 +316,7 @@ public class Query {
 	
 	/**
 	 * Fetches all invites without a response sent to or by the given player's nickname.
-	 * @param nickname Nickname of player's inbox to recieve
+	 * @param nickname Nickname of player's inbox to receive
 	 * @return The given nickname's inbox in an InboxResponse.
 	 */
 	public InboxResponse getInbox(String nickname) {
@@ -428,7 +428,7 @@ public class Query {
 	
 	/**
 	 * Sets results as seen for the given game and color within the passed SeeResults message.
-	 * @param msg The SeeResuls message recieved by the server.
+	 * @param msg The SeeResuls message received by the server.
 	 */
 	public void setResults(SeeResults msg) {
 		try	{//Connect to DB 

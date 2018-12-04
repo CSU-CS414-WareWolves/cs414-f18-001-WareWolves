@@ -236,7 +236,10 @@ public class ChadServer extends Thread{
 		channel.register(select, SelectionKey.OP_READ);
 	}
 	
-	
+	/**
+	 * Main method for server. Called to start Chad Server
+	 * @param args arg[0] should be the port to start the server on
+	 */
 	public static void main(String[] args) {
 		int port = Integer.parseInt(args[0]);
 		ChadServer server = new ChadServer(port);
