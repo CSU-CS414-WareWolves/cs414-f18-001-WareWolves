@@ -126,7 +126,7 @@ public class SwingController extends JPanel implements ChadGameDriver {
         break;
       case LOGOUT:
         if(playingGame){
-          cardLayout.show(cardPanel, "MenuGame");
+          cardLayout.show(cardPanel, "MenuScreen");
           playingGame = false;
         }
         break;
