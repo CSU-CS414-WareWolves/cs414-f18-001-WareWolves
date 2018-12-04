@@ -2,12 +2,17 @@ package client.presenter.controller.util;
 
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.ViewMessageType;
+import client.presenter.controller.messages.ActiveGameMessage;
+import client.presenter.controller.messages.GameRequestMessage;
+import client.presenter.controller.messages.InboxMessage;
+import client.presenter.controller.messages.InviteMessage;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MenuMessageResponse;
 import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.MovePieceResponse;
+import client.presenter.controller.messages.ProfileMessage;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.RegisterResponseMessage;
 import client.presenter.controller.messages.UnregisterMessage;
@@ -57,10 +62,17 @@ public class ViewMessageFactory {
         return new MovePieceMessage(Integer.parseInt(info[0]), Integer.parseInt(info[1]),
             Integer.parseInt(info[2]), Integer.parseInt(info[3]));
       case MOVE_PIECE_RESPONSE:
-        boolean success = true;
-        if (info[0].equals("false"))
-          success = false;
-        return new MovePieceResponse(success, info[1]);
+        return new MovePieceResponse(info[0], info[1]);
+      case PROFILE:
+        return new ProfileMessage(info[0]);
+      case ACTIVE_GAMES:
+        return new ActiveGameMessage();
+      case INBOX:
+        return  new InboxMessage();
+      case GAME_REQUEST:
+        return new GameRequestMessage(info);
+      case NEW_INVITE:
+        return new InviteMessage(info[0], info[1]);
       default:
         throw new IllegalArgumentException("The messageType of " + type.name() + " is not valid");
     }

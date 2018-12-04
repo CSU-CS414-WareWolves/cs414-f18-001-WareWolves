@@ -2,6 +2,7 @@ package client.gui;
 
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.network.messages.NetworkMessage;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Any Chad Game Driver needs these methods
@@ -20,7 +21,6 @@ public interface ChadGameDriver {
    * @param message the message to process
    */
   void handleNetMessage(NetworkMessage message);
-
   /**
    * Starts up the GUI interface
    */

@@ -13,7 +13,7 @@ public class Rook extends LinePiece {
   }
 
   /**
-   * Finds all the valid moves for a Rook in chad chess. A Rook moves along vertical and horizontal
+   * Finds all the valid moves for a Rook in chadgame chess. A Rook moves along vertical and horizontal
    * lines. A Rook can only capture a enemy non-King piece if the Rook is on an enemy wall and the
    * other piece is in its own castle, or the Rook is in its own castle and the other piece is on
    * the wall. A Rook can always put a King in check if no other pieces are between the Rook and the

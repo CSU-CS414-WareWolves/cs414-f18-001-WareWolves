@@ -1,9 +1,10 @@
-package client.gui.swing;
+package client.gui.swing.panels.chadgame;
 
 import client.gui.ChadGameDriver;
+import client.gui.swing.SwingChadDriver;
 import client.presenter.controller.MenuMessageTypes;
+import client.presenter.controller.messages.LogoutMessage;
 import client.presenter.controller.messages.MenuMessage;
-import client.presenter.network.messages.GameInfo;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -24,10 +25,6 @@ public class GameJPanel extends JPanel implements ActionListener {
    * The menu bar
    */
   JMenuBar menuBar;
-  /**
-   * Name for restart game action
-   */
-  private final String RESTART_GAME = "Restart Game";
   /**
    * Name for quit menu action
    */
@@ -59,6 +56,7 @@ public class GameJPanel extends JPanel implements ActionListener {
     createMenuBar();
     createGameBoard();
     createStatusBar();
+
 
 
   }
@@ -97,9 +95,6 @@ public class GameJPanel extends JPanel implements ActionListener {
     JMenu menu = new JMenu("Game Menu");
     menuBar.add(menu);
 
-    JMenuItem restartGame = new JMenuItem(RESTART_GAME);
-    restartGame.addActionListener(this);
-    menu.add(restartGame);
 
     //a group of JMenuItems
     JMenuItem quitGame = new JMenuItem(QUIT_GAME);
@@ -111,23 +106,7 @@ public class GameJPanel extends JPanel implements ActionListener {
   }
 
 
-  /**
-   * Create the GUI and show it.  For thread safety, this method should be invoked from the
-   * event-dispatching thread.
-   */
-  private static void createAndShowGUI() {
-    //Create and set up the window.
-    JFrame frame = new JFrame("MenuLookDemo");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    //Create and set up the content pane.
-    GameJPanel demo = new GameJPanel(new SwingChadDriver());
-    frame.add(demo);
-
-    //Display the window.
-    frame.pack();
-    frame.setVisible(true);
-  }
 
 
   /**
@@ -153,15 +132,10 @@ public class GameJPanel extends JPanel implements ActionListener {
    * @param e the menu command
    */
   public void actionPerformed(ActionEvent e) {
-    if (RESTART_GAME.equals(e.getActionCommand())) {
-      JOptionPane.showMessageDialog(this, "Restarting Game");
-      // Simulate a Network Message to load a new game
-      driver.handleNetMessage(
-          new GameInfo(-1, "rdCreDRiHRjIrcCkdDreERhHKiIRjJrcDrdERhIRiJrcERhJreCRjH", false));
-    } else if (QUIT_GAME.equals(e.getActionCommand())) {
+    if (QUIT_GAME.equals(e.getActionCommand())) {
       JOptionPane.showMessageDialog(this, "Quitting Game");
       // Simulate a menu message for demo
-      driver.handleViewMessage(new MenuMessage(MenuMessageTypes.LOGOUT, new String[0]));
+      driver.handleViewMessage(new LogoutMessage());
     }
 
   }
@@ -194,5 +168,23 @@ public class GameJPanel extends JPanel implements ActionListener {
         createAndShowGUI();
       }
     });
+  }
+
+  /**
+   * Create the GUI and show it.  For thread safety, this method should be invoked from the
+   * event-dispatching thread.
+   */
+  private static void createAndShowGUI() {
+    //Create and set up the window.
+    JFrame frame = new JFrame("MenuLookDemo");
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    //Create and set up the content pane.
+    GameJPanel demo = new GameJPanel(new SwingChadDriver());
+    frame.add(demo);
+
+    //Display the window.
+    frame.pack();
+    frame.setVisible(true);
   }
 }
