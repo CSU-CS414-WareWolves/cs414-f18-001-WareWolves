@@ -303,8 +303,8 @@ public class Query {
 							black = rs.getString("recipient");
 						}
 					} finally { rs.close(); }
-					query = "INSERT INTO activeGames (whitePlayer, blackPlayer, board, turn, startDate, ended) VALUES"+
-							"('"+white+"', '"+black+"', '"+startingBoard+"', false, CURDATE(), false);";
+					query = "INSERT INTO activeGames (whitePlayer, blackPlayer, board, turn, startDate, ended, whiteSeeResults, blackSeeResults) VALUES"+
+							"('"+white+"', '"+black+"', '"+startingBoard+"', false, CURDATE(), false, false, false);";
 					st.executeUpdate(query);
 				} finally { st.close(); }
 			} finally { conn.close(); }
@@ -657,7 +657,7 @@ public class Query {
 			try{
 				Statement st = conn.createStatement();
 				try {//Check if username and hashedPass match
-					String query = "SELECT * FROM activeGames WHERE ended = false AND whitePlayer = '"+ nickname +"';";       
+					String query = "SELECT * FROM activeGames WHERE whiteSeeResults = false AND whitePlayer = '"+ nickname +"';";       
 					ResultSet rs = st.executeQuery(query);
 					try{//check if rs is empty
 						if(rs.first()) {
@@ -679,7 +679,7 @@ public class Query {
 							}
 						}
 					} finally { rs.close(); }
-					query = "SELECT * FROM activeGames WHERE ended = false AND blackPlayer = '"+ nickname +"';";
+					query = "SELECT * FROM activeGames WHERE blackSeeResults = false AND blackPlayer = '"+ nickname +"';";
 					rs = st.executeQuery(query);
 					try{//check if rs is empty
 						if(rs.first()) {
