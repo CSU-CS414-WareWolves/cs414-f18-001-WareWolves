@@ -51,7 +51,7 @@ public class SwingController extends JPanel implements ChadGameDriver {
 
   @Override
   public void handleViewMessage(ViewMessage message) {
-    System.out.println("handleViewMessage:: " + message.messageType);
+    System.out.println("SwingController::handleViewMessage " + message.messageType);
 
     switch (message.messageType) {
 
@@ -66,9 +66,6 @@ public class SwingController extends JPanel implements ChadGameDriver {
         break;
       case SHOW_VALID_MOVES:
         controller.handleViewMessage(message);
-        break;
-      case MENU:
-        handleMenuMessage((MenuMessage) message);
         break;
       case MOVE_PIECE:
         controller.handleViewMessage(message);
@@ -92,6 +89,7 @@ public class SwingController extends JPanel implements ChadGameDriver {
         }
         break;
       case UNREGISTER_RESPONSE:
+        controller.handleViewMessage(message);
         break;
       case SHOW_VALID_MOVES_RESPONSE:
         ViewValidMovesResponse validMoves = (ViewValidMovesResponse) message;
@@ -100,6 +98,10 @@ public class SwingController extends JPanel implements ChadGameDriver {
       case MENU_RESPONSE:
         break;
       case MOVE_PIECE_RESPONSE:
+        if(!playingGame){
+          cardLayout.show(cardPanel, "GameScreen");
+          playingGame = true;
+        }
         MovePieceResponse moves = (MovePieceResponse) message;
         JOptionPane.showMessageDialog(gameJPanel, moves.message);
         gameJPanel.setBoardPieces(moves.gameBoard);
@@ -114,6 +116,7 @@ public class SwingController extends JPanel implements ChadGameDriver {
         controller.handleViewMessage(message);
         break;
       case GAME_REQUEST:
+        controller.handleViewMessage(message);
         break;
       case NEW_INVITE:
         controller.handleViewMessage(message);
@@ -122,45 +125,26 @@ public class SwingController extends JPanel implements ChadGameDriver {
         controller.handleViewMessage(message);
         break;
       case LOGOUT:
-        break;
-      case RESIGN:
-        break;
-    }
-
-
-  }
-
-  private void handleMenuMessage(MenuMessage message) {
-
-    switch (message.menuType) {
-
-      case LOGOUT:
-        cardLayout.show(cardPanel, "MenuScreen");
-        playingGame = false;
-        break;
-      case SELECT_GAME:
-        controller.handleViewMessage(message);
-        //gameJPanel.setVisible(true);
-        //this.setSize(gameJPanel.getSize());
-        //this.revalidate();
-        //this.repaint();
-        //this.pack();
-        cardLayout.show(cardPanel, "GameScreen");
-        playingGame = true;
-        break;
-      case SEND_INVITE:
-        controller.handleViewMessage(message);
+        if(playingGame){
+          cardLayout.show(cardPanel, "MenuGame");
+          playingGame = false;
+        }
         break;
       case RESIGN:
         controller.handleViewMessage(message);
         break;
     }
 
+
   }
+
+
+
+
 
   @Override
   public void handleNetMessage(NetworkMessage message) {
-    System.out.println("handleViewMessage:: " + message.type);
+    System.out.println("SwingController::handleViewMessage " + message.type);
     switch (message.type) {
 
       case LOGIN_RESPONSE:

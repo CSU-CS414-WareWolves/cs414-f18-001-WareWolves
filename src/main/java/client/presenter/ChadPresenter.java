@@ -38,6 +38,7 @@ import client.presenter.network.messages.ProfileResponse;
 import client.presenter.network.messages.Register;
 import client.presenter.network.messages.RegisterResponse;
 import client.presenter.network.messages.Resign;
+import client.presenter.network.messages.SeeResults;
 import client.presenter.network.messages.Unregister;
 import client.presenter.network.messages.UnregisterResponse;
 import java.io.IOException;
@@ -166,7 +167,7 @@ public class ChadPresenter implements ChadGameDriver{
            String board = chadGame.getBoard();
            char piece = board.charAt(index - 1);
            String moveString = piece + moves.fromLocation.toString() + moves.toLocation.toString();
-           Move move = new Move(gameID, moveString, chadGame.getBoard(), ending, draw);
+           Move move = new Move(currentGame.getGameID(), moveString, chadGame.getBoard(), ending, draw);
            networkManager.sendMessage(move);
       } else {
           // Send a move piece response message with an error
@@ -197,6 +198,11 @@ public class ChadPresenter implements ChadGameDriver{
         currentGame = new ActiveGameInfo(gameRequestMessage.gameInfo);
         chadGame = new Game(currentGame.getGameBoard(), currentGame.getTurn());
         viewDriver.handleViewMessage(new MovePieceResponse(getCurrentPlayer(chadGame.getTurn()) + "'s turn.", chadGame.getBoard()));
+
+        if(currentGame.getEnded()){
+          networkManager.sendMessage(new SeeResults(currentGame.getGameID(), currentGame.getColor()));
+        }
+
         break;
       case NEW_INVITE:
         // Send an invite request to the net manager
@@ -215,6 +221,7 @@ public class ChadPresenter implements ChadGameDriver{
         ResignMessage resignMessage = (ResignMessage) message;
         Resign resign = new Resign(resignMessage.gameID, playerNickname);
         networkManager.sendMessage(resign);
+        networkManager.sendMessage(new ActiveGameRequest(playerNickname));
         break;
     }
   }

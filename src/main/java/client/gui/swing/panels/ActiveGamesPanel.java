@@ -61,8 +61,7 @@ public class ActiveGamesPanel extends UpdatableJTableInPanel {
             .showConfirmDialog(mainPanel, "Are you sure you want to resign the game against "
                 + gameInfo.getOpponent(), "Warning", dialogButton);
         if (dialogResult == JOptionPane.YES_OPTION) {
-          controller
-              .sendMessage(new ResignMessage(gameIndex));
+          controller.sendMessage(new ResignMessage(gameIndex));
         }
       }
     });
