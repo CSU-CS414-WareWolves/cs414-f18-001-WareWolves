@@ -82,20 +82,20 @@ public class ChadServer extends Thread{
 				ByteBuffer buff = ByteBuffer.allocate(5000);
 				buff.clear();
 				SocketChannel s = (SocketChannel)key.channel();
-				if(s.isConnected()) {
-					if(s.read(buff) == -1){
-						s.close();
-						sessions.values().remove(s);
-						return;
-					}
+				if(s.read(buff) == -1){
+					s.close();
+					sessions.values().remove(s);
+					return;
 				}
 				byte[] msg = new byte[1000];
 				String message = new String(buff.get(msg).array()).trim();
 				System.out.println("Recieved: "+message);
 				parseMessage(message, s);
 			}
-		} catch (CancelledKeyException e) {
+		} catch (CancelledKeyException | IOException e) {
 			// If key gets canceled it means the client has disconnected
+			key.channel().close();
+			sessions.values().remove((SocketChannel)key.channel());
 			System.err.println("A client has disconnected");
 		}
 	}
@@ -172,7 +172,7 @@ public class ChadServer extends Thread{
 					try {
 						sessions.get(opponent).write(ByteBuffer.allocate(4).putInt(move.length));
 						sessions.get(opponent).write(ByteBuffer.wrap(move.getDataString().getBytes()));
-						System.out.println("Sent: "+move.getDataString());
+						System.out.println("Sent to "+opponent+":"+move.getDataString());
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
