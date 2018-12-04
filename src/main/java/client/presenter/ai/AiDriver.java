@@ -2,41 +2,41 @@ package client.presenter.ai;
 
 import client.game.Game;
 import client.gui.ChadGameDriver;
-import client.presenter.ChadPresenter;
 import client.presenter.controller.messages.ViewMessage;
-import client.presenter.controller.util.HashPasswords;
 import client.presenter.network.NetworkManager;
-import client.presenter.network.messages.*;
-import org.omg.CORBA.DynAnyPackage.InvalidValue;
-import sun.misc.IOUtils;
-
-import javax.sound.midi.Soundbank;
+import client.presenter.network.messages.ActiveGameRequest;
+import client.presenter.network.messages.ActiveGameResponse;
+import client.presenter.network.messages.InboxRequest;
+import client.presenter.network.messages.InboxResponse;
+import client.presenter.network.messages.InviteResponse;
+import client.presenter.network.messages.Login;
+import client.presenter.network.messages.LoginResponse;
+import client.presenter.network.messages.Move;
+import client.presenter.network.messages.NetworkMessage;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
-import java.util.stream.Collectors;
+import org.omg.CORBA.DynAnyPackage.InvalidValue;
 
 public class AiDriver implements ChadGameDriver {
 
   private NetworkManager network;
 
-  public AiDriver(InetAddress addr, int port) throws IOException, NoSuchAlgorithmException {
+  public AiDriver(InetAddress addr, int port) throws IOException {
     System.out.println("Starting AI at " + addr.toString() + ":" + port);
     this.network = new NetworkManager(addr, port, this);
     network.startThread();
     if (network.sendMessage(new Login(
-        "ai@ai.ai","easymode")))
+        "ai@ai.ai", "easymode"))) {
       System.out.println("Sent login request");
-    else
+    } else {
       System.out.println("AI login failed to send");
+    }
     InboxPing inboxChecker = new InboxPing();
     inboxChecker.run();
+    network.sendMessage(new ActiveGameRequest("AI"));
   }
 
   @Override
@@ -55,11 +55,9 @@ public class AiDriver implements ChadGameDriver {
       case LOGIN_RESPONSE:
         System.out.println("Login response received...");
         LoginResponse login = (LoginResponse) message;
-        if (login.success)
-        {
+        if (login.success) {
           System.out.println("AI logged in");
-        }
-        else {
+        } else {
           System.out.println("AI login failed.");
         }
         break;
@@ -67,63 +65,9 @@ public class AiDriver implements ChadGameDriver {
         System.out.println("Move received...");
         Move move = (Move) message;
         boolean turn = (!Character.isUpperCase(move.move.charAt(0)));
-        Game chadGame = new Game(move.board, turn);
-        if (chadGame.gameover()){
-          break;
-        }
-        String args = "\"" + move.board + "\", " + (turn ? "True" : "False");
-        String command = "python3 -c \'import ChadML as gm; gm.bestMove(" + args + ");\'";
-        try {
-          ProcessBuilder pb = new ProcessBuilder(
-              "python3", "-c", "\'import ChadML as gm; gm.bestMove(" + args + ");\'");
-          System.out.println("Calling python script with command:");
-          System.out.println("python3 -c \'import ChadML as gm; gm.bestMove(" + args + ");\'");
-          pb.inheritIO();
-          Process pr = pb.start();
 
-          Process p = Runtime.getRuntime().exec(new String[] {"/bin/bash", "-c", command });
-          p.waitFor();
+        this.move(move.gameID, move.board, turn);
 
-          String aiMove = null;
-
-          try (BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
-            String line;
-            while ((line = br.readLine()) != null)  {
-              aiMove = line;
-            }
-          }
-          if (aiMove == null){
-            throw new InvalidValue("No move received from AI");
-          }
-
-
-
-/*
-          BufferedReader in = new BufferedReader(new InputStreamReader(pr.getInputStream()));
-
-          pr.waitFor();
-
-          String aiMove = in.readLine();
-          */
-          System.out.println("Move calculated, making move '" + aiMove + "'");
-          String boardString = chadGame.getBoard();
-          int pIndex = boardString.indexOf(aiMove.substring(0, 2));
-          String moveFrom = boardString.substring(pIndex - 1, pIndex + 2);
-          chadGame.move(aiMove.substring(0, 2), aiMove.substring(2, 4));
-          System.out.println("Sending move to server");
-          network.sendMessage(new Move(
-              move.gameID,
-              moveFrom + aiMove.substring(2, 4),
-              chadGame.getBoard(),
-              chadGame.gameover(), false));
-
-        } catch (IOException e) {
-          e.printStackTrace();
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        } catch (InvalidValue invalidValue) {
-          invalidValue.printStackTrace();
-        }
         break;
       case INBOX_RESPONSE:
         System.out.println("Received Inbox response:");
@@ -136,12 +80,61 @@ public class AiDriver implements ChadGameDriver {
           }
         }
         break;
+      case ACTIVE_GAMES_RESPONSE:
+        System.out.println("Received Active Games response:");
+        ActiveGameResponse games = (ActiveGameResponse) message;
+        for (int i = 0; i < games.color.length; ++i) {
+          if (games.color[i] == games.turns[i]) {
+            this.move(games.gameIDs[i], games.gameBoards[i], games.turns[i]);
+          }
+        }
+
+        break;
       default:
         break;
     }
   }
 
+  private void move(int gameID, String gameBoard, boolean turn) {
+    Game chadGame = new Game(gameBoard, turn);
+    if (chadGame.gameover()) {
+      return;
+    }
+    String args = "\"" + gameBoard + "\", " + (turn ? "True" : "False");
+    String command = "python3 -c \'import ChadML as gm; gm.bestMove(" + args + ");\'";
+    try {
+      System.out.println("Calling python script with command:");
+      System.out.println(command);
 
+      Process p = Runtime.getRuntime().exec(new String[]{"/bin/bash", "-c", command});
+      p.waitFor();
+
+      String aiMove = null;
+
+      try (BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()))) {
+        String line;
+        while ((line = br.readLine()) != null) {
+          aiMove = line;
+        }
+      }
+      if (aiMove == null) {
+        throw new InvalidValue("No move received from AI");
+      }
+      System.out.println("Move calculated, making move '" + aiMove + "'");
+      String boardString = chadGame.getBoard();
+      int pIndex = boardString.indexOf(aiMove.substring(0, 2));
+      String moveFrom = boardString.substring(pIndex - 1, pIndex + 2);
+      chadGame.move(aiMove.substring(0, 2), aiMove.substring(2, 4));
+      System.out.println("Sending move to server");
+      network.sendMessage(new Move(
+          gameID,
+          moveFrom + aiMove.substring(2, 4),
+          chadGame.getBoard(),
+          chadGame.gameover(), false));
+    } catch (InterruptedException | IOException | InvalidValue e) {
+      e.printStackTrace();
+    }
+  }
 
   public class InboxPing extends Thread {
 
@@ -153,8 +146,9 @@ public class AiDriver implements ChadGameDriver {
           e.printStackTrace();
         }
         System.out.println("Check for invites...");
-        if (!network.sendMessage(new InboxRequest("AI")))
+        if (!network.sendMessage(new InboxRequest("AI"))) {
           System.exit(1);
+        }
 
       }
     }
