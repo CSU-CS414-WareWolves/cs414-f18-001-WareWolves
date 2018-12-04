@@ -111,7 +111,8 @@ public class CLDriver implements ChadGameDriver {
         break;
       case INBOX_RESPONSE:
         InboxResponse ir = (InboxResponse) message;
-        controller.handleViewMessage(handleInbox(ir.inviteIDs, ir.sendDates, ir.senders));
+        InboxMessage im = handleInbox(ir.inviteIDs, ir.sendDates, ir.senders);
+        controller.handleViewMessage(im);
         break;
       case LOGOUT:
         login.showLogout();
@@ -200,13 +201,14 @@ public class CLDriver implements ChadGameDriver {
           controller.handleViewMessage(vmm);
         }
         else{
+          System.out.println(rrm.messages);
           login.failedCreds(1);
         }
         break;
       case SHOW_VALID_MOVES:
-        //Give presenter valid moves
-        //low TODO: valid move parser
-        chadGame.validMoves(((ViewValidMoves)message).location.toString());
+        String temp = chadGame.validMoves(((ViewValidMoves)message).location.toString());
+        String[] moves = stringToArray(temp);
+        game.showValidMoves(moves);
         break;
       case SHOW_VALID_MOVES_RESPONSE:
         ViewValidMovesResponse vvmr = (ViewValidMovesResponse) message;
@@ -297,7 +299,12 @@ public class CLDriver implements ChadGameDriver {
           return new InboxMessage();
         case 3:
           //Send Outbox
-          return handleOutbox();
+          InviteMessage im = handleOutbox();
+          //send Presenter new InviteMessage
+          controller.handleViewMessage(im);
+          //Return to Main Menu
+          clearScreen();
+          break;
         case 4:
           //View Stats
           return handleProfile();
@@ -307,7 +314,6 @@ public class CLDriver implements ChadGameDriver {
         case 6:
           //Logout
           System.out.println("[!] Hope to see you again soon, " + nickname + "!");
-          //high TODO: return new, updated Logout message
           return new LogoutMessage();
         default:
           clearScreen();
@@ -411,7 +417,7 @@ public class CLDriver implements ChadGameDriver {
    * @param senders array with challenger nicknames
    * @return an AcceptInvite message with chosen id/nickname
    */
-  public MenuMessage handleInbox(int[] ids, String[] dates, String[] senders){
+  public InboxMessage handleInbox(int[] ids, String[] dates, String[] senders){
     clearScreen();
     menu.viewInvites(ids, dates, senders);
 
@@ -421,7 +427,7 @@ public class CLDriver implements ChadGameDriver {
     info[0] = Integer.toString(ids[option]);
     info[1] = senders[option];
     //high TODO: return new Accept_Invite message
-    return new MenuMessage(MenuMessageTypes.SELECT_GAME, info);
+    return new InboxMessage();
   }
 
   /**
@@ -453,6 +459,33 @@ public class CLDriver implements ChadGameDriver {
     System.err.println("[!] Please input a valid option\n");
   }
 
+  /**
+   * Parses valid moves String to array
+   * @param s
+   */
+  public String[] stringToArray(String s) {
+    String[] res = s.split("");
+    return res;
+  }
+
+  /**
+   * Prints array nicely with commas, no comma added at the end.
+   * @param S String[] array
+   */
+  public String arrayToString(String[] S) {
+    StringBuilder res = new StringBuilder();
+    for(int i = 0; i < S.length; i++) {
+      if(i+1 != S.length) {
+        res.append(S[i]).append(", ");
+      }
+      else {
+        res.append(S[i]);
+      }
+    }
+    return res.toString();
+  }
+
   public static void main(String[] args) {
+
   }
 }
