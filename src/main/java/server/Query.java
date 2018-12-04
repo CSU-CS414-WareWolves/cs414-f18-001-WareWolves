@@ -660,6 +660,7 @@ public class Query {
 							opponents.add(rs.getString("blackPlayer"));
 							startDates.add(rs.getString("startDate"));
 							turns.add(rs.getBoolean("turn"));
+							colors.add(false);
 							endeds.add(rs.getBoolean("ended"));
 							while(rs.next()) {
 								gameIDs.add(rs.getInt("gameID"));
@@ -681,6 +682,7 @@ public class Query {
 							opponents.add(rs.getString("whitePlayer"));
 							startDates.add(rs.getString("startDate"));
 							turns.add(rs.getBoolean("turn"));
+							colors.add(true);
 							endeds.add(rs.getBoolean("ended"));
 							while(rs.next()) {
 								gameIDs.add(rs.getInt("gameID"));
