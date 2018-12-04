@@ -6,6 +6,7 @@ import client.gui.swing.SwingController;
 import client.gui.swing.info.ActiveGameInfo;
 import client.presenter.controller.messages.GameRequestMessage;
 import client.presenter.controller.messages.InviteMessage;
+import client.presenter.controller.messages.InviteMessageResponse;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.MovePieceMessage;
@@ -25,6 +26,7 @@ import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.InboxRequest;
 import client.presenter.network.messages.InboxResponse;
 import client.presenter.network.messages.InviteRequest;
+import client.presenter.network.messages.InviteResponse;
 import client.presenter.network.messages.Login;
 import client.presenter.network.messages.LoginResponse;
 import client.presenter.network.messages.Move;
@@ -199,6 +201,12 @@ public class ChadPresenter implements ChadGameDriver{
         InviteMessage inviteMessage = (InviteMessage) message;
         InviteRequest inviteRequest = new InviteRequest(inviteMessage.sender, inviteMessage.recipient);
         networkManager.sendMessage(inviteRequest);
+        networkManager.sendMessage(new InboxRequest(playerNickname));
+      case INVITE_RESPONSE:
+        InviteMessageResponse inviteMessageResponse = (InviteMessageResponse) message;
+        networkManager.sendMessage(new InviteResponse(inviteMessageResponse.inviteID, inviteMessageResponse.response));
+        networkManager.sendMessage(new InboxRequest(playerNickname));
+
     }
   }
 
