@@ -8,6 +8,7 @@ public abstract class SharedTestAttributes {
   public static final String TEST_NICKNAME = "Chad Player";
   public static final String TEST_NICKNAME_2 = "Chess Player";
   public static final boolean TEST_SUCCESS = true;
+  public static final int TEST_GAME_ID = 1337;
   public static final int FROM_ROW = 5;
   public static final int FROM_COL = 7;
   public static final int TO_ROW = 8;

@@ -13,6 +13,7 @@ import client.presenter.controller.messages.MovePieceResponse;
 import client.presenter.controller.messages.ProfileMessage;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.RegisterResponseMessage;
+import client.presenter.controller.messages.ResignMessage;
 import client.presenter.controller.messages.UnregisterMessage;
 import client.presenter.controller.messages.UnregisterResponseMessage;
 import client.presenter.controller.messages.ViewMessage;
@@ -34,6 +35,7 @@ import client.presenter.network.messages.ProfileRequest;
 import client.presenter.network.messages.ProfileResponse;
 import client.presenter.network.messages.Register;
 import client.presenter.network.messages.RegisterResponse;
+import client.presenter.network.messages.Resign;
 import client.presenter.network.messages.Unregister;
 import client.presenter.network.messages.UnregisterResponse;
 import java.io.IOException;
@@ -199,6 +201,13 @@ public class ChadPresenter implements ChadGameDriver{
         InviteMessage inviteMessage = (InviteMessage) message;
         InviteRequest inviteRequest = new InviteRequest(inviteMessage.sender, inviteMessage.recipient);
         networkManager.sendMessage(inviteRequest);
+       break;
+      case RESIGN:
+        // Send a resign request to the net manager
+        ResignMessage resignMessage = (ResignMessage) message;
+        Resign resign = new Resign(resignMessage.gameID, playerNickname);
+        networkManager.sendMessage(resign);
+        break;
     }
   }
 
