@@ -205,6 +205,7 @@ public class ChadPresenter implements ChadGameDriver{
         InviteRequest inviteRequest = new InviteRequest(inviteMessage.sender, inviteMessage.recipient);
         networkManager.sendMessage(inviteRequest);
         networkManager.sendMessage(new InboxRequest(playerNickname));
+        break;
       case INVITE_RESPONSE:
         InviteMessageResponse inviteMessageResponse = (InviteMessageResponse) message;
         networkManager.sendMessage(new InviteResponse(inviteMessageResponse.inviteID, inviteMessageResponse.response));
@@ -340,6 +341,7 @@ public class ChadPresenter implements ChadGameDriver{
     } catch (IOException e) { }
     if(userInterface.equals("cli")){
       // Instantiate CLI Controller
+      System.out.println("[!] Starting cli gui...");
       viewDriver = new CLDriver(this);
     } else if(userInterface.equals("gui")){
       // Instantiate GUI Controller
@@ -358,12 +360,13 @@ public class ChadPresenter implements ChadGameDriver{
    * Starts a thread for the Swing GUI
    */
   public void start(){
-
-    javax.swing.SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-          viewDriver.createAndShowGUI();
-      }
-    });
+    CLIThread c = new CLIThread();
+    c.run();
+//    javax.swing.SwingUtilities.invokeLater(new Runnable() {
+//      public void run() {
+//          viewDriver.createAndShowGUI();
+//      }
+//    });
   }
 
   /**
@@ -375,6 +378,11 @@ public class ChadPresenter implements ChadGameDriver{
     return turn == currentGame.getColor() ? playerNickname : currentGame.getOpponent();
   }
 
+  public class CLIThread extends Thread {
+    public void run() {
+      viewDriver.createAndShowGUI();
+    }
+  }
 
   public static void main(String[] args) {
     // args[0] = "cli" or "gui", args[1] server host, args[2] server port

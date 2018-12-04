@@ -69,7 +69,8 @@ public class CLDriver implements ChadGameDriver {
     clearScreen();
     int option = 0;
     try {
-      while (true) {
+      while(true) {
+        keys = new Scanner(System.in);
         option = keys.nextInt();
         switch (option) {
           case 1:
@@ -85,7 +86,6 @@ public class CLDriver implements ChadGameDriver {
             warningValidOption();
             login.showSplash();
             login.showLogin();
-            clearScreen();
         }
       }
     } catch(NoSuchAlgorithmException e) {
@@ -162,7 +162,6 @@ public class CLDriver implements ChadGameDriver {
           //if login successful, print main menu
           //-send presenter a message for option chose
           this.nickname = lrm.nickname;
-          menu.showMenu(nickname);
           ViewMessage vm = handleMenu();
           controller.handleViewMessage(vm);
         }
@@ -192,17 +191,17 @@ public class CLDriver implements ChadGameDriver {
         }
         break;
       case REGISTER_RESPONSE:
-        //high TODO: ask about this message also
         RegisterResponseMessage rrm = (RegisterResponseMessage) message;
         if(rrm.success){
-          System.out.println(rrm.messages);
+          System.out.println(arrayToString(rrm.messages));
           menu.showMenu(nickname);
           ViewMessage vmm = handleMenu();
           controller.handleViewMessage(vmm);
         }
         else{
-          System.out.println(rrm.messages);
+          System.out.println(arrayToString(rrm.messages));
           login.failedCreds(1);
+          handleTitleScreen();
         }
         break;
       case SHOW_VALID_MOVES:
@@ -286,10 +285,13 @@ public class CLDriver implements ChadGameDriver {
    * @return a ViewMessage corresponding to the option chosen
    */
   public ViewMessage handleMenu(){
-    int option;
+    clearScreen();
+    menu.showMenu(nickname);
+
+    int option = 0;
     while(true) {
+      keys = new Scanner(System.in);
       option = keys.nextInt();
-      menu.showMenu(nickname);
       switch (option) {
         case 1:
           //View Active Games
@@ -316,9 +318,8 @@ public class CLDriver implements ChadGameDriver {
           System.out.println("[!] Hope to see you again soon, " + nickname + "!");
           return new LogoutMessage();
         default:
-          clearScreen();
           warningValidOption();
-          menu.showMenu(nickname);
+          clearScreen();
           break;
       }
     }
@@ -361,6 +362,7 @@ public class CLDriver implements ChadGameDriver {
    * @return a GameRequestMessage with chosen gameID
    */
   public GameRequestMessage handleSelectGame() {
+    keys = new Scanner(System.in);
     int option = keys.nextInt();
     return new GameRequestMessage(new String[]{Integer.toString(option)});
   }
@@ -370,9 +372,10 @@ public class CLDriver implements ChadGameDriver {
    * @return a ViewMessage corresponding to the user's actions
    */
   public ViewMessage handleMovePiece() {
-    String from;
-    String to;
-    while (true) {
+    String from = "";
+    String to = "";
+    keys = new Scanner(System.in);
+    while(true) {
       System.out.println("~ Select a piece (e.g. \"1a\"): ");
       from = keys.nextLine();
       //check for exit or resignation
@@ -422,6 +425,8 @@ public class CLDriver implements ChadGameDriver {
     menu.viewInvites(ids, dates, senders);
 
     String[] info = new String[2];
+
+    keys = new Scanner(System.in);
     int option = keys.nextInt();
 
     info[0] = Integer.toString(ids[option]);

@@ -5,10 +5,8 @@ import java.io.IOException;
 import java.net.Socket;
 
 import client.presenter.network.messages.*;
-import java.util.Observable;
-import java.util.Observer;
 
-public class RecieveThread extends Observable implements Runnable{
+public class RecieveThread extends Thread{
 	/**
 	 * A Socket connected to the server
 	 */
@@ -20,9 +18,9 @@ public class RecieveThread extends Observable implements Runnable{
 	/**
 	 * NetworkManager in charge of the RecieveThread, used to pass recieved messages up.
 	 */
-	private Observer mgmt;
-	
-	
+	private NetworkManager mgmt;
+
+
 	/**
 	 * Constructor, instantiates DataInputStream of socket
 	 * @param Sock socket connected to server from NetworkManager
@@ -34,8 +32,8 @@ public class RecieveThread extends Observable implements Runnable{
 		din = new DataInputStream(sock.getInputStream());
 		mgmt = net;
 	}
-	
-	
+
+
 	/**
 	 * Run loop, waits to be active to read in data
 	 */
@@ -44,17 +42,17 @@ public class RecieveThread extends Observable implements Runnable{
 		int dataLen;
 		while(!Thread.currentThread().isInterrupted()) {
 			try {
-        //System.out.println("RecieveThread:: Reading Message");
-        //System.out.println(sock.getRemoteSocketAddress().toString());
+				//System.out.println("RecieveThread:: Reading Message");
+				//System.out.println(sock.getRemoteSocketAddress().toString());
 
-        if(din.available() != 0){
-          System.out.println("Data InputStream: " + din.available());
-          byte[] bytes = new byte[10000];
-          din.read(bytes);
-          String msg = new String(bytes).trim();
-          System.out.println(msg);
-          parseMessage(msg);
-        }
+				if(din.available() != 0){
+					System.out.println("Data InputStream: " + din.available());
+					byte[] bytes = new byte[10000];
+					din.read(bytes);
+					String msg = new String(bytes).trim();
+					System.out.println(msg);
+					parseMessage(msg);
+				}
 
 				//dataLen = din.read();
 				//byte[] bytes = new byte[dataLen];
@@ -64,7 +62,7 @@ public class RecieveThread extends Observable implements Runnable{
 
 			} catch (IOException e) {
 				System.err.println(e.getMessage());
-        Thread.currentThread().interrupt();
+				Thread.currentThread().interrupt();
 				try {
 					sock.close();
 				} catch (IOException e1) {
@@ -73,49 +71,49 @@ public class RecieveThread extends Observable implements Runnable{
 			}
 		}
 	}
-	
+
 	/**
 	 * Reads message type code, sends to appropriate NetworkManager method to handle message type
-	 * @param msg String of message received 
+	 * @param msg String of message received
 	 */
 	protected void parseMessage(String msg) {
 		NET_MESSAGE_TYPE mt = NET_MESSAGE_TYPE.fromInt(Integer.parseInt(msg.split(":")[0]));
 		NetworkMessage message = null;
 		switch(mt) {
 			case LOGIN_RESPONSE:
-			  message = new LoginResponse(msg);
-			  break;
-      case GAME_INFO:
-        message = new GameInfo(msg);
-        break;
+				message = new LoginResponse(msg);
+				break;
+			case GAME_INFO:
+				message = new GameInfo(msg);
+				break;
 			case MOVE:
-			  message = new Move(msg);
-        break;
+				message = new Move(msg);
+				break;
 			case ACTIVE_GAMES_RESPONSE:
-			  message = new ActiveGameResponse(msg);
-        break;
+				message = new ActiveGameResponse(msg);
+				break;
 			case REGISTER_RESPONSE:
-        message = new RegisterResponse(msg);
-        break;
+				message = new RegisterResponse(msg);
+				break;
 			case INBOX_RESPONSE:
-			  message = new InboxResponse(msg);
-        break;
+				message = new InboxResponse(msg);
+				break;
 			case PROFILE_RESPONSE:
-			  message = new ProfileResponse(msg);
-        break;
+				message = new ProfileResponse(msg);
+				break;
 			case PLAYERS:
-			  message = new Players(msg);
-        break;
+				message = new Players(msg);
+				break;
 			case UNREGISTER_RESPONSE:
-			  new UnregisterResponse(msg);
-        break;
+				new UnregisterResponse(msg);
+				break;
 			default:
-			  System.err.println("Could not parse message: "+msg);
-        break;
+				System.err.println("Could not parse message: "+msg);
+				break;
 		}
 		if(message!=null)
-			mgmt.update(this, message);
+			mgmt.sendToPresenter(message);
 	}
 
-	
+
 }

@@ -7,20 +7,18 @@ import java.net.Socket;
 
 import client.presenter.ChadPresenter;
 import client.presenter.network.messages.NetworkMessage;
-import java.util.Observable;
-import java.util.Observer;
 
-public class NetworkManager implements Observer {
+public class NetworkManager {
 	private Socket sock;
 	private Sender send;
 	private RecieveThread recv;
 	private ChadGameDriver presenter;
-	
+
 	/**
 	 * @constructor
 	 * @param addr IP address of server
 	 * @param port Port that server is listening on
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public NetworkManager(InetAddress addr, int port, ChadGameDriver presenter) throws IOException {
 		sock = new Socket(addr, port);
@@ -28,16 +26,16 @@ public class NetworkManager implements Observer {
 		recv = new RecieveThread(sock, this);
 		this.presenter = presenter;
 	}
-	
+
 	/**
 	 * Starts RecieveThread
 	 */
 	public void startThread() {
-		recv.run();
+		recv.start();
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param msg The Message object to send
 	 * @return True if send successful, false if send failed
 	 */
@@ -45,19 +43,13 @@ public class NetworkManager implements Observer {
 		return send.sendToServer(msg);
 	}
 
-  /**
-   *
-   * @param msg The Message object to send
-   */
+	/**
+	 *
+	 * @param msg The Message object to send
+	 */
 	protected void sendToPresenter(NetworkMessage msg) {
 		presenter.handleNetMessage(msg);
 	}
 
 
-	@Override
-	public void update(Observable o, Object arg) {
-    NetworkMessage message = (NetworkMessage) arg;
-    presenter.handleNetMessage(message);
-
-  }
 }
