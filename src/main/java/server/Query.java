@@ -699,6 +699,17 @@ public class Query {
 			System.err.printf("Exception: ");
 			System.err.println(e.getMessage());
 		}
+		if(gameIDs.size()==0) {
+			int[] ids = {-1};
+			String[] board = {"-1"};
+			String[] opponent = {"-1"};
+			String[] dates = {"-1"};
+			boolean[] turn = {false};
+			boolean[] color = {false};
+			boolean[] ended = {false};
+			ret = new ActiveGameResponse(ids, boards.toArray(board), opponents.toArray(opponent), startDates.toArray(dates), turn, color, ended);
+			return ret;
+		}
 		int[] ids = new int[gameIDs.size()];
 		String[] board = new String[boards.size()];
 		String[] opponent = new String[opponents.size()];
@@ -733,5 +744,9 @@ public class Query {
 		}
 	}
 	
+	public static void main(String[] args) {
+		Query q = new Query();
+		System.out.println(q.getActiveGames("test1").getDataString());
+	}
 	
 }
