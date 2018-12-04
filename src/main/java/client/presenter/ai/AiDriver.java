@@ -34,9 +34,10 @@ public class AiDriver implements ChadGameDriver {
     } else {
       System.out.println("AI login failed to send");
     }
+    network.sendMessage(new ActiveGameRequest("AI"));
+
     InboxPing inboxChecker = new InboxPing();
     inboxChecker.run();
-    network.sendMessage(new ActiveGameRequest("AI"));
   }
 
   @Override
