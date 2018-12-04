@@ -9,6 +9,7 @@ import client.gui.swing.panels.testcontrolers.TestSwingController;
 import client.presenter.ChadPresenter;
 import client.presenter.controller.messages.ActiveGameMessage;
 import client.presenter.controller.messages.LoginResponseMessage;
+import client.presenter.controller.messages.LogoutMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceResponse;
 import client.presenter.controller.messages.RegisterResponseMessage;
@@ -21,20 +22,31 @@ import java.awt.EventQueue;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
-public class SwingController extends JPanel implements ChadGameDriver {
+public class SwingController extends JFrame implements ChadGameDriver {
 
   private JPanel mainPanel;
   private MainMenuPanel menuPanel;
   private LoginScreenPanel loginScreenPanel;
   private GameJPanel gameJPanel;
   private JPanel cardPanel;
+
+  /**
+   * The menu bar
+   */
+  JMenuBar menuBar;
+
 
   private ChadGameDriver controller;
   private CardLayout cardLayout;
@@ -47,6 +59,7 @@ public class SwingController extends JPanel implements ChadGameDriver {
 
     $$$setupUI$$$();
     cardLayout = (CardLayout) cardPanel.getLayout();
+    this.add(menuBar, BorderLayout.NORTH);
     cardLayout.show(cardPanel, "LoginScreen");
     //cardLayout.show(cardPanel, "MenuScreen");
     //cardLayout.show(cardPanel, "GameScreen");
@@ -185,9 +198,35 @@ public class SwingController extends JPanel implements ChadGameDriver {
     menuPanel = new MainMenuPanel(this);
     loginScreenPanel = new LoginScreenPanel(this);
     gameJPanel = new GameJPanel(this);
+    createMenuBar();
 
   }
 
+
+  /**
+   * Creates the menu items
+   */
+  private void createMenuBar() {
+
+    //Create the menu bar.
+    menuBar = new JMenuBar();
+
+    //Build the first menu.
+    JMenu menu = new JMenu("Game Menu");
+    menuBar.add(menu);
+
+    //a group of JMenuItems
+    JMenuItem logout = new JMenuItem("Logout");
+    logout.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        cardLayout.show(cardPanel, "LoginScreen");
+        controller.handleViewMessage(new LogoutMessage());
+      }
+    });
+    menu.add(logout);
+
+  }
 
   public static void main(String[] args) {
 
