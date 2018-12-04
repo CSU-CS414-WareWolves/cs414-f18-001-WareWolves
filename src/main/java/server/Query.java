@@ -699,6 +699,9 @@ public class Query {
 			System.err.printf("Exception: ");
 			System.err.println(e.getMessage());
 		}
+		if(gameIDs.size()==0) {
+			return ret;
+		}
 		int[] ids = new int[gameIDs.size()];
 		String[] board = new String[boards.size()];
 		String[] opponent = new String[opponents.size()];
@@ -732,6 +735,5 @@ public class Query {
 			System.err.println(e.getMessage());
 		}
 	}
-	
 	
 }

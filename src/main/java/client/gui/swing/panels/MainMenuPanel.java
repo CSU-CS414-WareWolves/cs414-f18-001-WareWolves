@@ -5,6 +5,7 @@ import client.gui.swing.SwingGUIController;
 import client.gui.swing.panels.testcontrolers.TestSwingController;
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.ActiveGameMessage;
+import client.presenter.controller.messages.InviteMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.ProfileMessage;
 import client.presenter.controller.messages.ViewMessage;
@@ -68,7 +69,31 @@ public class MainMenuPanel extends SwingGUIController {
         controller.handleViewMessage(message);
         System.out.println("View Stats: " + profileMessage.nickname);
         break;
-
+      case NEW_INVITE:
+        String player = (String) JOptionPane.showInputDialog(
+            this,
+            "Select player to invite",
+            "Send New Invite",
+            JOptionPane.PLAIN_MESSAGE,
+            null,
+            playersList,
+            playersList[0]);
+        if ((player != null) && (player.length() > 0)) {
+          controller.handleViewMessage(new InviteMessage(nickName, player));
+          System.out.println("Sending Invite to: " + player);
+        }
+        break;
+      case INVITE_RESPONSE:
+        controller.handleViewMessage(message);
+        break;
+      case GAME_REQUEST:
+        controller.handleViewMessage(message);
+        break;
+      case RESIGN:
+        controller.handleViewMessage(message);
+        break;
+      default:
+        System.err.println("MainMenuPanel::sendMessage - unknown message type " + message.getClass());
     }
 
     if (message instanceof MenuMessage) {
