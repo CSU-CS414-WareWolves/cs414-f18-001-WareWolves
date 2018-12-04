@@ -180,7 +180,7 @@ public class ChadServer extends Thread{
 			}
 			break;
 			case ACTIVE_GAMES_REQUEST: try {
-				ActiveGameResponse response = query.getActiveGames(new ActiveGameRequest(msg).nickname);
+				ActiveGameResponse response = query.getActiveGames(new ActiveGameRequest(msg, 0).nickname);
 				sock.write(ByteBuffer.allocate(4).putInt(response.length));
 				sock.write(ByteBuffer.wrap(response.getDataString().getBytes()));
 				System.out.println("Sent: "+response.getDataString());
