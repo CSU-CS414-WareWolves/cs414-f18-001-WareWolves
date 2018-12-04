@@ -15,6 +15,7 @@ import client.presenter.controller.messages.MovePieceResponse;
 import client.presenter.controller.messages.ProfileMessage;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.RegisterResponseMessage;
+import client.presenter.controller.messages.ResignMessage;
 import client.presenter.controller.messages.UnregisterMessage;
 import client.presenter.controller.messages.UnregisterResponseMessage;
 import client.presenter.controller.messages.ViewMessage;
@@ -73,6 +74,8 @@ public class ViewMessageFactory {
         return new GameRequestMessage(info);
       case NEW_INVITE:
         return new InviteMessage(info[0], info[1]);
+      case RESIGN:
+        return new ResignMessage(Integer.parseInt(info[0]));
       default:
         throw new IllegalArgumentException("The messageType of " + type.name() + " is not valid");
     }

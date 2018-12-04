@@ -22,7 +22,7 @@ import client.presenter.network.messages.ProfileResponse;
 
 public class TestGameDriver implements ChadGameDriver {
 
-  private ChadGameDriver gui;
+  public ChadGameDriver gui;
   private Game game;
   private boolean playerColor;
   private ActiveGameInfo currentGame;

@@ -82,13 +82,13 @@ public class ChadServer extends Thread{
 				ByteBuffer buff = ByteBuffer.allocate(5000);
 				buff.clear();
 				SocketChannel s = (SocketChannel)key.channel();
-				int read = 0;
-				read = s.read(buff);
+				if(s.read(buff) == -1){
+					return;
+				}
 				byte[] msg = new byte[1000];
 				String message = new String(buff.get(msg).array()).trim();
 				System.out.println(message);
-				if(read > 0)
-					parseMessage(message, s);
+				parseMessage(message, s);
 			}
 		} catch (CancelledKeyException e) {
 			// If key gets canceled it means the client has disconnected
@@ -219,7 +219,7 @@ public class ChadServer extends Thread{
 	
 	
 	public static void main(String[] args) {
-		int port = Integer.parseInt(args[1]);
+		int port = Integer.parseInt(args[0]);
 		ChadServer server = new ChadServer(port);
 		server.start();
 	}

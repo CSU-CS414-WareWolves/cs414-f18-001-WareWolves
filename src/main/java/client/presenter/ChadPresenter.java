@@ -7,6 +7,7 @@ import client.gui.swing.SwingController;
 import client.gui.swing.info.ActiveGameInfo;
 import client.presenter.controller.messages.GameRequestMessage;
 import client.presenter.controller.messages.InviteMessage;
+import client.presenter.controller.messages.InviteMessageResponse;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.MovePieceMessage;
@@ -14,6 +15,7 @@ import client.presenter.controller.messages.MovePieceResponse;
 import client.presenter.controller.messages.ProfileMessage;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.RegisterResponseMessage;
+import client.presenter.controller.messages.ResignMessage;
 import client.presenter.controller.messages.UnregisterMessage;
 import client.presenter.controller.messages.UnregisterResponseMessage;
 import client.presenter.controller.messages.ViewMessage;
@@ -26,6 +28,7 @@ import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.InboxRequest;
 import client.presenter.network.messages.InboxResponse;
 import client.presenter.network.messages.InviteRequest;
+import client.presenter.network.messages.InviteResponse;
 import client.presenter.network.messages.Login;
 import client.presenter.network.messages.LoginResponse;
 import client.presenter.network.messages.Move;
@@ -35,6 +38,7 @@ import client.presenter.network.messages.ProfileRequest;
 import client.presenter.network.messages.ProfileResponse;
 import client.presenter.network.messages.Register;
 import client.presenter.network.messages.RegisterResponse;
+import client.presenter.network.messages.Resign;
 import client.presenter.network.messages.Unregister;
 import client.presenter.network.messages.UnregisterResponse;
 import java.io.IOException;
@@ -200,6 +204,19 @@ public class ChadPresenter implements ChadGameDriver{
         InviteMessage inviteMessage = (InviteMessage) message;
         InviteRequest inviteRequest = new InviteRequest(inviteMessage.sender, inviteMessage.recipient);
         networkManager.sendMessage(inviteRequest);
+        networkManager.sendMessage(new InboxRequest(playerNickname));
+      case INVITE_RESPONSE:
+        InviteMessageResponse inviteMessageResponse = (InviteMessageResponse) message;
+        networkManager.sendMessage(new InviteResponse(inviteMessageResponse.inviteID, inviteMessageResponse.response));
+        networkManager.sendMessage(new InboxRequest(playerNickname));
+
+       break;
+      case RESIGN:
+        // Send a resign request to the net manager
+        ResignMessage resignMessage = (ResignMessage) message;
+        Resign resign = new Resign(resignMessage.gameID, playerNickname);
+        networkManager.sendMessage(resign);
+        break;
     }
   }
 
