@@ -256,9 +256,12 @@ public class ChadPresenter implements ChadGameDriver{
         viewDriver.handleViewMessage(loginResponseMessage);
         break;
       case MOVE:
+        if(currentGame == null){
+          return;
+        }
         Move move = (Move) message;
         // Check if the move message is for the current game
-        if(currentGame.getGameID() == move.gameID) {
+        if( currentGame.getGameID() == move.gameID) {
           if (move.ending) {
             // The game has ended
             if (move.draw) {

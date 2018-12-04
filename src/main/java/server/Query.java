@@ -698,7 +698,7 @@ public class Query {
 							while(rs.next()) {
 								gameIDs.add(rs.getInt("gameID"));
 								boards.add(rs.getString("board"));
-								opponents.add(rs.getString("blackPlayer"));
+								opponents.add(rs.getString("whitePlayer"));
 								startDates.add(rs.getString("startDate"));
 								turns.add(rs.getBoolean("turn"));
 								colors.add(true);
