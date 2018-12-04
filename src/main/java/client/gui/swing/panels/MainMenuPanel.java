@@ -5,6 +5,7 @@ import client.gui.swing.SwingGUIController;
 import client.gui.swing.panels.testcontrolers.TestSwingController;
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.ActiveGameMessage;
+import client.presenter.controller.messages.InboxMessage;
 import client.presenter.controller.messages.InviteMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.ProfileMessage;
@@ -16,6 +17,9 @@ import java.awt.CardLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -39,7 +43,7 @@ public class MainMenuPanel extends SwingGUIController {
 
   private ChadGameDriver controller;
 
-  private String[] playersList;
+  private ArrayList<String> playersList = new ArrayList<>();
   private String nickName;
 
   public MainMenuPanel(ChadGameDriver controller) {
@@ -70,14 +74,16 @@ public class MainMenuPanel extends SwingGUIController {
         System.out.println("View Stats: " + profileMessage.nickname);
         break;
       case NEW_INVITE:
+        ArrayList<String> removeSelf = (ArrayList<String>) playersList.clone();
+        removeSelf.remove(nickName);
         String player = (String) JOptionPane.showInputDialog(
             this,
             "Select player to invite",
             "Send New Invite",
             JOptionPane.PLAIN_MESSAGE,
             null,
-            playersList,
-            playersList[0]);
+            removeSelf.toArray(),
+            removeSelf.get(0));
         if ((player != null) && (player.length() > 0)) {
           controller.handleViewMessage(new InviteMessage(nickName, player));
           System.out.println("Sending Invite to: " + player);
@@ -98,40 +104,8 @@ public class MainMenuPanel extends SwingGUIController {
 
     if (message instanceof MenuMessage) {
       MenuMessage menuMessage = (MenuMessage) message;
-
-      switch (menuMessage.menuType) {
-        case SELECT_GAME:
-          controller.handleViewMessage(message);
-          System.out.println("Select Game: " + menuMessage.information[0] + " Opponent: "
-              + menuMessage.information[2]);
-          break;
-        case RESIGN:
-          controller.handleViewMessage(message);
-          System.out.println("Resign Game: " + menuMessage.information[0] + " Opponent: "
-              + menuMessage.information[2]);
-          break;
-        case INVITES:
-          if (menuMessage.information.length == 0) {
-            String player = (String) JOptionPane.showInputDialog(
-                this,
-                "Select player to invite",
-                "Send New Invite",
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                playersList,
-                playersList[0]);
-            if ((player != null) && (player.length() > 0)) {
-              controller.handleViewMessage(
-                  new MenuMessage(MenuMessageTypes.SEND_INVITE, new String[]{nickName, player}));
-              System.out.println("Send Invite to: " + player);
-            }
-          } else {
-            controller.handleViewMessage(message);
-            System.out.println("Invite ID: " + menuMessage.information[0] + " Accepting: "
-                + menuMessage.information[1]);
-          }
-      }
-
+      System.out.println("Invite ID: " + menuMessage.information[0] + " Accepting: "
+          + menuMessage.information[1]);
     }
 
   }
@@ -173,7 +147,7 @@ public class MainMenuPanel extends SwingGUIController {
         break;
       case PLAYERS:
         Players players = (Players) message;
-        playersList = players.players;
+        playersList.addAll(Arrays.asList(players.players));
         playerStatsPanel.populatePlayersList(message);
         break;
       default:
@@ -195,8 +169,7 @@ public class MainMenuPanel extends SwingGUIController {
         break;
       case "viewInvites":
         cardLayout.show(displayPanel, "Invites");
-        controller
-            .handleViewMessage(new MenuMessage(MenuMessageTypes.INVITES, new String[]{nickName}));
+        controller.handleViewMessage(new InboxMessage());
         break;
       default:
         System.out.println(e.getActionCommand());

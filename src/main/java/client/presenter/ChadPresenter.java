@@ -204,11 +204,11 @@ public class ChadPresenter implements ChadGameDriver{
         InviteRequest inviteRequest = new InviteRequest(inviteMessage.sender, inviteMessage.recipient);
         networkManager.sendMessage(inviteRequest);
         networkManager.sendMessage(new InboxRequest(playerNickname));
+        break;
       case INVITE_RESPONSE:
         InviteMessageResponse inviteMessageResponse = (InviteMessageResponse) message;
         networkManager.sendMessage(new InviteResponse(inviteMessageResponse.inviteID, inviteMessageResponse.response));
         networkManager.sendMessage(new InboxRequest(playerNickname));
-
        break;
       case RESIGN:
         // Send a resign request to the net manager

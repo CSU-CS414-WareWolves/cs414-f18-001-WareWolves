@@ -111,11 +111,19 @@ public class SwingController extends JPanel implements ChadGameDriver {
         controller.handleViewMessage(message);
         break;
       case INBOX:
+        controller.handleViewMessage(message);
         break;
       case GAME_REQUEST:
         break;
       case NEW_INVITE:
         controller.handleViewMessage(message);
+        break;
+      case INVITE_RESPONSE:
+        controller.handleViewMessage(message);
+        break;
+      case LOGOUT:
+        break;
+      case RESIGN:
         break;
     }
 

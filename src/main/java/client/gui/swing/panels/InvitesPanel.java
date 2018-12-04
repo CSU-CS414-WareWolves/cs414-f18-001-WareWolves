@@ -88,8 +88,7 @@ public class InvitesPanel extends UpdatableJTableInPanel {
                 sentTable.convertRowIndexToModel(sentTable.getSelectedRow()), 1)
                 , "Warning", dialogButton);
         if (dialogResult == JOptionPane.YES_OPTION) {
-          controller.sendMessage(new MenuMessage(MenuMessageTypes.INVITES,
-              new String[]{String.valueOf(inviteId), String.valueOf(false)}));
+          controller.sendMessage(new InviteMessageResponse(inviteId, false));
         }
 
 

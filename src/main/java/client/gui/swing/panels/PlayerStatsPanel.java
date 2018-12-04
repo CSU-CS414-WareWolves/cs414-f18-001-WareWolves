@@ -69,6 +69,10 @@ public class PlayerStatsPanel extends UpdatableJTableInPanel {
 
     // Reset current data
     playerStatsModel.setNumRows(0);
+    if(profileResponse.whitePlayers[0].equals("-1")){
+
+      return;
+    }
     int playerWins = 0;
     int numberOfGames = profileResponse.results.length;
     for (int i = 0; i < numberOfGames; i++) {
