@@ -112,6 +112,10 @@ public class InvitesPanel extends UpdatableJTableInPanel {
     receivedTableModel.setNumRows(0);
     sentTableModel.setNumRows(0);
 
+    if (inboxMessage.inviteIDs[0] == -1) {
+      return;
+    }
+
     for (int i = 0; i < inboxMessage.inviteIDs.length; i++) {
 
       if (inboxMessage.senders[i].equals(nickname)) {
