@@ -55,9 +55,6 @@ public class SwingChadDriver implements ChadGameDriver{
         // Tell GUI to what moves to show
         gamePanel.setValidMoves(validMoves);
         break;
-      case MENU:
-        handleMenuMessage((MenuMessage) message);
-        break;
       case MOVE_PIECE:
         MovePieceMessage moves = (MovePieceMessage) message;
         chadGame.move(moves.fromLocation.toString(), moves.toLocation.toString());
@@ -86,29 +83,6 @@ public class SwingChadDriver implements ChadGameDriver{
 
   }
 
-  /**
-   * Handles all the menu messages from the gui
-   * @param message the message to process
-   */
-  private void handleMenuMessage(MenuMessage message) {
-    switch (message.menuType){
-
-      case LOGOUT:
-        // Send Logout to server
-        System.exit(0);
-        break;
-      case PLAYER_STATS:
-        break;
-      case ACTIVE_GAMES:
-        break;
-      case INVITES:
-        break;
-      case SELECT_GAME:
-        break;
-      case SEND_INVITE:
-        break;
-    }
-  }
 
   /**
    * Handles all the messages from NetManager(Not Implemented)

@@ -6,8 +6,10 @@ import java.net.Socket;
 
 import client.presenter.ChadPresenter;
 import client.presenter.network.messages.NetworkMessage;
+import java.util.Observable;
+import java.util.Observer;
 
-public class NetworkManager {
+public class NetworkManager implements Observer {
 	private Socket sock;
 	private Sender send;
 	private RecieveThread recv;
@@ -30,7 +32,7 @@ public class NetworkManager {
 	 * Starts RecieveThread
 	 */
 	public void startThread() {
-		recv.start();
+		recv.run();
 	}
 	
 	/**
@@ -50,5 +52,11 @@ public class NetworkManager {
 		presenter.handleNetMessage(msg);
 	}
 
-	
+
+	@Override
+	public void update(Observable o, Object arg) {
+    NetworkMessage message = (NetworkMessage) arg;
+    presenter.handleNetMessage(message);
+
+  }
 }

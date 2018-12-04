@@ -2,8 +2,6 @@ package client.presenter;
 
 import client.game.Game;
 import client.gui.ChadGameDriver;
-import client.gui.cl.CLDriver;
-import client.gui.swing.SwingChadDriver;
 import client.gui.swing.SwingController;
 import client.gui.swing.info.ActiveGameInfo;
 import client.presenter.controller.messages.GameRequestMessage;
@@ -24,8 +22,6 @@ import client.presenter.controller.util.HashPasswords;
 import client.presenter.network.NetworkManager;
 import client.presenter.network.messages.ActiveGameRequest;
 import client.presenter.network.messages.ActiveGameResponse;
-import client.presenter.network.messages.GameInfo;
-import client.presenter.network.messages.GameRequest;
 import client.presenter.network.messages.InboxRequest;
 import client.presenter.network.messages.InboxResponse;
 import client.presenter.network.messages.InviteRequest;
@@ -198,7 +194,7 @@ public class ChadPresenter implements ChadGameDriver{
         chadGame = new Game(currentGame.getGameBoard(), currentGame.getTurn());
         viewDriver.handleViewMessage(new MovePieceResponse(getCurrentPlayer(chadGame.getTurn()) + "'s turn.", chadGame.getBoard()));
         break;
-      case INVITE:
+      case NEW_INVITE:
         // Send an invite request to the net manager
         InviteMessage inviteMessage = (InviteMessage) message;
         InviteRequest inviteRequest = new InviteRequest(inviteMessage.sender, inviteMessage.recipient);
@@ -212,7 +208,7 @@ public class ChadPresenter implements ChadGameDriver{
    * @param message the message to process
    */
   public void handleNetMessage(NetworkMessage message){
-    System.out.println("handleNetMessage:: " + message.type);
+    System.out.println("Presenter::handleNetMessage:: " + message.type);
     switch (message.type){
       case LOGIN_RESPONSE:
         LoginResponse loginResponse = (LoginResponse) message;
@@ -308,6 +304,7 @@ public class ChadPresenter implements ChadGameDriver{
         }
         break;
     }
+
   }
 
   public void createAndShowGUI() { }
@@ -325,7 +322,6 @@ public class ChadPresenter implements ChadGameDriver{
     } catch (IOException e) { }
     if(userInterface.equals("cli")){
       // Instantiate CLI Controller
-      viewDriver = new CLDriver(this);
     } else if(userInterface.equals("gui")){
       // Instantiate GUI Controller
       viewDriver = new SwingController(this);

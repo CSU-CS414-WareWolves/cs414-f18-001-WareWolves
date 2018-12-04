@@ -3,6 +3,8 @@ package client.gui.swing.panels;
 import client.gui.swing.SwingGUIController;
 import client.gui.swing.panels.testcontrolers.TestGameMenuController;
 import client.presenter.controller.MenuMessageTypes;
+import client.presenter.controller.messages.InviteMessage;
+import client.presenter.controller.messages.InviteMessageResponse;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.network.messages.InboxResponse;
 import client.presenter.network.messages.NetworkMessage;
@@ -43,7 +45,7 @@ public class InvitesPanel extends UpdatableJTableInPanel {
     newInvite.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        controller.sendMessage(new MenuMessage(MenuMessageTypes.INVITES, new String[]{}));
+        controller.sendMessage(new InviteMessage(null,null));
       }
     });
     acceptInvite.addActionListener(new ActionListener() {
@@ -53,8 +55,7 @@ public class InvitesPanel extends UpdatableJTableInPanel {
         if (inviteId == -1) {
           return;
         }
-        controller.sendMessage(new MenuMessage(MenuMessageTypes.INVITES,
-            new String[] {String.valueOf(inviteId), String.valueOf(true)}));
+        controller.sendMessage(new InviteMessageResponse(inviteId, true));
       }
     });
     rejectInvite.addActionListener(new ActionListener() {
@@ -65,8 +66,7 @@ public class InvitesPanel extends UpdatableJTableInPanel {
         if (inviteId == -1) {
           return;
         }
-        controller.sendMessage(new MenuMessage(MenuMessageTypes.INVITES,
-            new String[] {String.valueOf(inviteId), String.valueOf(false)}));
+        controller.sendMessage(new InviteMessageResponse(inviteId, false));
       }
     });
     cancelInvite.addActionListener(new ActionListener() {

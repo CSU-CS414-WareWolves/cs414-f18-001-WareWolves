@@ -5,8 +5,10 @@ import java.io.IOException;
 import java.net.Socket;
 
 import client.presenter.network.messages.*;
+import java.util.Observable;
+import java.util.Observer;
 
-public class RecieveThread extends Thread{
+public class RecieveThread extends Observable implements Runnable{
 	/**
 	 * A Socket connected to the server
 	 */
@@ -18,7 +20,7 @@ public class RecieveThread extends Thread{
 	/**
 	 * NetworkManager in charge of the RecieveThread, used to pass recieved messages up.
 	 */
-	private NetworkManager mgmt;
+	private Observer mgmt;
 	
 	
 	/**
@@ -42,13 +44,27 @@ public class RecieveThread extends Thread{
 		int dataLen;
 		while(!Thread.currentThread().isInterrupted()) {
 			try {
-				dataLen = din.readInt();
-				byte[] bytes = new byte[dataLen];
-				din.readFully(bytes, 0, dataLen);
-				String msg = new String(bytes);
-				parseMessage(msg);
+        //System.out.println("RecieveThread:: Reading Message");
+        //System.out.println(sock.getRemoteSocketAddress().toString());
+
+        if(din.available() != 0){
+          System.out.println("Data InputStream: " + din.available());
+          byte[] bytes = new byte[10000];
+          din.read(bytes);
+          String msg = new String(bytes).trim();
+          System.out.println(msg);
+          parseMessage(msg);
+        }
+
+				//dataLen = din.read();
+				//byte[] bytes = new byte[dataLen];
+				//din.readFully(bytes, 0, dataLen);
+				//String msg = new String(bytes);
+				//System.out.println("RecieveThread:: Got Message");
+
 			} catch (IOException e) {
 				System.err.println(e.getMessage());
+        Thread.currentThread().interrupt();
 			}
 		}
 	}
@@ -61,20 +77,40 @@ public class RecieveThread extends Thread{
 		NET_MESSAGE_TYPE mt = NET_MESSAGE_TYPE.fromInt(Integer.parseInt(msg.split(":")[0]));
 		NetworkMessage message = null;
 		switch(mt) {
-			case LOGIN_RESPONSE: message = new LoginResponse(msg);
-			case GAME_INFO: message = new GameInfo(msg);
-			case MOVE: message = new Move(msg);
-			case ACTIVE_GAMES_RESPONSE: message = new ActiveGameResponse(msg);
-			case REGISTER_RESPONSE: new RegisterResponse(msg);
-			case INBOX_RESPONSE: message = new InboxResponse(msg);
-			case PROFILE_RESPONSE: message = new ProfileResponse(msg);
-			case PLAYERS: message = new Players(msg);
-			case UNREGISTER_RESPONSE: new UnregisterResponse(msg);
-			default: System.err.println("Could not parse message: "+msg);
+			case LOGIN_RESPONSE:
+			  message = new LoginResponse(msg);
+			  break;
+      case GAME_INFO:
+        message = new GameInfo(msg);
+        break;
+			case MOVE:
+			  message = new Move(msg);
+        break;
+			case ACTIVE_GAMES_RESPONSE:
+			  message = new ActiveGameResponse(msg);
+        break;
+			case REGISTER_RESPONSE:
+        message = new RegisterResponse(msg);
+        break;
+			case INBOX_RESPONSE:
+			  message = new InboxResponse(msg);
+        break;
+			case PROFILE_RESPONSE:
+			  message = new ProfileResponse(msg);
+        break;
+			case PLAYERS:
+			  message = new Players(msg);
+        break;
+			case UNREGISTER_RESPONSE:
+			  new UnregisterResponse(msg);
+        break;
+			default:
+			  System.err.println("Could not parse message: "+msg);
+        break;
 		}
 		if(message!=null)
-			mgmt.sendToPresenter(message);
+			mgmt.update(this, message);
 	}
-	
+
 	
 }

@@ -3,6 +3,7 @@ package client.gui.swing.panels.chadgame;
 import client.gui.ChadGameDriver;
 import client.gui.swing.SwingChadDriver;
 import client.presenter.controller.MenuMessageTypes;
+import client.presenter.controller.messages.LogoutMessage;
 import client.presenter.controller.messages.MenuMessage;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -134,7 +135,7 @@ public class GameJPanel extends JPanel implements ActionListener {
     if (QUIT_GAME.equals(e.getActionCommand())) {
       JOptionPane.showMessageDialog(this, "Quitting Game");
       // Simulate a menu message for demo
-      driver.handleViewMessage(new MenuMessage(MenuMessageTypes.LOGOUT, new String[] {}));
+      driver.handleViewMessage(new LogoutMessage());
     }
 
   }
