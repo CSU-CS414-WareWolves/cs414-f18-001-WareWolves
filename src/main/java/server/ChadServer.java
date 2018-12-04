@@ -89,7 +89,7 @@ public class ChadServer extends Thread{
 				}
 				byte[] msg = new byte[1000];
 				String message = new String(buff.get(msg).array()).trim();
-				System.out.println("Recieved: "+message);
+				System.out.println("Recieved from "+s.socket().getInetAddress().toString()+": "+message);
 				parseMessage(message, s);
 			}
 		} catch (CancelledKeyException | IOException e) {
@@ -136,6 +136,9 @@ public class ChadServer extends Thread{
 					System.out.println("Sent: "+response.getDataString());
 					if(response.success){
 						sessions.put(register.nickname, sock);
+						LoginResponse loginResponse = new LoginResponse(true, register.nickname);
+						sock.write(ByteBuffer.allocate(4).putInt(loginResponse.length));
+						sock.write(ByteBuffer.wrap(loginResponse.getDataString().getBytes()));
 						Players players = query.getPlayers();
 						System.out.println("Sent: "+players.getDataString());
 						sock.write(ByteBuffer.allocate(4).putInt(players.length));

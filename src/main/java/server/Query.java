@@ -320,7 +320,7 @@ public class Query {
 	 * @return The given nickname's inbox in an InboxResponse.
 	 */
 	public InboxResponse getInbox(String nickname) {
-		InboxResponse ret = new InboxResponse(new int[] {0}, new String[] {"-1"}, new String[] {"-1"},new String[] {"-1"});
+		InboxResponse ret = new InboxResponse(new int[] {-1}, new String[] {"-1"}, new String[] {"-1"},new String[] {"-1"});
 		try	{//Connect to DB 
 			Class.forName(driver); 
 			Connection conn = DriverManager.getConnection(theURL, user, pass);	
