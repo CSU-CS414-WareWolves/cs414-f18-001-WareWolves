@@ -192,18 +192,6 @@ public class SwingController extends JPanel implements ChadGameDriver {
 
   public static void main(String[] args) {
 
-    TestGameDriver testDriver = new TestGameDriver();
-
-    SwingController demoController = new SwingController(testDriver);
-    testDriver.setGui(demoController);
-
-    //Schedule a job for the event-dispatching thread:
-    //creating and showing this application's GUI.
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        demoController.createAndShowGUI();
-      }
-    });
   }
 
   /**
