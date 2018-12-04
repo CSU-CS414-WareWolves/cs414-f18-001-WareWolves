@@ -18,6 +18,7 @@ import client.presenter.controller.messages.MovePieceResponse;
 import client.presenter.controller.messages.ProfileMessage;
 import client.presenter.controller.messages.RegisterMessage;
 import client.presenter.controller.messages.RegisterResponseMessage;
+import client.presenter.controller.messages.ResignMessage;
 import client.presenter.controller.messages.UnregisterMessage;
 import client.presenter.controller.messages.UnregisterResponseMessage;
 import client.presenter.controller.messages.ViewMessage;
@@ -92,6 +93,13 @@ class ViewMessageFactoryTest {
 
     String[] info = {};
     testMessageEquals(expected, info, ViewMessageType.INBOX);
+  }
+
+  @Test
+  void createViewMessageResign() throws NoSuchAlgorithmException {
+    ResignMessage expected = new ResignMessage(TEST_GAME_ID);
+    String[] info = {"1337"};
+    testMessageEquals(expected, info, ViewMessageType.RESIGN);
   }
 
   @Test

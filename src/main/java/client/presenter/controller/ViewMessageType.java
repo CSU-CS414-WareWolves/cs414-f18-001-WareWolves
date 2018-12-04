@@ -22,5 +22,6 @@ public enum ViewMessageType {
   GAME_REQUEST,
   NEW_INVITE,
   INVITE_RESPONSE,
-  LOGOUT
+  LOGOUT,
+  RESIGN
 }

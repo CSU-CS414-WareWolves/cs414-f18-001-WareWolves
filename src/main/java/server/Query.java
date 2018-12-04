@@ -30,7 +30,7 @@ public class Query {
 	
 	/**
 	 * Check a login request and craft response to it.
-	 * @param msg Login message recieved from the server.
+	 * @param msg Login message received from the server.
 	 * @return LoginResponse message for the given Login request message.
 	 */
 	public LoginResponse loginCheck(Login msg) {
@@ -44,8 +44,9 @@ public class Query {
 					String query = "SELECT * FROM users where email = '"+ msg.email +"' AND hashedPass = '"+msg.passwordAttempt+"';";       
 					ResultSet rs = st.executeQuery(query);
 					try{//check if rs is empty
-						if(rs.first())
+						if(rs.first()){
 							ret = new LoginResponse(true, rs.getString("nickname"));
+						}
 					} finally { rs.close(); }
 				} finally { st.close(); }
 			} finally { conn.close(); }
@@ -302,8 +303,8 @@ public class Query {
 							black = rs.getString("recipient");
 						}
 					} finally { rs.close(); }
-					query = "INSERT INTO activeGames (whitePlayer, blackPlayer, board, turn, startDate, ended) VALUES"+
-							"('"+white+"', '"+black+"', '"+startingBoard+"', false, CURDATE(), false);";
+					query = "INSERT INTO activeGames (whitePlayer, blackPlayer, board, turn, startDate, ended, whiteSeeResults, blackSeeResults) VALUES"+
+							"('"+white+"', '"+black+"', '"+startingBoard+"', false, CURDATE(), false, false, false);";
 					st.executeUpdate(query);
 				} finally { st.close(); }
 			} finally { conn.close(); }
@@ -315,11 +316,11 @@ public class Query {
 	
 	/**
 	 * Fetches all invites without a response sent to or by the given player's nickname.
-	 * @param nickname Nickname of player's inbox to recieve
+	 * @param nickname Nickname of player's inbox to receive
 	 * @return The given nickname's inbox in an InboxResponse.
 	 */
 	public InboxResponse getInbox(String nickname) {
-		InboxResponse ret = new InboxResponse(new int[] {0}, new String[] {"-1"}, new String[] {"-1"},new String[] {"-1"});
+		InboxResponse ret = new InboxResponse(new int[] {-1}, new String[] {"-1"}, new String[] {"-1"},new String[] {"-1"});
 		try	{//Connect to DB 
 			Class.forName(driver); 
 			Connection conn = DriverManager.getConnection(theURL, user, pass);	
@@ -363,7 +364,12 @@ public class Query {
 	}
 	
 	
-	
+	/**
+	 * Method to handle move messages
+	 * @param msg The Move message
+	 * @param color the color of the player who made the move
+	 * @return The string of the nickname of the opponent of the player who made the move
+	 */
 	public String move(Move msg, boolean color) {
 		String ret="";
 		try	{//Connect to DB 
@@ -397,16 +403,22 @@ public class Query {
 						}
 					}
 					if(color) {
-						query = "SELET * FROM activeGames WHERE gameID = "+msg.gameID+";";
+						query = "UPDATE activeGames SET turn = false WHERE gameID = "+msg.gameID+";"; 
+						st.executeUpdate(query);
+						query = "SELECT * FROM activeGames WHERE gameID = "+msg.gameID+";";
 						ResultSet rs = st.executeQuery(query);
 						try{//Check if rs is empty
+							rs.first();
 							ret = rs.getString("whitePlayer");
 						} finally { rs.close(); }
 					}
 					else {
-						query = "SELET * FROM activeGames WHERE gameID = "+msg.gameID+";";
+						query = "UPDATE activeGames SET turn = true WHERE gameID = "+msg.gameID+";"; 
+						st.executeUpdate(query);
+						query = "SELECT * FROM activeGames WHERE gameID = "+msg.gameID+";";
 						ResultSet rs = st.executeQuery(query);
 						try{//Check if rs is empty
+							rs.first();
 							ret = rs.getString("blackPlayer");
 						} finally { rs.close(); }
 					}
@@ -421,7 +433,7 @@ public class Query {
 	
 	/**
 	 * Sets results as seen for the given game and color within the passed SeeResults message.
-	 * @param msg The SeeResuls message recieved by the server.
+	 * @param msg The SeeResuls message received by the server.
 	 */
 	public void setResults(SeeResults msg) {
 		try	{//Connect to DB 
@@ -617,6 +629,8 @@ public class Query {
 						while(rs.next())
 							nicknames.add(rs.getString("nickname"));
 						String[] names = new String[nicknames.size()];
+						for(int i=0;i<names.length;i++)
+							names[i] = nicknames.get(i);
 						ret = new Players(names);
 					} finally { rs.close(); }
 				} finally { st.close(); }
@@ -648,7 +662,7 @@ public class Query {
 			try{
 				Statement st = conn.createStatement();
 				try {//Check if username and hashedPass match
-					String query = "SELECT * FROM activeGames WHERE whitePlayer = '"+ nickname +"';";       
+					String query = "SELECT * FROM activeGames WHERE whiteSeeResults = false AND whitePlayer = '"+ nickname +"';";       
 					ResultSet rs = st.executeQuery(query);
 					try{//check if rs is empty
 						if(rs.first()) {
@@ -657,6 +671,7 @@ public class Query {
 							opponents.add(rs.getString("blackPlayer"));
 							startDates.add(rs.getString("startDate"));
 							turns.add(rs.getBoolean("turn"));
+							colors.add(false);
 							endeds.add(rs.getBoolean("ended"));
 							while(rs.next()) {
 								gameIDs.add(rs.getInt("gameID"));
@@ -669,7 +684,7 @@ public class Query {
 							}
 						}
 					} finally { rs.close(); }
-					query = "SELECT * FROM activeGames WHERE blackPlayer = '"+ nickname +"';";
+					query = "SELECT * FROM activeGames WHERE blackSeeResults = false AND blackPlayer = '"+ nickname +"';";
 					rs = st.executeQuery(query);
 					try{//check if rs is empty
 						if(rs.first()) {
@@ -678,6 +693,7 @@ public class Query {
 							opponents.add(rs.getString("whitePlayer"));
 							startDates.add(rs.getString("startDate"));
 							turns.add(rs.getBoolean("turn"));
+							colors.add(true);
 							endeds.add(rs.getBoolean("ended"));
 							while(rs.next()) {
 								gameIDs.add(rs.getInt("gameID"));
@@ -695,6 +711,9 @@ public class Query {
 		} catch (Exception e) {
 			System.err.printf("Exception: ");
 			System.err.println(e.getMessage());
+		}
+		if(gameIDs.size()==0) {
+			return ret;
 		}
 		int[] ids = new int[gameIDs.size()];
 		String[] board = new String[boards.size()];

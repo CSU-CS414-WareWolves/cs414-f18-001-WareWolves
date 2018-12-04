@@ -4,7 +4,10 @@ import client.gui.ChadGameDriver;
 import client.gui.swing.panels.LoginScreenPanel;
 import client.gui.swing.panels.MainMenuPanel;
 import client.gui.swing.panels.chadgame.GameJPanel;
+import client.gui.swing.panels.testcontrolers.TestGameDriver;
 import client.gui.swing.panels.testcontrolers.TestSwingController;
+import client.presenter.ChadPresenter;
+import client.presenter.controller.messages.ActiveGameMessage;
 import client.presenter.controller.messages.LoginResponseMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceResponse;
@@ -12,14 +15,20 @@ import client.presenter.controller.messages.RegisterResponseMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMovesResponse;
 import client.presenter.network.messages.NetworkMessage;
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.EventQueue;
 import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
-public class SwingController extends Frame implements ChadGameDriver {
+public class SwingController extends JPanel implements ChadGameDriver {
 
   private JPanel mainPanel;
   private MainMenuPanel menuPanel;
@@ -31,21 +40,24 @@ public class SwingController extends Frame implements ChadGameDriver {
   private CardLayout cardLayout;
   private boolean playingGame = false;
 
+
   public SwingController(ChadGameDriver controller) {
 
     this.controller = controller;
 
+    $$$setupUI$$$();
     cardLayout = (CardLayout) cardPanel.getLayout();
     cardLayout.show(cardPanel, "LoginScreen");
+    //cardLayout.show(cardPanel, "MenuScreen");
+    //cardLayout.show(cardPanel, "GameScreen");
   }
-
 
 
   @Override
   public void handleViewMessage(ViewMessage message) {
-    System.out.println("handleViewMessage:: " + message.messageType);
+    System.out.println("SwingController::handleViewMessage " + message.messageType);
 
-    switch (message.messageType){
+    switch (message.messageType) {
 
       case REGISTER:
         controller.handleViewMessage(message);
@@ -59,15 +71,12 @@ public class SwingController extends Frame implements ChadGameDriver {
       case SHOW_VALID_MOVES:
         controller.handleViewMessage(message);
         break;
-      case MENU:
-        handleMenuMessage((MenuMessage) message);
-        break;
       case MOVE_PIECE:
         controller.handleViewMessage(message);
         break;
       case REGISTER_RESPONSE:
         RegisterResponseMessage registerResponse = (RegisterResponseMessage) message;
-        if(registerResponse.success){
+        if (registerResponse.success) {
           menuPanel.setNickName(registerResponse.messages[0]);
           cardLayout.show(cardPanel, "MenuScreen");
         } else {
@@ -76,7 +85,7 @@ public class SwingController extends Frame implements ChadGameDriver {
         break;
       case LOGIN_RESPONSE:
         LoginResponseMessage loginResponse = (LoginResponseMessage) message;
-        if(loginResponse.success){
+        if (loginResponse.success) {
           menuPanel.setNickName(loginResponse.nickname);
           cardLayout.show(cardPanel, "MenuScreen");
         } else {
@@ -84,6 +93,7 @@ public class SwingController extends Frame implements ChadGameDriver {
         }
         break;
       case UNREGISTER_RESPONSE:
+        controller.handleViewMessage(message);
         break;
       case SHOW_VALID_MOVES_RESPONSE:
         ViewValidMovesResponse validMoves = (ViewValidMovesResponse) message;
@@ -92,8 +102,14 @@ public class SwingController extends Frame implements ChadGameDriver {
       case MENU_RESPONSE:
         break;
       case MOVE_PIECE_RESPONSE:
+        if (!playingGame) {
+          cardLayout.show(cardPanel, "GameScreen");
+          playingGame = true;
+        }
         MovePieceResponse moves = (MovePieceResponse) message;
+        gameJPanel.clearValidMoves();
         JOptionPane.showMessageDialog(gameJPanel, moves.message);
+        gameJPanel.setSetGameStatus(moves.message);
         gameJPanel.setBoardPieces(moves.gameBoard);
         break;
       case PROFILE:
@@ -103,50 +119,38 @@ public class SwingController extends Frame implements ChadGameDriver {
         controller.handleViewMessage(message);
         break;
       case INBOX:
+        controller.handleViewMessage(message);
         break;
       case GAME_REQUEST:
+        controller.handleViewMessage(message);
         break;
       case NEW_INVITE:
         controller.handleViewMessage(message);
         break;
-    }
-
-
-
-  }
-
-  private void handleMenuMessage(MenuMessage message) {
-
-    switch (message.menuType){
-
+      case INVITE_RESPONSE:
+        controller.handleViewMessage(message);
+        break;
       case LOGOUT:
-        cardLayout.show(cardPanel, "MenuScreen");
-        playingGame = false;
-        break;
-      case SELECT_GAME:
-        controller.handleViewMessage(message);
-        //gameJPanel.setVisible(true);
-        //this.setSize(gameJPanel.getSize());
-        //this.revalidate();
-        //this.repaint();
-        //this.pack();
-        cardLayout.show(cardPanel, "GameScreen");
-        playingGame = true;
-        break;
-      case SEND_INVITE:
-        controller.handleViewMessage(message);
+        if (playingGame) {
+          cardLayout.show(cardPanel, "MenuScreen");
+          controller.handleViewMessage(new ActiveGameMessage());
+          gameJPanel.setBoardPieces("");
+          playingGame = false;
+        }
         break;
       case RESIGN:
         controller.handleViewMessage(message);
         break;
     }
 
+
   }
+
 
   @Override
   public void handleNetMessage(NetworkMessage message) {
-    System.out.println("handleViewMessage:: " + message.type);
-    switch (message.type){
+    System.out.println("SwingController::handleViewMessage " + message.type);
+    switch (message.type) {
 
       case LOGIN_RESPONSE:
         break;
@@ -180,24 +184,15 @@ public class SwingController extends Frame implements ChadGameDriver {
   private void createUIComponents() {
     menuPanel = new MainMenuPanel(this);
     loginScreenPanel = new LoginScreenPanel(this);
-    gameJPanel =  new GameJPanel(this);
+    gameJPanel = new GameJPanel(this);
 
   }
-
 
 
   public static void main(String[] args) {
 
-    SwingController demoController = new SwingController(new TestSwingController());
-
-    //Schedule a job for the event-dispatching thread:
-    //creating and showing this application's GUI.
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        demoController.createAndShowGUI();
-      }
-    });
   }
+
   /**
    * Create the GUI and show it.  For thread safety, this method should be invoked from the
    * event-dispatching thread.
@@ -206,11 +201,10 @@ public class SwingController extends Frame implements ChadGameDriver {
     //Create and set up the window.
     JFrame frame = new JFrame("Login Panel Test");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
     //Create and set up the content pane.
-    SwingController demo = new SwingController(controller);
 
-
-    frame.add(demo.mainPanel);
+    frame.add(this.mainPanel);
 
     //Display the window.
     frame.pack();
@@ -218,5 +212,54 @@ public class SwingController extends Frame implements ChadGameDriver {
   }
 
 
+  /**
+   * Method generated by IntelliJ IDEA GUI Designer
+   * >>> IMPORTANT!! <<<
+   * DO NOT edit this method OR call it in your code!
+   *
+   * @noinspection ALL
+   */
+  private void $$$setupUI$$$() {
+    createUIComponents();
+    mainPanel = new JPanel();
+    mainPanel.setLayout(new BorderLayout(0, 0));
+    cardPanel = new JPanel();
+    cardPanel.setLayout(new CardLayout(0, 0));
+    mainPanel.add(cardPanel, BorderLayout.CENTER);
+    final JPanel panel1 = new JPanel();
+    panel1.setLayout(new GridBagLayout());
+    cardPanel.add(panel1, "LoginScreen");
+    GridBagConstraints gbc;
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    panel1.add(loginScreenPanel.$$$getRootComponent$$$(), gbc);
+    final JPanel spacer1 = new JPanel();
+    gbc = new GridBagConstraints();
+    gbc.gridx = 1;
+    gbc.gridy = 0;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    panel1.add(spacer1, gbc);
+    final JPanel spacer2 = new JPanel();
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 1;
+    gbc.fill = GridBagConstraints.VERTICAL;
+    panel1.add(spacer2, gbc);
+    final JPanel panel2 = new JPanel();
+    panel2.setLayout(new BorderLayout(0, 0));
+    cardPanel.add(panel2, "MenuScreen");
+    panel2.add(menuPanel.$$$getRootComponent$$$(), BorderLayout.CENTER);
+    final JPanel panel3 = new JPanel();
+    panel3.setLayout(new BorderLayout(0, 0));
+    cardPanel.add(panel3, "GameScreen");
+    panel3.add(gameJPanel, BorderLayout.CENTER);
+  }
 
+  /**
+   * @noinspection ALL
+   */
+  public JComponent $$$getRootComponent$$$() {
+    return mainPanel;
+  }
 }
