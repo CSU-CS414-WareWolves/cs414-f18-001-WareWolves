@@ -63,6 +63,11 @@ public class RecieveThread extends Thread{
 			} catch (IOException e) {
 				System.err.println(e.getMessage());
         Thread.currentThread().interrupt();
+				try {
+					sock.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 		}
 	}

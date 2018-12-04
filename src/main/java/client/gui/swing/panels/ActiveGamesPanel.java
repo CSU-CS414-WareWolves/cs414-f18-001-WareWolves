@@ -8,13 +8,19 @@ import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.NetworkMessage;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
@@ -39,7 +45,6 @@ public class ActiveGamesPanel extends UpdatableJTableInPanel {
   public ActiveGamesPanel(SwingGUIController controller) {
 
     this.controller = controller;
-
     resignGameButton.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {

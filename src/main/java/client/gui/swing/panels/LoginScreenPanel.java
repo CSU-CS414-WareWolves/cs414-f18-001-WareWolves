@@ -9,6 +9,7 @@ import client.presenter.controller.messages.ViewMessage;
 import client.presenter.network.messages.NetworkMessage;
 import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -42,11 +43,11 @@ public class LoginScreenPanel extends SwingGUIController {
 
     String messageInfo = "This is a default message!!! I should not be seen";
 
-    if(message instanceof LoginResponseMessage){
+    if (message instanceof LoginResponseMessage) {
       messageInfo = "The password or email address entered is invalid";
     }
 
-    if(message instanceof RegisterResponseMessage){
+    if (message instanceof RegisterResponseMessage) {
       RegisterResponseMessage registerResponse = (RegisterResponseMessage) message;
       messageInfo = registerResponse.messages[0];
     }
