@@ -157,6 +157,8 @@ public class GameJPanel extends JPanel implements ActionListener {
     gameBoard.setValidMoves(validMoves, true);
   }
 
+  public void clearValidMoves() { gameBoard.setAllValidMoves(false); }
+
   // For Testing
 
   public static void main(String[] args) {

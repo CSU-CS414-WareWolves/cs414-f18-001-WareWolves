@@ -1,6 +1,8 @@
 package client.presenter;
 
+import client.Point;
 import client.game.Game;
+import client.game.pieces.Piece;
 import client.gui.ChadGameDriver;
 import client.gui.swing.SwingController;
 import client.gui.swing.info.ActiveGameInfo;
@@ -45,6 +47,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
+import javax.swing.Timer;
 
 public class ChadPresenter implements ChadGameDriver{
 
@@ -71,6 +74,7 @@ public class ChadPresenter implements ChadGameDriver{
   private NetworkManager networkManager; // Initialize (Not Implemented)
 
   private ActiveGameInfo currentGame;
+
 
 
   /**
@@ -264,6 +268,14 @@ public class ChadPresenter implements ChadGameDriver{
             }
           } else {
             // Game is not over
+            Point moveFrom = new Point(move.move.substring(1, 3));
+            Point moveTo = new Point(move.move.substring(3));
+
+            MovePieceResponse boardBeforeMove = new MovePieceResponse(getCurrentPlayer(chadGame.getTurn()) + " moved.", chadGame.getBoard());
+            viewDriver.handleViewMessage(boardBeforeMove);
+            String opponentsMoves = chadGame.validMoves(moveFrom.toString());
+            viewDriver.handleViewMessage(new ViewValidMovesResponse(new String[] {opponentsMoves}));
+            chadGame.move(moveFrom.toString(), moveTo.toString());
             MovePieceResponse movePieceResponse = new MovePieceResponse(getCurrentPlayer(chadGame.getTurn()) + "'s turn.", chadGame.getBoard());
             viewDriver.handleViewMessage(movePieceResponse);
           }

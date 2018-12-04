@@ -26,6 +26,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 public class SwingController extends JPanel implements ChadGameDriver {
 
@@ -38,6 +39,8 @@ public class SwingController extends JPanel implements ChadGameDriver {
   private ChadGameDriver controller;
   private CardLayout cardLayout;
   private boolean playingGame = false;
+
+
 
   public SwingController(ChadGameDriver controller) {
 
@@ -105,7 +108,9 @@ public class SwingController extends JPanel implements ChadGameDriver {
           playingGame = true;
         }
         MovePieceResponse moves = (MovePieceResponse) message;
+        gameJPanel.clearValidMoves();
         JOptionPane.showMessageDialog(gameJPanel, moves.message);
+        gameJPanel.setSetGameStatus(moves.message);
         gameJPanel.setBoardPieces(moves.gameBoard);
         break;
       case PROFILE:

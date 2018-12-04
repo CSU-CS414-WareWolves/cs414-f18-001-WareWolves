@@ -14,6 +14,7 @@ import java.util.HashSet;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionListener {
 
@@ -324,7 +325,7 @@ public class ChadGameBoard extends JPanel implements MouseListener, MouseMotionL
    * Sets all the valid move Jlabels to visible or not visible
    * @param state visible or not visible
    */
-  private void setAllValidMoves(boolean state) {
+  public void setAllValidMoves(boolean state) {
     for(Component gameSquare: chessBoard.getComponents()){
       setValidMove(gameSquare, state);
     }
