@@ -125,7 +125,7 @@ public class CLDriver implements ChadGameDriver {
 //        controller.handleViewMessage(pm);
         break;
       case PROFILE_RESPONSE:
-        //TODO: ask what this data is
+        //high TODO: ask what this data is
         ProfileResponse pr = (ProfileResponse) message;
 //        menu.showStats(pr.whitePlayers, pr.blackPlayers, pr.results, pr.startDates, pr.endDates);
         break;
@@ -191,7 +191,7 @@ public class CLDriver implements ChadGameDriver {
         }
         break;
       case REGISTER_RESPONSE:
-        //TODO: ask about this message also
+        //high TODO: ask about this message also
         RegisterResponseMessage rrm = (RegisterResponseMessage) message;
         if(rrm.success){
           System.out.println(rrm.messages);
@@ -205,7 +205,7 @@ public class CLDriver implements ChadGameDriver {
         break;
       case SHOW_VALID_MOVES:
         //Give presenter valid moves
-        //TODO: valid move parser
+        //low TODO: valid move parser
         chadGame.validMoves(((ViewValidMoves)message).location.toString());
         break;
       case SHOW_VALID_MOVES_RESPONSE:
@@ -306,10 +306,9 @@ public class CLDriver implements ChadGameDriver {
           return handleUnregister();
         case 6:
           //Logout
-          System.out.println("[!] Hope to see you again soon!");
-          //TODO: return new, updated Logout message
-//          return new LogoutMessage();
-          break;
+          System.out.println("[!] Hope to see you again soon, " + nickname + "!");
+          //high TODO: return new, updated Logout message
+          return new LogoutMessage();
         default:
           clearScreen();
           warningValidOption();
@@ -375,13 +374,13 @@ public class CLDriver implements ChadGameDriver {
         return handleMenu();
       }
       else if(from.toUpperCase().equals("RESIGN")) {
-        //TODO: return new, updated Logout message
-//        return new ResignMessage();
+        //high TODO: return new, updated Resign message
         return handleMenu();
+//        return new ResignMessage();
       }
 
       //Display valid moves for selected piece
-      //TODO: helper to convert validMoves String into String[]
+      //low TODO: helper to convert validMoves String into String[]
       String[] moves = {chadGame.validMoves(from)};
       game.showValidMoves(moves);
 
@@ -421,7 +420,7 @@ public class CLDriver implements ChadGameDriver {
 
     info[0] = Integer.toString(ids[option]);
     info[1] = senders[option];
-    //TODO: return new Accept_Invite message
+    //high TODO: return new Accept_Invite message
     return new MenuMessage(MenuMessageTypes.SELECT_GAME, info);
   }
 
