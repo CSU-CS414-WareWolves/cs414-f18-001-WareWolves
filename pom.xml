@@ -34,18 +34,6 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifest>
-              <addClasspath>true</addClasspath>
-              <mainClass>server.ChadServer</mainClass>
-            </manifest>
-          </archive>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.21.0</version>
         <dependencies>
@@ -68,17 +56,24 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>client.presenter.ai.AiDriver</mainClass>
+              <mainClass>client.presenter.ChadPresenter</mainClass>
             </manifest>
           </archive>
         </configuration>
       </plugin>
-
     </plugins>
 
   </build>
 
   <dependencies>
+
+
+    <dependency>
+      <groupId>com.intellij</groupId>
+      <artifactId>forms_rt</artifactId>
+      <version>7.0.3</version>
+    </dependency>
+
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
