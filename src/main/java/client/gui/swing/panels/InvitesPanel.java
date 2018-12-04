@@ -8,12 +8,16 @@ import client.presenter.controller.messages.InviteMessageResponse;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.network.messages.InboxResponse;
 import client.presenter.network.messages.NetworkMessage;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -45,7 +49,7 @@ public class InvitesPanel extends UpdatableJTableInPanel {
     newInvite.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-        controller.sendMessage(new InviteMessage(null,null));
+        controller.sendMessage(new InviteMessage(null, null));
       }
     });
     acceptInvite.addActionListener(new ActionListener() {
@@ -80,16 +84,13 @@ public class InvitesPanel extends UpdatableJTableInPanel {
         int dialogButton = JOptionPane.YES_NO_OPTION;
         int dialogResult = JOptionPane
             .showConfirmDialog(mainPanel, "Are you sure you want to cancel your invite to "
-                + sentTableModel.getValueAt(
-                    sentTable.convertRowIndexToModel(sentTable.getSelectedRow()),1)
+                    + sentTableModel.getValueAt(
+                sentTable.convertRowIndexToModel(sentTable.getSelectedRow()), 1)
                 , "Warning", dialogButton);
         if (dialogResult == JOptionPane.YES_OPTION) {
           controller.sendMessage(new MenuMessage(MenuMessageTypes.INVITES,
-              new String[] {String.valueOf(inviteId), String.valueOf(false)}));
+              new String[]{String.valueOf(inviteId), String.valueOf(false)}));
         }
-
-
-
 
 
       }
@@ -112,11 +113,11 @@ public class InvitesPanel extends UpdatableJTableInPanel {
 
     for (int i = 0; i < inboxMessage.inviteIDs.length; i++) {
 
-      if(inboxMessage.senders[i].equals(nickname)){
-        sentTableModel.addRow(new Object[] {inboxMessage.inviteIDs[i],
+      if (inboxMessage.senders[i].equals(nickname)) {
+        sentTableModel.addRow(new Object[]{inboxMessage.inviteIDs[i],
             inboxMessage.recipients[i], inboxMessage.sendDates[i]});
       } else {
-        receivedTableModel.addRow(new Object[] {inboxMessage.inviteIDs[i],
+        receivedTableModel.addRow(new Object[]{inboxMessage.inviteIDs[i],
             inboxMessage.senders[i], inboxMessage.sendDates[i]});
       }
     }
@@ -125,7 +126,6 @@ public class InvitesPanel extends UpdatableJTableInPanel {
   }
 
   private void createUIComponents() {
-
 
     receivedTableModel = new DefaultTableModel(new Object[][]{}, receivedColumns);
     receivedTable = new JTable(receivedTableModel) {
@@ -158,7 +158,6 @@ public class InvitesPanel extends UpdatableJTableInPanel {
     columnControl.removeColumn(columnControl.getColumn(0));
 
   }
-
 
 
   public static void main(String[] args) {
@@ -197,5 +196,6 @@ public class InvitesPanel extends UpdatableJTableInPanel {
   public void setNickname(String nickname) {
     this.nickname = nickname;
   }
+
 }
 

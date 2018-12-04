@@ -44,8 +44,9 @@ public class Query {
 					String query = "SELECT * FROM users where email = '"+ msg.email +"' AND hashedPass = '"+msg.passwordAttempt+"';";       
 					ResultSet rs = st.executeQuery(query);
 					try{//check if rs is empty
-						if(rs.first())
+						if(rs.first()){
 							ret = new LoginResponse(true, rs.getString("nickname"));
+						}
 					} finally { rs.close(); }
 				} finally { st.close(); }
 			} finally { conn.close(); }
@@ -617,6 +618,8 @@ public class Query {
 						while(rs.next())
 							nicknames.add(rs.getString("nickname"));
 						String[] names = new String[nicknames.size()];
+						for(int i=0;i<names.length;i++)
+							names[i] = nicknames.get(i);
 						ret = new Players(names);
 					} finally { rs.close(); }
 				} finally { st.close(); }
@@ -729,5 +732,6 @@ public class Query {
 			System.err.println(e.getMessage());
 		}
 	}
+	
 	
 }

@@ -2,12 +2,12 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="client.gui.swing.SwingController">
   <grid id="27dc6" binding="mainPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
-      <xy x="20" y="20" width="725" height="400"/>
+      <xy x="20" y="20" width="744" height="400"/>
     </constraints>
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="b9dd1" binding="cardPanel" layout-manager="CardLayout" hgap="0" vgap="0">
+      <grid id="b9dd1" binding="cardPanel" layout-manager="CardLayout" hgap="0" vgap="0" show="5b386">
         <constraints border-constraint="Center"/>
         <properties/>
         <border type="none"/>

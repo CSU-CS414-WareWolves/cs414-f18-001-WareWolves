@@ -10,9 +10,14 @@ import client.presenter.controller.messages.ProfileMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.network.messages.NetworkMessage;
 import client.presenter.network.messages.Players;
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -57,7 +62,7 @@ public class MainMenuPanel extends SwingGUIController {
   @Override
   public void sendMessage(ViewMessage message) {
 
-    switch (message.messageType){
+    switch (message.messageType) {
       case PROFILE:
         ProfileMessage profileMessage = (ProfileMessage) message;
         controller.handleViewMessage(message);
@@ -81,7 +86,7 @@ public class MainMenuPanel extends SwingGUIController {
               + menuMessage.information[2]);
           break;
         case INVITES:
-          if(menuMessage.information.length == 0){
+          if (menuMessage.information.length == 0) {
             String player = (String) JOptionPane.showInputDialog(
                 this,
                 "Select player to invite",
@@ -91,7 +96,8 @@ public class MainMenuPanel extends SwingGUIController {
                 playersList,
                 playersList[0]);
             if ((player != null) && (player.length() > 0)) {
-              controller.handleViewMessage(new MenuMessage(MenuMessageTypes.SEND_INVITE, new String[] {nickName, player}));
+              controller.handleViewMessage(
+                  new MenuMessage(MenuMessageTypes.SEND_INVITE, new String[]{nickName, player}));
               System.out.println("Send Invite to: " + player);
             }
           } else {
@@ -101,9 +107,6 @@ public class MainMenuPanel extends SwingGUIController {
           }
       }
 
-    } else {
-      throw new IllegalArgumentException("ActiveGame:: Did not sent a menu message - "
-          + message.messageType);
     }
 
   }
@@ -111,7 +114,7 @@ public class MainMenuPanel extends SwingGUIController {
   @Override
   public void receiveMessage(ViewMessage message) {
 
-    switch (message.messageType){
+    switch (message.messageType) {
       case MENU:
         break;
       case REGISTER_RESPONSE:
@@ -167,7 +170,8 @@ public class MainMenuPanel extends SwingGUIController {
         break;
       case "viewInvites":
         cardLayout.show(displayPanel, "Invites");
-        controller.handleViewMessage(new MenuMessage(MenuMessageTypes.INVITES, new String[] {nickName}));
+        controller
+            .handleViewMessage(new MenuMessage(MenuMessageTypes.INVITES, new String[]{nickName}));
         break;
       default:
         System.out.println(e.getActionCommand());
@@ -210,4 +214,5 @@ public class MainMenuPanel extends SwingGUIController {
     this.nickName = nickName;
     invitesPanel.setNickname(nickName);
   }
+
 }
