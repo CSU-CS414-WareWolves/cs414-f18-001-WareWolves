@@ -30,7 +30,7 @@ public class Query {
 	
 	/**
 	 * Check a login request and craft response to it.
-	 * @param msg Login message recieved from the server.
+	 * @param msg Login message received from the server.
 	 * @return LoginResponse message for the given Login request message.
 	 */
 	public LoginResponse loginCheck(Login msg) {
@@ -316,11 +316,11 @@ public class Query {
 	
 	/**
 	 * Fetches all invites without a response sent to or by the given player's nickname.
-	 * @param nickname Nickname of player's inbox to recieve
+	 * @param nickname Nickname of player's inbox to receive
 	 * @return The given nickname's inbox in an InboxResponse.
 	 */
 	public InboxResponse getInbox(String nickname) {
-		InboxResponse ret = new InboxResponse(new int[] {0}, new String[] {"-1"}, new String[] {"-1"},new String[] {"-1"});
+		InboxResponse ret = new InboxResponse(new int[] {-1}, new String[] {"-1"}, new String[] {"-1"},new String[] {"-1"});
 		try	{//Connect to DB 
 			Class.forName(driver); 
 			Connection conn = DriverManager.getConnection(theURL, user, pass);	
@@ -364,7 +364,12 @@ public class Query {
 	}
 	
 	
-	
+	/**
+	 * Method to handle move messages
+	 * @param msg The Move message
+	 * @param color the color of the player who made the move
+	 * @return The string of the nickname of the opponent of the player who made the move
+	 */
 	public String move(Move msg, boolean color) {
 		String ret="";
 		try	{//Connect to DB 
@@ -428,7 +433,7 @@ public class Query {
 	
 	/**
 	 * Sets results as seen for the given game and color within the passed SeeResults message.
-	 * @param msg The SeeResuls message recieved by the server.
+	 * @param msg The SeeResuls message received by the server.
 	 */
 	public void setResults(SeeResults msg) {
 		try	{//Connect to DB 

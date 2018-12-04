@@ -23,7 +23,14 @@ public class ChadServer extends Thread{
 	 * Selector for handling keys
 	 */
 	private Selector select;
+	/**
+	 * Query object for mysql database interaction
+	 */
 	private Query query;
+	/**
+	 * Map of active players
+	 * Key=Player nickname, Value=SocketChannel of player's session
+	 */
 	private HashMap<String, SocketChannel> sessions;
 	
 	/**
@@ -89,7 +96,7 @@ public class ChadServer extends Thread{
 				}
 				byte[] msg = new byte[1000];
 				String message = new String(buff.get(msg).array()).trim();
-				System.out.println("Recieved: "+message);
+				System.out.println("Recieved from "+s.socket().getInetAddress().toString()+": "+message);
 				parseMessage(message, s);
 			}
 		} catch (CancelledKeyException | IOException e) {
@@ -136,6 +143,10 @@ public class ChadServer extends Thread{
 					System.out.println("Sent: "+response.getDataString());
 					if(response.success){
 						sessions.put(register.nickname, sock);
+						LoginResponse loginResponse = new LoginResponse(true, register.nickname);
+						sock.write(ByteBuffer.allocate(4).putInt(loginResponse.length));
+						sock.write(ByteBuffer.wrap(loginResponse.getDataString().getBytes()));
+						System.out.println("Sent: "+loginResponse.getDataString());
 						Players players = query.getPlayers();
 						System.out.println("Sent: "+players.getDataString());
 						sock.write(ByteBuffer.allocate(4).putInt(players.length));
@@ -233,7 +244,10 @@ public class ChadServer extends Thread{
 		channel.register(select, SelectionKey.OP_READ);
 	}
 	
-	
+	/**
+	 * Main method for server. Called to start Chad Server
+	 * @param args arg[0] should be the port to start the server on
+	 */
 	public static void main(String[] args) {
 		int port = Integer.parseInt(args[0]);
 		ChadServer server = new ChadServer(port);
