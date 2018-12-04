@@ -32,6 +32,7 @@ import client.presenter.network.messages.InviteRequest;
 import client.presenter.network.messages.InviteResponse;
 import client.presenter.network.messages.Login;
 import client.presenter.network.messages.LoginResponse;
+import client.presenter.network.messages.Logout;
 import client.presenter.network.messages.Move;
 import client.presenter.network.messages.NetworkMessage;
 import client.presenter.network.messages.Players;
@@ -134,6 +135,8 @@ public class ChadPresenter implements ChadGameDriver{
         // Tell GUI to what moves to show
         viewDriver.handleViewMessage(new ViewValidMovesResponse(new String [] {validMoves}));
         break;
+      case MENU:
+        break;
       case MOVE_PIECE:
         MovePieceMessage moves = (MovePieceMessage) message;
         boolean draw = false;
@@ -220,6 +223,10 @@ public class ChadPresenter implements ChadGameDriver{
         networkManager.sendMessage(new InviteResponse(inviteMessageResponse.inviteID, inviteMessageResponse.response));
         networkManager.sendMessage(new InboxRequest(playerNickname));
        break;
+      case LOGOUT:
+        networkManager.sendMessage(new Logout(playerNickname));
+        playerNickname = null;
+        break;
       case RESIGN:
         // Send a resign request to the net manager
         ResignMessage resignMessage = (ResignMessage) message;
