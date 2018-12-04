@@ -364,7 +364,12 @@ public class Query {
 	}
 	
 	
-	
+	/**
+	 * Method to handle move messages
+	 * @param msg The Move message
+	 * @param color the color of the player who made the move
+	 * @return The string of the nickname of the opponent of the player who made the move
+	 */
 	public String move(Move msg, boolean color) {
 		String ret="";
 		try	{//Connect to DB 

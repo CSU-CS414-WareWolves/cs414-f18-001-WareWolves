@@ -23,7 +23,14 @@ public class ChadServer extends Thread{
 	 * Selector for handling keys
 	 */
 	private Selector select;
+	/**
+	 * Query object for mysql database interaction
+	 */
 	private Query query;
+	/**
+	 * Map of active players
+	 * Key=Player nickname, Value=SocketChannel of player's session
+	 */
 	private HashMap<String, SocketChannel> sessions;
 	
 	/**
@@ -139,6 +146,7 @@ public class ChadServer extends Thread{
 						LoginResponse loginResponse = new LoginResponse(true, register.nickname);
 						sock.write(ByteBuffer.allocate(4).putInt(loginResponse.length));
 						sock.write(ByteBuffer.wrap(loginResponse.getDataString().getBytes()));
+						System.out.println("Sent: "+loginResponse.getDataString());
 						Players players = query.getPlayers();
 						System.out.println("Sent: "+players.getDataString());
 						sock.write(ByteBuffer.allocate(4).putInt(players.length));
