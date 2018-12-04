@@ -70,7 +70,7 @@ public class PlayerStatsPanel extends UpdatableJTableInPanel {
     // Reset current data
     playerStatsModel.setNumRows(0);
     if(profileResponse.whitePlayers[0].equals("-1")){
-
+      playerStats.setText(playerNickName + " has not played any games.");
       return;
     }
     int playerWins = 0;

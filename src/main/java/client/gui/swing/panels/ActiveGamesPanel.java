@@ -5,7 +5,9 @@ import client.gui.swing.SwingGUIController;
 import client.gui.swing.info.ActiveGameInfo;
 import client.gui.swing.panels.testcontrolers.TestGameMenuController;
 import client.presenter.controller.MenuMessageTypes;
+import client.presenter.controller.messages.GameRequestMessage;
 import client.presenter.controller.messages.MenuMessage;
+import client.presenter.controller.messages.ResignMessage;
 import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.NetworkMessage;
 import java.awt.BorderLayout;
@@ -60,7 +62,7 @@ public class ActiveGamesPanel extends UpdatableJTableInPanel {
                 + gameInfo.getOpponent(), "Warning", dialogButton);
         if (dialogResult == JOptionPane.YES_OPTION) {
           controller
-              .sendMessage(new MenuMessage(MenuMessageTypes.RESIGN, gameInfo.getInfoArray()));
+              .sendMessage(new ResignMessage(gameIndex));
         }
       }
     });
@@ -70,8 +72,7 @@ public class ActiveGamesPanel extends UpdatableJTableInPanel {
         int gameIndex = getHiddenID(activeGamesTable);
         if (gameIndex != -1) {
           ActiveGameInfo gameInfo = activeGames.get(gameIndex);
-          controller
-              .sendMessage(new MenuMessage(MenuMessageTypes.SELECT_GAME, gameInfo.getInfoArray()));
+          controller.sendMessage(new GameRequestMessage(gameInfo.getInfoArray()));
         }
       }
     });
