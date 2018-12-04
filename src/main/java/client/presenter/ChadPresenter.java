@@ -1,6 +1,8 @@
 package client.presenter;
 
+import client.Point;
 import client.game.Game;
+import client.game.pieces.Piece;
 import client.gui.ChadGameDriver;
 import client.gui.cl.CLDriver;
 import client.gui.swing.SwingController;
@@ -39,12 +41,14 @@ import client.presenter.network.messages.ProfileResponse;
 import client.presenter.network.messages.Register;
 import client.presenter.network.messages.RegisterResponse;
 import client.presenter.network.messages.Resign;
+import client.presenter.network.messages.SeeResults;
 import client.presenter.network.messages.Unregister;
 import client.presenter.network.messages.UnregisterResponse;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.NoSuchAlgorithmException;
+import javax.swing.Timer;
 
 public class ChadPresenter implements ChadGameDriver{
 
@@ -71,6 +75,7 @@ public class ChadPresenter implements ChadGameDriver{
   private NetworkManager networkManager; // Initialize (Not Implemented)
 
   private ActiveGameInfo currentGame;
+
 
 
   /**
@@ -167,7 +172,7 @@ public class ChadPresenter implements ChadGameDriver{
            String board = chadGame.getBoard();
            char piece = board.charAt(index - 1);
            String moveString = piece + moves.fromLocation.toString() + moves.toLocation.toString();
-           Move move = new Move(gameID, moveString, chadGame.getBoard(), ending, draw);
+           Move move = new Move(currentGame.getGameID(), moveString, chadGame.getBoard(), ending, draw);
            networkManager.sendMessage(move);
       } else {
           // Send a move piece response message with an error
@@ -198,6 +203,11 @@ public class ChadPresenter implements ChadGameDriver{
         currentGame = new ActiveGameInfo(gameRequestMessage.gameInfo);
         chadGame = new Game(currentGame.getGameBoard(), currentGame.getTurn());
         viewDriver.handleViewMessage(new MovePieceResponse(getCurrentPlayer(chadGame.getTurn()) + "'s turn.", chadGame.getBoard()));
+
+        if(currentGame.getEnded()){
+          networkManager.sendMessage(new SeeResults(currentGame.getGameID(), currentGame.getColor()));
+        }
+
         break;
       case NEW_INVITE:
         // Send an invite request to the net manager
@@ -210,13 +220,13 @@ public class ChadPresenter implements ChadGameDriver{
         InviteMessageResponse inviteMessageResponse = (InviteMessageResponse) message;
         networkManager.sendMessage(new InviteResponse(inviteMessageResponse.inviteID, inviteMessageResponse.response));
         networkManager.sendMessage(new InboxRequest(playerNickname));
-
        break;
       case RESIGN:
         // Send a resign request to the net manager
         ResignMessage resignMessage = (ResignMessage) message;
         Resign resign = new Resign(resignMessage.gameID, playerNickname);
         networkManager.sendMessage(resign);
+        networkManager.sendMessage(new ActiveGameRequest(playerNickname));
         break;
     }
   }
@@ -259,6 +269,14 @@ public class ChadPresenter implements ChadGameDriver{
             }
           } else {
             // Game is not over
+            Point moveFrom = new Point(move.move.substring(1, 3));
+            Point moveTo = new Point(move.move.substring(3));
+
+            MovePieceResponse boardBeforeMove = new MovePieceResponse(getCurrentPlayer(chadGame.getTurn()) + " moved.", chadGame.getBoard());
+            viewDriver.handleViewMessage(boardBeforeMove);
+            String opponentsMoves = chadGame.validMoves(moveFrom.toString());
+            viewDriver.handleViewMessage(new ViewValidMovesResponse(new String[] {opponentsMoves}));
+            chadGame.move(moveFrom.toString(), moveTo.toString());
             MovePieceResponse movePieceResponse = new MovePieceResponse(getCurrentPlayer(chadGame.getTurn()) + "'s turn.", chadGame.getBoard());
             viewDriver.handleViewMessage(movePieceResponse);
           }

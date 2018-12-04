@@ -23,7 +23,14 @@ public class ChadServer extends Thread{
 	 * Selector for handling keys
 	 */
 	private Selector select;
+	/**
+	 * Query object for mysql database interaction
+	 */
 	private Query query;
+	/**
+	 * Map of active players
+	 * Key=Player nickname, Value=SocketChannel of player's session
+	 */
 	private HashMap<String, SocketChannel> sessions;
 	
 	/**
@@ -83,21 +90,29 @@ public class ChadServer extends Thread{
 				buff.clear();
 				SocketChannel s = (SocketChannel)key.channel();
 				if(s.read(buff) == -1){
+					s.close();
+					sessions.values().remove(s);
 					return;
 				}
 				byte[] msg = new byte[1000];
 				String message = new String(buff.get(msg).array()).trim();
-				System.out.println(message);
+				System.out.println("Recieved from "+s.socket().getInetAddress().toString()+": "+message);
 				parseMessage(message, s);
 			}
-		} catch (CancelledKeyException e) {
+		} catch (CancelledKeyException | IOException e) {
 			// If key gets canceled it means the client has disconnected
+			key.channel().close();
+			sessions.values().remove((SocketChannel)key.channel());
 			System.err.println("A client has disconnected");
 		}
 	}
 	
-	//TODO: notify of resignation?
-	
+
+	/**
+	 * Primary message handler
+	 * @param msg The data string of the NetworkMessage received from the client
+	 * @param sock The socket channel of the client who sent a message
+	 */
 	private void parseMessage(String msg, SocketChannel sock) {
 		NET_MESSAGE_TYPE mt = NET_MESSAGE_TYPE.fromInt(Integer.parseInt(msg.split(":")[0]));
 		switch(mt) {
@@ -105,11 +120,11 @@ public class ChadServer extends Thread{
 				LoginResponse response = query.loginCheck(new Login(msg));
 				//sock.write(ByteBuffer.allocate(4).putInt(response.length));
 				sock.write(ByteBuffer.wrap(response.getDataString().getBytes()));
-				System.out.println(response.getDataString());
+				System.out.println("Sent: "+response.getDataString());
 				if(response.success) {
 					sessions.put(response.nickname, sock);
 					Players players = query.getPlayers();
-					System.out.println(players.getDataString());
+					System.out.println("Sent: "+players.getDataString());
 					sock.write(ByteBuffer.allocate(4).putInt(players.length));
 					sock.write(ByteBuffer.wrap(players.getDataString().getBytes()));
 				}
@@ -125,9 +140,15 @@ public class ChadServer extends Thread{
 					RegisterResponse response = query.register(register);
 					sock.write(ByteBuffer.allocate(4).putInt(response.length));
 					sock.write(ByteBuffer.wrap(response.getDataString().getBytes()));
+					System.out.println("Sent: "+response.getDataString());
 					if(response.success){
 						sessions.put(register.nickname, sock);
+						LoginResponse loginResponse = new LoginResponse(true, register.nickname);
+						sock.write(ByteBuffer.allocate(4).putInt(loginResponse.length));
+						sock.write(ByteBuffer.wrap(loginResponse.getDataString().getBytes()));
+						System.out.println("Sent: "+loginResponse.getDataString());
 						Players players = query.getPlayers();
+						System.out.println("Sent: "+players.getDataString());
 						sock.write(ByteBuffer.allocate(4).putInt(players.length));
 						sock.write(ByteBuffer.wrap(players.getDataString().getBytes()));	
 					}
@@ -140,6 +161,7 @@ public class ChadServer extends Thread{
 				UnregisterResponse response = query.unregister(new Unregister(msg));
 				sock.write(ByteBuffer.allocate(4).putInt(response.length));
 				sock.write(ByteBuffer.wrap(response.getDataString().getBytes()));
+				System.out.println("Sent: "+response.getDataString());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -148,6 +170,7 @@ public class ChadServer extends Thread{
 				GameInfo response = query.getGame(new GameRequest(msg).gameID);
 				sock.write(ByteBuffer.allocate(4).putInt(response.length));
 				sock.write(ByteBuffer.wrap(response.getDataString().getBytes()));
+				System.out.println("Sent: "+response.getDataString());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -160,6 +183,7 @@ public class ChadServer extends Thread{
 					try {
 						sessions.get(opponent).write(ByteBuffer.allocate(4).putInt(move.length));
 						sessions.get(opponent).write(ByteBuffer.wrap(move.getDataString().getBytes()));
+						System.out.println("Sent to "+opponent+":"+move.getDataString());
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -167,9 +191,10 @@ public class ChadServer extends Thread{
 			}
 			break;
 			case ACTIVE_GAMES_REQUEST: try {
-				ActiveGameResponse response = query.getActiveGames(new ActiveGameRequest(msg).nickname);
+				ActiveGameResponse response = query.getActiveGames(new ActiveGameRequest(msg, 0).nickname);
 				sock.write(ByteBuffer.allocate(4).putInt(response.length));
 				sock.write(ByteBuffer.wrap(response.getDataString().getBytes()));
+				System.out.println("Sent: "+response.getDataString());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -184,6 +209,7 @@ public class ChadServer extends Thread{
 				InboxResponse response = query.getInbox(new InboxRequest(msg, 0).nickname);
 				sock.write(ByteBuffer.allocate(4).putInt(response.length));
 				sock.write(ByteBuffer.wrap(response.getDataString().getBytes()));
+				System.out.println("Sent: "+response.getDataString());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -192,6 +218,7 @@ public class ChadServer extends Thread{
 				ProfileResponse response = query.getProfile(new ProfileRequest(msg, 0).nickname);
 				sock.write(ByteBuffer.allocate(4).putInt(response.length));
 				sock.write(ByteBuffer.wrap(response.getDataString().getBytes()));
+				System.out.println("Sent: "+response.getDataString());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -217,7 +244,10 @@ public class ChadServer extends Thread{
 		channel.register(select, SelectionKey.OP_READ);
 	}
 	
-	
+	/**
+	 * Main method for server. Called to start Chad Server
+	 * @param args arg[0] should be the port to start the server on
+	 */
 	public static void main(String[] args) {
 		int port = Integer.parseInt(args[0]);
 		ChadServer server = new ChadServer(port);

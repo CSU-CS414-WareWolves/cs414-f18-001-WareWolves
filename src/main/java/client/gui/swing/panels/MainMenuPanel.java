@@ -5,6 +5,7 @@ import client.gui.swing.SwingGUIController;
 import client.gui.swing.panels.testcontrolers.TestSwingController;
 import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.ActiveGameMessage;
+import client.presenter.controller.messages.InboxMessage;
 import client.presenter.controller.messages.InviteMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.ProfileMessage;
@@ -16,6 +17,9 @@ import java.awt.CardLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -39,13 +43,14 @@ public class MainMenuPanel extends SwingGUIController {
 
   private ChadGameDriver controller;
 
-  private String[] playersList;
+  private ArrayList<String> playersList = new ArrayList<>();
   private String nickName;
 
   public MainMenuPanel(ChadGameDriver controller) {
 
     this.controller = controller;
 
+    $$$setupUI$$$();
     cardLayout = (CardLayout) displayPanel.getLayout();
     cardLayout.show(displayPanel, "Empty");
 
@@ -70,14 +75,16 @@ public class MainMenuPanel extends SwingGUIController {
         System.out.println("View Stats: " + profileMessage.nickname);
         break;
       case NEW_INVITE:
+        ArrayList<String> removeSelf = (ArrayList<String>) playersList.clone();
+        removeSelf.remove(nickName);
         String player = (String) JOptionPane.showInputDialog(
             this,
             "Select player to invite",
             "Send New Invite",
             JOptionPane.PLAIN_MESSAGE,
             null,
-            playersList,
-            playersList[0]);
+            removeSelf.toArray(),
+            removeSelf.get(0));
         if ((player != null) && (player.length() > 0)) {
           controller.handleViewMessage(new InviteMessage(nickName, player));
           System.out.println("Sending Invite to: " + player);
@@ -93,45 +100,14 @@ public class MainMenuPanel extends SwingGUIController {
         controller.handleViewMessage(message);
         break;
       default:
-        System.err.println("MainMenuPanel::sendMessage - unknown message type " + message.getClass());
+        System.err
+            .println("MainMenuPanel::sendMessage - unknown message type " + message.getClass());
     }
 
     if (message instanceof MenuMessage) {
       MenuMessage menuMessage = (MenuMessage) message;
-
-      switch (menuMessage.menuType) {
-        case SELECT_GAME:
-          controller.handleViewMessage(message);
-          System.out.println("Select Game: " + menuMessage.information[0] + " Opponent: "
-              + menuMessage.information[2]);
-          break;
-        case RESIGN:
-          controller.handleViewMessage(message);
-          System.out.println("Resign Game: " + menuMessage.information[0] + " Opponent: "
-              + menuMessage.information[2]);
-          break;
-        case INVITES:
-          if (menuMessage.information.length == 0) {
-            String player = (String) JOptionPane.showInputDialog(
-                this,
-                "Select player to invite",
-                "Send New Invite",
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                playersList,
-                playersList[0]);
-            if ((player != null) && (player.length() > 0)) {
-              controller.handleViewMessage(
-                  new MenuMessage(MenuMessageTypes.SEND_INVITE, new String[]{nickName, player}));
-              System.out.println("Send Invite to: " + player);
-            }
-          } else {
-            controller.handleViewMessage(message);
-            System.out.println("Invite ID: " + menuMessage.information[0] + " Accepting: "
-                + menuMessage.information[1]);
-          }
-      }
-
+      System.out.println("Invite ID: " + menuMessage.information[0] + " Accepting: "
+          + menuMessage.information[1]);
     }
 
   }
@@ -173,7 +149,7 @@ public class MainMenuPanel extends SwingGUIController {
         break;
       case PLAYERS:
         Players players = (Players) message;
-        playersList = players.players;
+        playersList.addAll(Arrays.asList(players.players));
         playerStatsPanel.populatePlayersList(message);
         break;
       default:
@@ -195,8 +171,7 @@ public class MainMenuPanel extends SwingGUIController {
         break;
       case "viewInvites":
         cardLayout.show(displayPanel, "Invites");
-        controller
-            .handleViewMessage(new MenuMessage(MenuMessageTypes.INVITES, new String[]{nickName}));
+        controller.handleViewMessage(new InboxMessage());
         break;
       default:
         System.out.println(e.getActionCommand());
@@ -240,4 +215,113 @@ public class MainMenuPanel extends SwingGUIController {
     invitesPanel.setNickname(nickName);
   }
 
+  /**
+   * Method generated by IntelliJ IDEA GUI Designer >>> IMPORTANT!! <<< DO NOT edit this method OR
+   * call it in your code!
+   *
+   * @noinspection ALL
+   */
+  private void $$$setupUI$$$() {
+    createUIComponents();
+    mainPanel = new JPanel();
+    mainPanel.setLayout(new GridBagLayout());
+    final JPanel panel1 = new JPanel();
+    panel1.setLayout(new GridBagLayout());
+    GridBagConstraints gbc;
+    gbc = new GridBagConstraints();
+    gbc.gridx = 1;
+    gbc.gridy = 1;
+    gbc.anchor = GridBagConstraints.WEST;
+    mainPanel.add(panel1, gbc);
+    invitesButton = new JButton();
+    invitesButton.setActionCommand("viewInvites");
+    invitesButton.setText("Invites");
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    panel1.add(invitesButton, gbc);
+    profilesButton = new JButton();
+    profilesButton.setActionCommand("viewProfiles");
+    profilesButton.setText("Profiles");
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 4;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    panel1.add(profilesButton, gbc);
+    gamesButton = new JButton();
+    gamesButton.setActionCommand("viewGames");
+    gamesButton.setHideActionText(false);
+    gamesButton.setText("Games");
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 2;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    panel1.add(gamesButton, gbc);
+    final JPanel spacer1 = new JPanel();
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 1;
+    gbc.fill = GridBagConstraints.VERTICAL;
+    panel1.add(spacer1, gbc);
+    final JPanel spacer2 = new JPanel();
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 3;
+    gbc.fill = GridBagConstraints.VERTICAL;
+    panel1.add(spacer2, gbc);
+    final JPanel spacer3 = new JPanel();
+    gbc = new GridBagConstraints();
+    gbc.gridx = 2;
+    gbc.gridy = 1;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    mainPanel.add(spacer3, gbc);
+    final JPanel spacer4 = new JPanel();
+    gbc = new GridBagConstraints();
+    gbc.gridx = 1;
+    gbc.gridy = 2;
+    gbc.fill = GridBagConstraints.VERTICAL;
+    mainPanel.add(spacer4, gbc);
+    final JPanel spacer5 = new JPanel();
+    gbc = new GridBagConstraints();
+    gbc.gridx = 1;
+    gbc.gridy = 0;
+    gbc.fill = GridBagConstraints.VERTICAL;
+    mainPanel.add(spacer5, gbc);
+    displayPanel = new JPanel();
+    displayPanel.setLayout(new CardLayout(0, 0));
+    displayPanel.setAutoscrolls(false);
+    gbc = new GridBagConstraints();
+    gbc.gridx = 3;
+    gbc.gridy = 1;
+    gbc.fill = GridBagConstraints.BOTH;
+    mainPanel.add(displayPanel, gbc);
+    displayPanel.setBorder(
+        BorderFactory.createTitledBorder(BorderFactory.createLoweredBevelBorder(), null));
+    displayPanel.add(activeGamesPanel.$$$getRootComponent$$$(), "Games");
+    final JPanel panel2 = new JPanel();
+    panel2.setLayout(new BorderLayout(0, 0));
+    displayPanel.add(panel2, "Empty");
+    displayPanel.add(invitesPanel.$$$getRootComponent$$$(), "Invites");
+    displayPanel.add(playerStatsPanel.$$$getRootComponent$$$(), "Stats");
+    final JPanel spacer6 = new JPanel();
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 1;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    mainPanel.add(spacer6, gbc);
+    final JPanel spacer7 = new JPanel();
+    gbc = new GridBagConstraints();
+    gbc.gridx = 4;
+    gbc.gridy = 1;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    mainPanel.add(spacer7, gbc);
+  }
+
+  /**
+   * @noinspection ALL
+   */
+  public JComponent $$$getRootComponent$$$() {
+    return mainPanel;
+  }
 }
