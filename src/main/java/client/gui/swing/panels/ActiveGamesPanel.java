@@ -111,6 +111,9 @@ public class ActiveGamesPanel extends UpdatableJTableInPanel {
     activeGames.clear();
     gameInfoModel.setNumRows(0);
 
+    if(gameInfoMessage.gameIDs[0] == -1)
+      return;
+
     for (int i = 0; i < gameInfoMessage.gameIDs.length; i++) {
       activeGames.put(gameInfoMessage.gameIDs[i],
           new ActiveGameInfo(gameInfoMessage.gameIDs[i], gameInfoMessage.gameBoards[i],
