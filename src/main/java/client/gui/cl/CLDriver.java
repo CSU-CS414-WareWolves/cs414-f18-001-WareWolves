@@ -147,28 +147,20 @@ public class CLDriver implements ChadGameDriver {
         GameRequestMessage gr = handleSelectGame();
         controller.handleViewMessage(gr);
         break;
-      case LOGIN:
-        try {
-          LoginMessage lm = handleLogin();
-          controller.handleViewMessage(lm);
-        } catch (NoSuchAlgorithmException e) {
-          //handle error
-          e.printStackTrace();
-        }
-        break;
+//      case LOGIN:
+//        try {
+//          LoginMessage lm = handleLogin();
+//          controller.handleViewMessage(lm);
+//        } catch (NoSuchAlgorithmException e) {
+//          //handle error
+//          e.printStackTrace();
+//        }
+//        break;
       case LOGIN_RESPONSE:
         LoginResponseMessage lrm = (LoginResponseMessage) message;
-        if(lrm.success){
-          //if login successful, print main menu
-          //-send presenter a message for option chose
-          this.nickname = lrm.nickname;
-          ViewMessage vm = handleMenu();
-          controller.handleViewMessage(vm);
-        }
-        else {
-          login.failedCreds(0);
-          handleTitleScreen();
-        }
+        this.nickname = lrm.nickname;
+        ViewMessage vm = handleMenu();
+        controller.handleViewMessage(vm);
         break;
       case MOVE_PIECE:
         ViewMessage mpm = handleMovePiece();
@@ -178,8 +170,8 @@ public class CLDriver implements ChadGameDriver {
         MovePieceResponse mpr = (MovePieceResponse) message;
         game.showGameBoard(mpr.gameBoard);
         System.out.println(mpr.message);
-        ViewMessage vm = handleMenu();
-        controller.handleViewMessage(vm);
+        ViewMessage backToMain = handleMenu();
+        controller.handleViewMessage(backToMain);
         break;
       case REGISTER:
         try {
