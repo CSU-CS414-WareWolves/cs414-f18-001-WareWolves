@@ -4,12 +4,10 @@ import client.Point;
 import client.game.Game;
 import client.gui.ChadGameDriver;
 import client.presenter.ChadPresenter;
-import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.*;
 import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.GameInfo;
 import client.presenter.network.messages.InboxResponse;
-import client.presenter.network.messages.InviteResponse;
 import client.presenter.network.messages.NetworkMessage;
 import client.presenter.network.messages.Players;
 import client.presenter.network.messages.ProfileResponse;
@@ -24,7 +22,7 @@ public class CLDriver implements ChadGameDriver {
   private CLLogin login;
   private CLMenu menu;
   private CLGameView game;
-  private Scanner keys;
+  private KeyboardThread keyboard;
 
   // Active player nickname
   private String nickname;
@@ -40,7 +38,7 @@ public class CLDriver implements ChadGameDriver {
     game = new CLGameView();
 
     activePlayers = new String[]{};
-    keys = new Scanner(System.in);
+    keyboard = new KeyboardThread();
   }
 
   /**
@@ -70,8 +68,7 @@ public class CLDriver implements ChadGameDriver {
     int option = 0;
     try {
       while(true) {
-        keys = new Scanner(System.in);
-        option = keys.nextInt();
+        option = keyboard.keys.nextInt();
         switch (option) {
           case 1:
             controller.handleViewMessage(handleLogin());
@@ -239,10 +236,10 @@ public class CLDriver implements ChadGameDriver {
 
     System.out.println("Enter your e-mail:");
     while(email.equals("")) {
-      email = keys.nextLine();
+      email = keyboard.keys.nextLine();
     }
     System.out.println("Enter your password:");
-    pass = keys.nextLine();
+    pass = keyboard.keys.nextLine();
 
     return new LoginMessage(email, pass);
   }
@@ -260,14 +257,14 @@ public class CLDriver implements ChadGameDriver {
 
     System.out.println("Please enter a valid e-mail:");
     while(email.equals("")) {
-      email = keys.nextLine();
+      email = keyboard.keys.nextLine();
     }
     System.out.println("Enter a unique nickname:");
     while(nick.equals("")) {
-      nick = keys.nextLine();
+      nick = keyboard.keys.nextLine();
     }
     System.out.println("Enter a strong password:");
-    pass = keys.nextLine();
+    pass = keyboard.keys.nextLine();
 
     return new RegisterMessage(email, pass, nick);
   }
@@ -282,8 +279,7 @@ public class CLDriver implements ChadGameDriver {
 
     int option = 0;
     while(true) {
-      keys = new Scanner(System.in);
-      option = keys.nextInt();
+      option = keyboard.keys.nextInt();
       switch (option) {
         case 1:
           //View Active Games
@@ -327,9 +323,9 @@ public class CLDriver implements ChadGameDriver {
 
     menu.unregisterUser();
     System.out.println("E-mail:");
-    email = keys.nextLine();
+    email = keyboard.keys.nextLine();
     System.out.println("Password:");
-    pass = keys.nextLine();
+    pass = keyboard.keys.nextLine();
 
     try {
       return new UnregisterMessage(email, pass, nickname);
@@ -354,8 +350,7 @@ public class CLDriver implements ChadGameDriver {
    * @return a GameRequestMessage with chosen gameID
    */
   public GameRequestMessage handleSelectGame() {
-    keys = new Scanner(System.in);
-    int option = keys.nextInt();
+    int option = keyboard.keys.nextInt();
     return new GameRequestMessage(new String[]{Integer.toString(option)});
   }
 
@@ -366,10 +361,9 @@ public class CLDriver implements ChadGameDriver {
   public ViewMessage handleMovePiece() {
     String from = "";
     String to = "";
-    keys = new Scanner(System.in);
     while(true) {
       System.out.println("~ Select a piece (e.g. \"1a\"): ");
-      from = keys.nextLine();
+      from = keyboard.keys.nextLine();
       //check for exit or resignation
       if(from.toUpperCase().equals("EXIT")) {
         return handleMenu();
@@ -387,7 +381,7 @@ public class CLDriver implements ChadGameDriver {
 
       System.out.println("[!] Type \"c\" to cancel piece selection");
       System.out.println("~ Select space to move to (e.g. \"1a\"): ");
-      to = keys.nextLine();
+      to = keyboard.keys.nextLine();
       if (!to.equals("c")) {
         break;
       }
@@ -418,8 +412,7 @@ public class CLDriver implements ChadGameDriver {
 
     String[] info = new String[2];
 
-    keys = new Scanner(System.in);
-    int option = keys.nextInt();
+    int option = keyboard.keys.nextInt();
 
     info[0] = Integer.toString(ids[option]);
     info[1] = senders[option];
@@ -435,7 +428,7 @@ public class CLDriver implements ChadGameDriver {
     clearScreen();
     String info = "";
     menu.requestUsername();
-    info = keys.nextLine();
+    info = keyboard.keys.nextLine();
     System.out.println("Invite will be sent to: " + info);
     return new InviteMessage(nickname, info);
   }
@@ -444,7 +437,7 @@ public class CLDriver implements ChadGameDriver {
     clearScreen();
     menu.showPlayers(activePlayers);
     menu.requestUsername();
-    String nick = keys.nextLine();
+    String nick = keyboard.keys.nextLine();
     return new ProfileMessage(nick);
   }
 
@@ -480,6 +473,16 @@ public class CLDriver implements ChadGameDriver {
       }
     }
     return res.toString();
+  }
+
+  public class KeyboardThread extends Thread {
+    Scanner keys = new Scanner(System.in);
+
+    public KeyboardThread() {
+    }
+
+    public void run() {
+    }
   }
 
   public static void main(String[] args) {
