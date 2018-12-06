@@ -3,6 +3,7 @@ package client.gui.swing;
 import client.gui.ChadGameDriver;
 import client.gui.swing.panels.LoginScreenPanel;
 import client.gui.swing.panels.MainMenuPanel;
+import client.gui.swing.panels.UnregisterAccountPanel;
 import client.gui.swing.panels.chadgame.GameJPanel;
 import client.gui.swing.panels.testcontrolers.TestGameDriver;
 import client.gui.swing.panels.testcontrolers.TestSwingController;
@@ -13,12 +14,16 @@ import client.presenter.controller.messages.LogoutMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceResponse;
 import client.presenter.controller.messages.RegisterResponseMessage;
+import client.presenter.controller.messages.UnregisterMessage;
+import client.presenter.controller.messages.UnregisterResponseMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMovesResponse;
 import client.presenter.network.messages.NetworkMessage;
+import client.presenter.network.messages.UnregisterResponse;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -41,6 +46,7 @@ public class SwingController extends JFrame implements ChadGameDriver {
   private LoginScreenPanel loginScreenPanel;
   private GameJPanel gameJPanel;
   private JPanel cardPanel;
+  private UnregisterAccountPanel unregisterAccountPanel;
 
   /**
    * The menu bar
@@ -61,8 +67,6 @@ public class SwingController extends JFrame implements ChadGameDriver {
     cardLayout = (CardLayout) cardPanel.getLayout();
     this.add(menuBar, BorderLayout.NORTH);
     cardLayout.show(cardPanel, "LoginScreen");
-    //cardLayout.show(cardPanel, "MenuScreen");
-    //cardLayout.show(cardPanel, "GameScreen");
   }
 
 
@@ -79,6 +83,12 @@ public class SwingController extends JFrame implements ChadGameDriver {
         controller.handleViewMessage(message);
         break;
       case UNREGISTER:
+        UnregisterMessage unregisterMessage = (UnregisterMessage) message;
+        if (unregisterMessage.email == null) {
+          cardLayout.show(cardPanel, "MenuScreen");
+          menuBar.setVisible(true);
+          return;
+        }
         controller.handleViewMessage(message);
         break;
       case SHOW_VALID_MOVES:
@@ -92,6 +102,7 @@ public class SwingController extends JFrame implements ChadGameDriver {
         if (registerResponse.success) {
           menuPanel.setNickName(registerResponse.messages[0]);
           cardLayout.show(cardPanel, "MenuScreen");
+          menuBar.setVisible(true);
         } else {
           loginScreenPanel.receiveMessage(message);
         }
@@ -101,12 +112,18 @@ public class SwingController extends JFrame implements ChadGameDriver {
         if (loginResponse.success) {
           menuPanel.setNickName(loginResponse.nickname);
           cardLayout.show(cardPanel, "MenuScreen");
+          menuBar.setVisible(true);
         } else {
           loginScreenPanel.receiveMessage(message);
         }
         break;
       case UNREGISTER_RESPONSE:
-        controller.handleViewMessage(message);
+        UnregisterResponseMessage unregisterResponse = (UnregisterResponseMessage) message;
+        JOptionPane.showMessageDialog(gameJPanel, unregisterResponse.messages[0]);
+        if (unregisterResponse.success) {
+          cardLayout.show(cardPanel, "LoginScreen");
+          menuBar.setVisible(false);
+        }
         break;
       case SHOW_VALID_MOVES_RESPONSE:
         ViewValidMovesResponse validMoves = (ViewValidMovesResponse) message;
@@ -118,10 +135,10 @@ public class SwingController extends JFrame implements ChadGameDriver {
         if (!playingGame) {
           cardLayout.show(cardPanel, "GameScreen");
           playingGame = true;
+          menuBar.setVisible(false);
         }
         MovePieceResponse moves = (MovePieceResponse) message;
         gameJPanel.clearValidMoves();
-        JOptionPane.showMessageDialog(gameJPanel, moves.message);
         gameJPanel.setSetGameStatus(moves.message);
         gameJPanel.setBoardPieces(moves.gameBoard);
         break;
@@ -149,6 +166,7 @@ public class SwingController extends JFrame implements ChadGameDriver {
           controller.handleViewMessage(new ActiveGameMessage());
           gameJPanel.setBoardPieces("");
           playingGame = false;
+          menuBar.setVisible(true);
         }
         break;
       case RESIGN:
@@ -186,6 +204,7 @@ public class SwingController extends JFrame implements ChadGameDriver {
         menuPanel.receiveMessage(message);
         break;
       case UNREGISTER_RESPONSE:
+
         break;
       case SEE_RESULTS:
         break;
@@ -198,6 +217,7 @@ public class SwingController extends JFrame implements ChadGameDriver {
     menuPanel = new MainMenuPanel(this);
     loginScreenPanel = new LoginScreenPanel(this);
     gameJPanel = new GameJPanel(this);
+    unregisterAccountPanel = new UnregisterAccountPanel(this);
     createMenuBar();
 
   }
@@ -222,9 +242,22 @@ public class SwingController extends JFrame implements ChadGameDriver {
       public void actionPerformed(ActionEvent e) {
         cardLayout.show(cardPanel, "LoginScreen");
         controller.handleViewMessage(new LogoutMessage());
+        menuBar.setVisible(false);
       }
     });
+
+    JMenuItem unregister = new JMenuItem("Unregister");
+    unregister.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        cardLayout.show(cardPanel, "UnregisterScreen");
+        menuBar.setVisible(false);
+      }
+    });
+
+    menuBar.setVisible(false);
     menu.add(logout);
+    menu.add(unregister);
 
   }
 
@@ -243,7 +276,9 @@ public class SwingController extends JFrame implements ChadGameDriver {
 
     //Create and set up the content pane.
 
+    frame.setJMenuBar(menuBar);
     frame.add(this.mainPanel);
+    frame.setResizable(false);
 
     //Display the window.
     frame.pack();
@@ -252,9 +287,8 @@ public class SwingController extends JFrame implements ChadGameDriver {
 
 
   /**
-   * Method generated by IntelliJ IDEA GUI Designer
-   * >>> IMPORTANT!! <<<
-   * DO NOT edit this method OR call it in your code!
+   * Method generated by IntelliJ IDEA GUI Designer >>> IMPORTANT!! <<< DO NOT edit this method OR
+   * call it in your code!
    *
    * @noinspection ALL
    */
@@ -293,6 +327,10 @@ public class SwingController extends JFrame implements ChadGameDriver {
     panel3.setLayout(new BorderLayout(0, 0));
     cardPanel.add(panel3, "GameScreen");
     panel3.add(gameJPanel, BorderLayout.CENTER);
+    final JPanel panel4 = new JPanel();
+    panel4.setLayout(new BorderLayout(0, 0));
+    cardPanel.add(panel4, "UnregisterScreen");
+    panel4.add(unregisterAccountPanel.$$$getRootComponent$$$(), BorderLayout.CENTER);
   }
 
   /**

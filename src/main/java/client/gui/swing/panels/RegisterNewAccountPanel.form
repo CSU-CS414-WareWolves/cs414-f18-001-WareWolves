@@ -122,6 +122,7 @@
           <component id="fc1a4" class="javax.swing.JButton" binding="registerAccount">
             <constraints/>
             <properties>
+              <actionCommand value="register Account"/>
               <text value="Register Account"/>
             </properties>
           </component>

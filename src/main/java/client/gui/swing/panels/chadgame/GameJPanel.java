@@ -68,7 +68,7 @@ public class GameJPanel extends JPanel implements ActionListener {
     JPanel statusPanel = new JPanel();
     statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
     this.add(statusPanel, BorderLayout.SOUTH);
-    statusPanel.setPreferredSize(new Dimension(this.getWidth(), 16));
+    statusPanel.setPreferredSize(new Dimension(this.getWidth(), 32));
     statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
     turnText = new JLabel("Players Turn");
     statusPanel.add(turnText);
@@ -133,8 +133,6 @@ public class GameJPanel extends JPanel implements ActionListener {
    */
   public void actionPerformed(ActionEvent e) {
     if (QUIT_GAME.equals(e.getActionCommand())) {
-      JOptionPane.showMessageDialog(this, "Quitting Game");
-      // Simulate a menu message for demo
       driver.handleViewMessage(new LogoutMessage());
     }
 
