@@ -119,11 +119,7 @@ public class ChadPresenter implements ChadGameDriver{
         break;
       case UNREGISTER:
         UnregisterMessage unregisterMessage = (UnregisterMessage) message;
-        try{
-          networkManager.sendMessage(new Unregister(unregisterMessage.email, unregisterMessage.nickname, HashPasswords.SHA1FromString(unregisterMessage.password)));
-        } catch(NoSuchAlgorithmException e) {
-          // Do nothing
-        }
+        networkManager.sendMessage(new Unregister(unregisterMessage.email, unregisterMessage.nickname, unregisterMessage.password));
         break;
       case SHOW_VALID_MOVES: // Need to change with addition of CLI
         // if the game is over no valid moves
@@ -341,10 +337,12 @@ public class ChadPresenter implements ChadGameDriver{
           String[] messages = {"Successfully Unregistered."};
           UnregisterResponseMessage unregisterResponseMessage = new UnregisterResponseMessage(unregisterResponse.success, messages);
           viewDriver.handleViewMessage(unregisterResponseMessage);
+          playerNickname = "";
+          activeGameResponse = null;
         }
         else {
           // Not successful
-          String[] messages = {"Unable to unregister. Please try again."};
+          String[] messages = {"Unable to unregister. User Information did not match, try again."};
           UnregisterResponseMessage unregisterResponseMessage = new UnregisterResponseMessage(unregisterResponse.success, messages);
           viewDriver.handleViewMessage(unregisterResponseMessage);
         }

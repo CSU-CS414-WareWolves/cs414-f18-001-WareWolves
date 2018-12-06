@@ -66,6 +66,18 @@
               </grid>
             </children>
           </grid>
+          <grid id="d5367" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <card name="UnregisterScreen"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <nested-form id="ab721" form-file="client/gui/swing/panels/UnregisterAccountPanel.form" binding="unregisterAccountPanel" custom-create="true">
+                <constraints border-constraint="Center"/>
+              </nested-form>
+            </children>
+          </grid>
         </children>
       </grid>
     </children>
