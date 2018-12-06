@@ -61,8 +61,6 @@ public class SwingController extends JFrame implements ChadGameDriver {
     cardLayout = (CardLayout) cardPanel.getLayout();
     this.add(menuBar, BorderLayout.NORTH);
     cardLayout.show(cardPanel, "LoginScreen");
-    //cardLayout.show(cardPanel, "MenuScreen");
-    //cardLayout.show(cardPanel, "GameScreen");
   }
 
 
@@ -92,6 +90,7 @@ public class SwingController extends JFrame implements ChadGameDriver {
         if (registerResponse.success) {
           menuPanel.setNickName(registerResponse.messages[0]);
           cardLayout.show(cardPanel, "MenuScreen");
+          menuBar.setVisible(true);
         } else {
           loginScreenPanel.receiveMessage(message);
         }
@@ -101,6 +100,7 @@ public class SwingController extends JFrame implements ChadGameDriver {
         if (loginResponse.success) {
           menuPanel.setNickName(loginResponse.nickname);
           cardLayout.show(cardPanel, "MenuScreen");
+          menuBar.setVisible(true);
         } else {
           loginScreenPanel.receiveMessage(message);
         }
@@ -118,6 +118,7 @@ public class SwingController extends JFrame implements ChadGameDriver {
         if (!playingGame) {
           cardLayout.show(cardPanel, "GameScreen");
           playingGame = true;
+          menuBar.setVisible(false);
         }
         MovePieceResponse moves = (MovePieceResponse) message;
         gameJPanel.clearValidMoves();
@@ -149,6 +150,7 @@ public class SwingController extends JFrame implements ChadGameDriver {
           controller.handleViewMessage(new ActiveGameMessage());
           gameJPanel.setBoardPieces("");
           playingGame = false;
+          menuBar.setVisible(true);
         }
         break;
       case RESIGN:
@@ -222,8 +224,10 @@ public class SwingController extends JFrame implements ChadGameDriver {
       public void actionPerformed(ActionEvent e) {
         cardLayout.show(cardPanel, "LoginScreen");
         controller.handleViewMessage(new LogoutMessage());
+        menuBar.setVisible(false);
       }
     });
+    menuBar.setVisible(false);
     menu.add(logout);
 
   }
@@ -243,7 +247,9 @@ public class SwingController extends JFrame implements ChadGameDriver {
 
     //Create and set up the content pane.
 
+    frame.setJMenuBar(menuBar);
     frame.add(this.mainPanel);
+    frame.setResizable(false);
 
     //Display the window.
     frame.pack();
