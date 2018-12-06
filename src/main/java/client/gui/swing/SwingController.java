@@ -13,6 +13,7 @@ import client.presenter.controller.messages.LogoutMessage;
 import client.presenter.controller.messages.MenuMessage;
 import client.presenter.controller.messages.MovePieceResponse;
 import client.presenter.controller.messages.RegisterResponseMessage;
+import client.presenter.controller.messages.UnregisterMessage;
 import client.presenter.controller.messages.ViewMessage;
 import client.presenter.controller.messages.ViewValidMovesResponse;
 import client.presenter.network.messages.NetworkMessage;
@@ -79,6 +80,11 @@ public class SwingController extends JFrame implements ChadGameDriver {
         controller.handleViewMessage(message);
         break;
       case UNREGISTER:
+        UnregisterMessage unregisterMessage = (UnregisterMessage) message;
+        if(unregisterMessage.email == null){
+          cardLayout.show(cardPanel, "MenuScreen");
+          return;
+        }
         controller.handleViewMessage(message);
         break;
       case SHOW_VALID_MOVES:
