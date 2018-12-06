@@ -23,7 +23,7 @@ public class CLGameView {
    * @param ids list of ids of the active games
    * @param players list of nicknames the player has an active game with
    */
-  public void showCurrentGames(int[] ids, String[] players){
+  public void showCurrentGames(int[] ids, String[] players, boolean[] turns, boolean[] color){
     //Print the list in a nice fashion
     StringBuilder res = new StringBuilder();
 
@@ -31,6 +31,8 @@ public class CLGameView {
     for(int i=0; i<players.length; i++){
       res.append("[").append(ids[i]).append("]: ");
       res.append(players[i]);
+      res.append(" - Current turn: ").append(turns[i]);
+      res.append(" - Your color : ").append(playerFromBool(color[i]));
       res.append("\n");
     }
 
@@ -111,6 +113,10 @@ public class CLGameView {
     res.append("\n");
 
     System.out.println(res);
+  }
+
+  public String playerFromBool(boolean p) {
+    return p ? "white" : "black";
   }
 
   /**

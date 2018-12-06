@@ -3,14 +3,8 @@ package client.gui.cl;
 import static org.junit.jupiter.api.Assertions.*;
 
 import client.presenter.ChadPresenter;
-import client.presenter.controller.MenuMessageTypes;
-import client.presenter.controller.messages.LoginMessage;
-import client.presenter.controller.messages.MenuMessage;
-import client.presenter.controller.messages.ViewMessage;
 import java.io.ByteArrayInputStream;
-import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
-import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -81,9 +75,11 @@ class CLDriverTest {
   void handleActiveGames() {
     int[] ids = {23,12};
     String[] nicks = {"theGameMaster", "AI"};
+    boolean[] ts = {true, false};
+    boolean[] color = {false, true};
 
     try {
-      driver.handleActiveGames(ids, nicks);
+      driver.showActiveGames(ids, nicks, ts, color);
     } catch(Exception e) {
       fail("");
     }

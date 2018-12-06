@@ -76,9 +76,11 @@ public class CLMenu {
     //This is the format that it will be printed as
     StringBuilder res = new StringBuilder();
     res.append("+++ "+ player + "'s Profile +++\n\n");
-    res.append("   W player   |   B player   |   Result");
+    res.append("|   W player   |   B player   |   Result  |\n");
     for(int i = 0; i<white.length; i++) {
-      res.append(white[i]).append(" | ").append(black[i]).append(" | ").append(playerFromBool(results[i]));
+      res.append(white[i]).append(" :: ");
+      res.append(black[i]).append(" :: ");
+      res.append(playerFromBool(results[i])).append("\n");
     }
     //TODO: W/L ratio calc
     System.out.println(res);

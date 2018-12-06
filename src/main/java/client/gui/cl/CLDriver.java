@@ -100,7 +100,7 @@ public class CLDriver implements ChadGameDriver {
     switch(message.type){
       case ACTIVE_GAMES_RESPONSE:
         ActiveGameResponse agr = (ActiveGameResponse) message;
-        handleActiveGames(agr.gameIDs, agr.opponents);
+        showActiveGames(agr.gameIDs, agr.opponents, agr.turns, agr.color);
         controller.handleViewMessage(handleSelectGame());
         break;
       case GAME_INFO:
@@ -328,11 +328,10 @@ public class CLDriver implements ChadGameDriver {
    * Shows the user's active games
    * @param ids list of ids of invitations
    * @param opponents list of nicknames the player has an invite from
-   * @return MenuMessage object with a String array = {gameId, opponent's nickname}
    */
-  public void handleActiveGames(int[] ids, String[] opponents){
+  public void showActiveGames(int[] ids, String[] opponents, boolean[] turns, boolean[] color){
     clearScreen();
-    game.showCurrentGames(ids, opponents);
+    game.showCurrentGames(ids, opponents, turns, color);
   }
 
   /**

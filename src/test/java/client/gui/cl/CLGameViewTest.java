@@ -28,8 +28,11 @@ class CLGameViewTest {
   void showCurrentGames() {
     int[] ids = {23,12};
     String[] nicks = {"theGameMaster", "AI"};
+    boolean[] ts = {true, false};
+    boolean[] color = {false, true};
+
     try {
-      game.showCurrentGames(ids, nicks);
+      game.showCurrentGames(ids, nicks, ts, color);
     } catch (Exception e) {
       fail("");
     }
