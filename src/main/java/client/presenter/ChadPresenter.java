@@ -4,6 +4,7 @@ import client.Point;
 import client.game.Game;
 import client.game.pieces.Piece;
 import client.gui.ChadGameDriver;
+import client.gui.cl.CLDriver;
 import client.gui.swing.SwingController;
 import client.gui.swing.info.ActiveGameInfo;
 import client.presenter.controller.messages.GameRequestMessage;
@@ -371,6 +372,7 @@ public class ChadPresenter implements ChadGameDriver{
     } catch (IOException e) { }
     if(userInterface.equals("cli")){
       // Instantiate CLI Controller
+      viewDriver = new CLDriver(this);
     } else if(userInterface.equals("gui")){
       // Instantiate GUI Controller
       viewDriver = new SwingController(this);
@@ -386,14 +388,26 @@ public class ChadPresenter implements ChadGameDriver{
 
   /**
    * Starts a thread for the Swing GUI
+   * @param gui = true if "gui", else false for "cli"
    */
-  public void start(){
-
-    javax.swing.SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
+  public void start(boolean gui){
+    if(gui) {
+      javax.swing.SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
           viewDriver.createAndShowGUI();
-      }
-    });
+        }
+      });
+    }
+    else {
+      CLIThread cl = new CLIThread();
+      cl.run();
+    }
+  }
+
+  public class CLIThread extends Thread {
+    public void run() {
+      viewDriver.createAndShowGUI();
+    }
   }
 
   /**
@@ -414,6 +428,6 @@ public class ChadPresenter implements ChadGameDriver{
   public static void main(String[] args) {
     // args[0] = "cli" or "gui", args[1] server host, args[2] server port
     ChadPresenter app = new ChadPresenter(args[1], args[2], args[0]);
-    app.start();
+    app.start(args[1].equals("gui"));
   }
 }

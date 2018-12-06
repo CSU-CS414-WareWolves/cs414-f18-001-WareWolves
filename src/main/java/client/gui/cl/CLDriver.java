@@ -106,10 +106,9 @@ public class CLDriver implements ChadGameDriver {
       case ACTIVE_GAMES_RESPONSE:
         ActiveGameResponse agr = (ActiveGameResponse) message;
         showActiveGames(agr.gameIDs, agr.opponents, agr.turns, agr.color);
-
+        gameid = handleSelectGame();
         ActiveGameInfo agi = new ActiveGameInfo(gameid, agr.gameBoards[gameid], agr.opponents[gameid],
             agr.startDates[gameid], agr.turns[gameid], agr.color[gameid], agr.ended[gameid]);
-
         controller.handleViewMessage(new GameRequestMessage(agi.getInfoArray()));
         break;
       case GAME_INFO:
