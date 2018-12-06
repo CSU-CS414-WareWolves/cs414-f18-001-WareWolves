@@ -9,6 +9,7 @@ import client.presenter.controller.messages.*;
 import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.GameInfo;
 import client.presenter.network.messages.InboxResponse;
+import client.presenter.network.messages.Move;
 import client.presenter.network.messages.NetworkMessage;
 import client.presenter.network.messages.Players;
 import client.presenter.network.messages.ProfileResponse;
@@ -147,10 +148,6 @@ public class CLDriver implements ChadGameDriver {
    */
   public void handleViewMessage(ViewMessage message){
     switch (message.messageType){
-//      case GAME_REQUEST:
-//        gameid = handleSelectGame();
-//        controller.handleViewMessage(gr);
-//        break;
       case LOGIN_RESPONSE:
         LoginResponseMessage lrm = (LoginResponseMessage) message;
         this.nickname = lrm.nickname;
@@ -158,15 +155,16 @@ public class CLDriver implements ChadGameDriver {
         controller.handleViewMessage(vm);
         break;
       case MOVE_PIECE:
-        ViewMessage mpm = handleMovePiece();
-        controller.handleViewMessage(mpm);
-        break;
-      case MOVE_PIECE_RESPONSE:
-        MovePieceResponse mpr = (MovePieceResponse) message;
-        game.showGameBoard(mpr.gameBoard);
-        System.out.println(mpr.message);
-        ViewMessage backToMain = handleMenu();
-        controller.handleViewMessage(backToMain);
+        MovePieceMessage mpr = (MovePieceMessage) message;
+        chadGame.move(mpr.fromLocation.toString(), mpr.toLocation.toString());
+
+        // Show the winner if the game is over
+        if(chadGame.gameover()){
+          game.showGameover(!chadGame.getTurn());
+        }
+
+        // Send Move to Server
+        controller.handleViewMessage(mpr);
         break;
       case REGISTER:
         try {

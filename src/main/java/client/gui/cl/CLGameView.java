@@ -125,4 +125,8 @@ public class CLGameView {
   public void showInGameMenu(){
     System.out.println("~[ Type QUIT to leave ]~[ Type RESIGN to forfeit ]~\n");
   }
+
+  public void showGameover(boolean p) {
+    System.out.println(playerFromBool(p)+" player won the game!");
+  }
 }
