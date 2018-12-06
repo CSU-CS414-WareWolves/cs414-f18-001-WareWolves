@@ -122,8 +122,6 @@ public class CLDriver implements ChadGameDriver {
       case PLAYERS:
         Players p = (Players) message;
         activePlayers = p.players;
-//        ProfileMessage pm = handleProfile();
-//        controller.handleViewMessage(pm);
         break;
       case PROFILE_RESPONSE:
         ProfileResponse pr = (ProfileResponse) message;
@@ -148,15 +146,6 @@ public class CLDriver implements ChadGameDriver {
         GameRequestMessage gr = handleSelectGame();
         controller.handleViewMessage(gr);
         break;
-//      case LOGIN:
-//        try {
-//          LoginMessage lm = handleLogin();
-//          controller.handleViewMessage(lm);
-//        } catch (NoSuchAlgorithmException e) {
-//          //handle error
-//          e.printStackTrace();
-//        }
-//        break;
       case LOGIN_RESPONSE:
         LoginResponseMessage lrm = (LoginResponseMessage) message;
         this.nickname = lrm.nickname;
