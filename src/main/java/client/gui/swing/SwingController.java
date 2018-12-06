@@ -139,7 +139,6 @@ public class SwingController extends JFrame implements ChadGameDriver {
         }
         MovePieceResponse moves = (MovePieceResponse) message;
         gameJPanel.clearValidMoves();
-        JOptionPane.showMessageDialog(gameJPanel, moves.message);
         gameJPanel.setSetGameStatus(moves.message);
         gameJPanel.setBoardPieces(moves.gameBoard);
         break;

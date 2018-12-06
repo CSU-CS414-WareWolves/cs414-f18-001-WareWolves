@@ -138,7 +138,7 @@ public class ChadPresenter implements ChadGameDriver{
         boolean draw = false;
         boolean ending = false;
         if(chadGame.getTurn() != currentGame.getColor()) {
-          viewDriver.handleViewMessage(new MovePieceResponse(getCurrentPlayer(chadGame.getTurn()) + "'s turn.", chadGame.getBoard()));
+          viewDriver.handleViewMessage(new MovePieceResponse(getMoveMessage(), chadGame.getBoard()));
         }
         // Checks to see if the move was successful
         if(chadGame.move(moves.fromLocation.toString(), moves.toLocation.toString())){
@@ -161,7 +161,7 @@ public class ChadPresenter implements ChadGameDriver{
            }
          } else {
            // Game is not over
-           MovePieceResponse movePieceResponse = new MovePieceResponse(getCurrentPlayer(chadGame.getTurn()) + "'s turn.", chadGame.getBoard());
+           MovePieceResponse movePieceResponse = new MovePieceResponse(getMoveMessage(), chadGame.getBoard());
            viewDriver.handleViewMessage(movePieceResponse);
          }
            // Send Move to Server
@@ -200,7 +200,7 @@ public class ChadPresenter implements ChadGameDriver{
         GameRequestMessage gameRequestMessage = (GameRequestMessage) message;
         currentGame = new ActiveGameInfo(gameRequestMessage.gameInfo);
         chadGame = new Game(currentGame.getGameBoard(), currentGame.getTurn());
-        viewDriver.handleViewMessage(new MovePieceResponse(getCurrentPlayer(chadGame.getTurn()) + "'s turn.", chadGame.getBoard()));
+        viewDriver.handleViewMessage(new MovePieceResponse(getMoveMessage(), chadGame.getBoard()));
 
         if(currentGame.getEnded()){
           networkManager.sendMessage(new SeeResults(currentGame.getGameID(), currentGame.getColor()));
@@ -282,7 +282,7 @@ public class ChadPresenter implements ChadGameDriver{
             String opponentsMoves = chadGame.validMoves(moveFrom.toString());
             viewDriver.handleViewMessage(new ViewValidMovesResponse(new String[] {opponentsMoves}));
             chadGame.move(moveFrom.toString(), moveTo.toString());
-            MovePieceResponse movePieceResponse = new MovePieceResponse(getCurrentPlayer(chadGame.getTurn()) + "'s turn.", chadGame.getBoard());
+            MovePieceResponse movePieceResponse = new MovePieceResponse(getMoveMessage(), chadGame.getBoard());
             viewDriver.handleViewMessage(movePieceResponse);
           }
         }
@@ -338,7 +338,7 @@ public class ChadPresenter implements ChadGameDriver{
           UnregisterResponseMessage unregisterResponseMessage = new UnregisterResponseMessage(unregisterResponse.success, messages);
           viewDriver.handleViewMessage(unregisterResponseMessage);
           playerNickname = "";
-          activeGameResponse = null;
+          currentGame = null;
         }
         else {
           // Not successful
@@ -350,6 +350,11 @@ public class ChadPresenter implements ChadGameDriver{
     }
 
   }
+
+  private String getMoveMessage() {
+    return getCurrentPlayer(chadGame.getTurn()) + "'s turn. Playing: " + getPlayerColor(chadGame.getTurn()) + ".";
+  }
+
 
   public void createAndShowGUI() { }
 
@@ -400,6 +405,11 @@ public class ChadPresenter implements ChadGameDriver{
     return turn == currentGame.getColor() ? playerNickname : currentGame.getOpponent();
   }
 
+  private String getPlayerColor(Boolean turn) {
+    if(turn == currentGame.getColor())
+      return currentGame.getColor() ? "Black" : "White";
+    return !currentGame.getColor() ? "Black" : "White";
+  }
 
   public static void main(String[] args) {
     // args[0] = "cli" or "gui", args[1] server host, args[2] server port
