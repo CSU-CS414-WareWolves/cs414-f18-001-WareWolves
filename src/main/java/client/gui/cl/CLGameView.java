@@ -31,7 +31,7 @@ public class CLGameView {
     for(int i=0; i<players.length; i++){
       res.append("[").append(ids[i]).append("]: ");
       res.append(players[i]);
-      res.append(" - Current turn: ").append(turns[i]);
+      res.append(" - Current turn: ").append(playerFromBool(turns[i]));
       res.append(" - Your color : ").append(playerFromBool(color[i]));
       res.append("\n");
     }

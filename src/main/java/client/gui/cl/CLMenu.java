@@ -24,11 +24,12 @@ public class CLMenu {
    * Print out all the invites that are currently in the user's inbox
    * @param ids list of ids of invitations
    * @param players list of nicknames the player has an invite from
+   * @return true=invites available, false=invites not available
    */
-  public void viewInvites(int[] ids, String[] dates, String[] players){
+  public boolean viewInvites(int[] ids, String[] dates, String[] players){
     if(ids.length == 0 || ids == null || ids[0] == -1){
       System.out.println("No invites found!\nSend a game invite from the main menu!");
-      return;
+      return false;
     } else {
       StringBuilder res = new StringBuilder();
       res.append("+++ Inbox +++\n");
@@ -36,6 +37,7 @@ public class CLMenu {
         res.append("[" + ids[i] + "]: "+ dates[i] + " - " + players[i] + " has invited you to a game!\n");
       }
       System.out.println(res);
+      return true;
     }
   }
 
@@ -75,7 +77,7 @@ public class CLMenu {
   public void showStats(String player, String[] white, String[] black, boolean[] results){
     //This is the format that it will be printed as
     StringBuilder res = new StringBuilder();
-    res.append("+++ "+ player + "'s Profile +++\n\n");
+    res.append("\n\n+++ "+ player + "'s Profile +++\n\n");
     res.append("|   W player   |   B player   |   Result  |\n");
     for(int i = 0; i<white.length; i++) {
       res.append(white[i]).append(" :: ");

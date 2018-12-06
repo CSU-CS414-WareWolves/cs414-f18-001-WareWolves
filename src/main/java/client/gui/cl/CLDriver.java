@@ -3,6 +3,7 @@ package client.gui.cl;
 import client.Point;
 import client.game.Game;
 import client.gui.ChadGameDriver;
+import client.gui.swing.info.ActiveGameInfo;
 import client.presenter.ChadPresenter;
 import client.presenter.controller.messages.*;
 import client.presenter.network.messages.ActiveGameResponse;
@@ -101,7 +102,11 @@ public class CLDriver implements ChadGameDriver {
       case ACTIVE_GAMES_RESPONSE:
         ActiveGameResponse agr = (ActiveGameResponse) message;
         showActiveGames(agr.gameIDs, agr.opponents, agr.turns, agr.color);
-        controller.handleViewMessage(handleSelectGame());
+
+        ActiveGameInfo agi = new ActiveGameInfo(gameid, agr.gameBoards[gameid], agr.opponents[gameid],
+            agr.startDates[gameid], agr.turns[gameid], agr.color[gameid], agr.ended[gameid]);
+
+        controller.handleViewMessage(new GameRequestMessage(agi.getInfoArray()));
         break;
       case GAME_INFO:
         GameInfo gi = (GameInfo) message;
@@ -111,7 +116,7 @@ public class CLDriver implements ChadGameDriver {
         break;
       case INBOX_RESPONSE:
         InboxResponse ir = (InboxResponse) message;
-        InviteMessage im = handleInbox(ir.inviteIDs, ir.sendDates, ir.senders);
+        ViewMessage im = handleInbox(ir.inviteIDs, ir.sendDates, ir.senders);
         controller.handleViewMessage(im);
         break;
       case LOGOUT:
@@ -142,10 +147,10 @@ public class CLDriver implements ChadGameDriver {
    */
   public void handleViewMessage(ViewMessage message){
     switch (message.messageType){
-      case GAME_REQUEST:
-        GameRequestMessage gr = handleSelectGame();
-        controller.handleViewMessage(gr);
-        break;
+//      case GAME_REQUEST:
+//        gameid = handleSelectGame();
+//        controller.handleViewMessage(gr);
+//        break;
       case LOGIN_RESPONSE:
         LoginResponseMessage lrm = (LoginResponseMessage) message;
         this.nickname = lrm.nickname;
@@ -336,13 +341,10 @@ public class CLDriver implements ChadGameDriver {
 
   /**
    * Handle the game selection screen
-   * @return a GameRequestMessage with chosen gameID
+   * @return gameid int
    */
-  public GameRequestMessage handleSelectGame() {
-    gameid  = requestInt();
-    String[] info = new String[1];
-    info[0] = Integer.toString(gameid);
-    return new GameRequestMessage(info);
+  public int handleSelectGame() {
+    return requestInt();
   }
 
   /**
@@ -396,16 +398,21 @@ public class CLDriver implements ChadGameDriver {
    * @param senders array with challenger nicknames
    * @return an AcceptInvite message with chosen id/nickname
    */
-  public InviteMessage handleInbox(int[] ids, String[] dates, String[] senders){
+  public ViewMessage handleInbox(int[] ids, String[] dates, String[] senders){
     clearScreen();
-    menu.viewInvites(ids, dates, senders);
+    boolean check = menu.viewInvites(ids, dates, senders);
+    if(check) {
+      String info = "";
+      int option = requestInt();
 
-    String info = "";
-    int option = requestInt();
-
-    info = senders[option];
-    //high TODO: what do I return here?
-    return new InviteMessage(info, nickname);
+      info = senders[option];
+      //high TODO: what do I return here?
+      // probably not an invite lol, needs an accept_invite
+      return new InviteMessage(info, nickname);
+    }
+    else {
+      return handleMenu();
+    }
   }
 
   /**
