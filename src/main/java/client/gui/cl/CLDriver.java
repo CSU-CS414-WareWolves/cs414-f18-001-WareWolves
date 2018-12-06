@@ -114,6 +114,7 @@ public class CLDriver implements ChadGameDriver {
         chadGame = new Game(gi.gameBoard, gi.turn);
         gameid = gi.gameID;
         showGame();
+        controller.handleViewMessage(handleMovePiece());
         break;
       case INBOX_RESPONSE:
         InboxResponse ir = (InboxResponse) message;
