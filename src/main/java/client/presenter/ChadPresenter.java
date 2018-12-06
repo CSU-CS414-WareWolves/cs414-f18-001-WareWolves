@@ -387,11 +387,11 @@ public class ChadPresenter implements ChadGameDriver{
   }
 
   /**
-   * Starts a thread for the Swing GUI
-   * @param gui = true if "gui", else false for "cli"
+   * Starts a thread for the Swing GUI or CLI
+   * @param gui String with GUI option
    */
-  public void start(boolean gui){
-    if(gui) {
+  public void start(String gui){
+    if(gui.equals("gui")) {
       javax.swing.SwingUtilities.invokeLater(new Runnable() {
         public void run() {
           viewDriver.createAndShowGUI();
@@ -428,6 +428,6 @@ public class ChadPresenter implements ChadGameDriver{
   public static void main(String[] args) {
     // args[0] = "cli" or "gui", args[1] server host, args[2] server port
     ChadPresenter app = new ChadPresenter(args[1], args[2], args[0]);
-    app.start(args[1].equals("gui"));
+    app.start(args[1]);
   }
 }
