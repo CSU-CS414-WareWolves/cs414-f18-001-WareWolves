@@ -1,11 +1,8 @@
 package client.gui.swing.panels;
 
 import client.gui.swing.SwingGUIController;
-import client.gui.swing.panels.testcontrolers.TestGameMenuController;
-import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.InviteMessage;
 import client.presenter.controller.messages.InviteMessageResponse;
-import client.presenter.controller.messages.MenuMessage;
 import client.presenter.network.messages.InboxResponse;
 import client.presenter.network.messages.NetworkMessage;
 import com.intellij.uiDesigner.core.Spacer;
@@ -15,14 +12,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
@@ -164,38 +159,6 @@ public class InvitesPanel extends UpdatableJTableInPanel {
 
   }
 
-
-  public static void main(String[] args) {
-
-    //Schedule a job for the event-dispatching thread:
-    //creating and showing this application's GUI.
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        createAndShowGUI();
-      }
-    });
-  }
-
-  /**
-   * Create the GUI and show it.  For thread safety, this method should be invoked from the
-   * event-dispatching thread.
-   */
-  private static void createAndShowGUI() {
-
-    //Create and set up the window.
-    JFrame frame = new JFrame("Login Panel Test");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-    //Create and set up the content pane.
-    InvitesPanel demo = new InvitesPanel(new TestGameMenuController());
-    demo.setNickname("Mac");
-    demo.updateTable(new InboxResponse("16:123:Mac:Dennis:01-01-18#1234:Charlie:Mac:02-14-18"));
-    frame.add(demo.mainPanel);
-
-    //Display the window.
-    frame.pack();
-    frame.setVisible(true);
-  }
 
 
   public void setNickname(String nickname) {

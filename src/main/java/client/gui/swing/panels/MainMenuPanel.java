@@ -2,8 +2,6 @@ package client.gui.swing.panels;
 
 import client.gui.ChadGameDriver;
 import client.gui.swing.SwingGUIController;
-import client.gui.swing.panels.testcontrolers.TestSwingController;
-import client.presenter.controller.MenuMessageTypes;
 import client.presenter.controller.messages.ActiveGameMessage;
 import client.presenter.controller.messages.InboxMessage;
 import client.presenter.controller.messages.InviteMessage;
@@ -19,14 +17,11 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 public class MainMenuPanel extends SwingGUIController {
 
@@ -177,37 +172,6 @@ public class MainMenuPanel extends SwingGUIController {
         System.out.println(e.getActionCommand());
     }
 
-  }
-
-  public static void main(String[] args) {
-
-    //Schedule a job for the event-dispatching thread:
-    //creating and showing this application's GUI.
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        createAndShowGUI();
-      }
-    });
-  }
-
-  /**
-   * Create the GUI and show it.  For thread safety, this method should be invoked from the
-   * event-dispatching thread.
-   */
-  private static void createAndShowGUI() {
-    //Create and set up the window.
-    JFrame frame = new JFrame("Login Panel Test");
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setResizable(false);
-
-    //Create and set up the content pane.
-    MainMenuPanel demo = new MainMenuPanel(new TestSwingController());
-    demo.receiveMessage(new Players("19:testUser:testUser2:testUser3"));
-    frame.add(demo.mainPanel);
-
-    //Display the window.
-    frame.pack();
-    frame.setVisible(true);
   }
 
   public void setNickName(String nickName) {
