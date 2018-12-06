@@ -30,7 +30,7 @@ public class UnregisterMessage extends ViewMessage{
       throws NoSuchAlgorithmException {
     super(ViewMessageType.UNREGISTER);
     this.email = email;
-    this.password = HashPasswords.SHA1FromString(password);
+    this.password = password;
     this.nickname = nickname;
 
   }

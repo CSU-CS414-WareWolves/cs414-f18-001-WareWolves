@@ -12,6 +12,7 @@ import client.presenter.controller.messages.InviteMessage;
 import client.presenter.controller.messages.InviteMessageResponse;
 import client.presenter.controller.messages.LoginMessage;
 import client.presenter.controller.messages.LoginResponseMessage;
+import client.presenter.controller.messages.LogoutMessage;
 import client.presenter.controller.messages.MovePieceMessage;
 import client.presenter.controller.messages.MovePieceResponse;
 import client.presenter.controller.messages.ProfileMessage;
@@ -341,7 +342,7 @@ public class ChadPresenter implements ChadGameDriver{
           // Successfully unregistered
           String[] messages = {"Successfully Unregistered."};
           UnregisterResponseMessage unregisterResponseMessage = new UnregisterResponseMessage(unregisterResponse.success, messages);
-          viewDriver.handleViewMessage(unregisterResponseMessage);
+          viewDriver.handleViewMessage(new LogoutMessage());
         }
         else {
           // Not successful

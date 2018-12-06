@@ -16,6 +16,7 @@ import client.presenter.network.messages.ProfileResponse;
 import client.presenter.network.messages.RegisterResponse;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class CLDriver implements ChadGameDriver {
 
@@ -58,9 +59,12 @@ public class CLDriver implements ChadGameDriver {
    */
   public void createAndShowGUI(){
     login.showSplash();
-    login.showLogin();
     chadGame = new Game();
-
+    try {
+      TimeUnit.SECONDS.sleep(1);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
     handleTitleScreen();
   }
 
@@ -72,6 +76,7 @@ public class CLDriver implements ChadGameDriver {
     int option = 0;
     try {
       while(true) {
+        login.showLogin();
         option = requestInt();
         switch (option) {
           case 1:
@@ -81,12 +86,10 @@ public class CLDriver implements ChadGameDriver {
             controller.handleViewMessage(handleRegister());
             return;
           case 3:
-            //handleLogout();
+            //Log out
             return;
           default:
             warningValidOption();
-            login.showSplash();
-            login.showLogin();
         }
       }
     } catch(NoSuchAlgorithmException e) {
@@ -125,6 +128,7 @@ public class CLDriver implements ChadGameDriver {
         login.showLogout();
         break;
       case MOVE:
+        controller.handleViewMessage(handleMovePiece());
         break;
       case PLAYERS:
         Players p = (Players) message;
@@ -132,13 +136,13 @@ public class CLDriver implements ChadGameDriver {
         break;
       case PROFILE_RESPONSE:
         ProfileResponse pr = (ProfileResponse) message;
-        menu.showPlayers(activePlayers);
+
+        clearScreen();
         menu.showStats(requestedName, pr.whitePlayers, pr.blackPlayers, pr.results);
+        clearScreen();
+
+        menu.showPlayers(activePlayers);
         controller.handleViewMessage(handleProfile());
-        break;
-      case REGISTER_RESPONSE:
-        RegisterResponse rr = (RegisterResponse) message;
-        handleViewMessage(new RegisterResponseMessage(rr.success, new String[]{}));
         break;
     }
   }
@@ -151,26 +155,28 @@ public class CLDriver implements ChadGameDriver {
     switch (message.messageType){
       case LOGIN_RESPONSE:
         LoginResponseMessage lrm = (LoginResponseMessage) message;
-        this.nickname = lrm.nickname;
-        ViewMessage vm = handleMenu();
-        controller.handleViewMessage(vm);
-        break;
-      case MOVE_PIECE:
-        MovePieceMessage mpr = (MovePieceMessage) message;
-        chadGame.move(mpr.fromLocation.toString(), mpr.toLocation.toString());
-
-        // Show the winner if the game is over
-        if(chadGame.gameover()){
-          game.showGameover(!chadGame.getTurn());
+        if(lrm.success) {
+          this.nickname = lrm.nickname;
+          ViewMessage vm = handleMenu();
+          controller.handleViewMessage(vm);
         }
-
-        // Send Move to Server
-        controller.handleViewMessage(mpr);
+        else {
+          clearScreen();
+          login.failedCreds(0);
+          handleTitleScreen();
+        }
+        break;
+      case MOVE_PIECE_RESPONSE:
+        MovePieceResponse mpr = (MovePieceResponse) message;
+        game.showGameBoard(mpr.gameBoard);
+        System.out.println(mpr.message);
+        controller.handleViewMessage(handleMenu());
         break;
       case REGISTER:
         try {
           RegisterMessage rm = handleRegister();
           controller.handleViewMessage(rm);
+          nickname = rm.nickname;
         } catch (NoSuchAlgorithmException e) {
           //handle error
           e.printStackTrace();
@@ -179,7 +185,7 @@ public class CLDriver implements ChadGameDriver {
       case REGISTER_RESPONSE:
         RegisterResponseMessage rrm = (RegisterResponseMessage) message;
         if(rrm.success){
-          System.out.println(arrayToString(rrm.messages));
+          System.out.println("[!] "+arrayToString(rrm.messages));
           menu.showMenu(nickname);
           ViewMessage vmm = handleMenu();
           controller.handleViewMessage(vmm);
@@ -190,11 +196,6 @@ public class CLDriver implements ChadGameDriver {
           handleTitleScreen();
         }
         break;
-      case SHOW_VALID_MOVES:
-        String temp = chadGame.validMoves(((ViewValidMoves)message).location.toString());
-        String[] moves = stringToArray(temp);
-        game.showValidMoves(moves);
-        break;
       case SHOW_VALID_MOVES_RESPONSE:
         ViewValidMovesResponse vvmr = (ViewValidMovesResponse) message;
         String[] validMovesArray1 = vvmr.locations;
@@ -203,18 +204,18 @@ public class CLDriver implements ChadGameDriver {
       case UNREGISTER:
         clearScreen();
         menu.unregisterUser();
-        UnregisterMessage urm = handleUnregister();
-        controller.handleViewMessage(urm);
+        UnregisterMessage um = handleUnregister();
+        controller.handleViewMessage(um);
         break;
       case UNREGISTER_RESPONSE:
-        UnregisterResponseMessage urrm = (UnregisterResponseMessage) message;
-        if(urrm.success) {
+        UnregisterResponseMessage urm = (UnregisterResponseMessage) message;
+        if(urm.success) {
           //return to title screen on success
-          System.out.println(urrm.messages);
+          System.out.println("[!] "+arrayToString(urm.messages));
           handleTitleScreen();
         } else {
           //return to main menu on fail
-          System.out.println(urrm.messages);
+          System.out.println("[!] "+arrayToString(urm.messages));
           ViewMessage vm2 = handleMenu();
           controller.handleViewMessage(vm2);
         }
@@ -232,9 +233,7 @@ public class CLDriver implements ChadGameDriver {
     String pass = "";
 
     System.out.println("Enter your e-mail:");
-    while(email.equals("")) {
-      email = requestLine();
-    }
+    email = requestLine();
     System.out.println("Enter your password:");
     pass = requestLine();
 
@@ -289,6 +288,7 @@ public class CLDriver implements ChadGameDriver {
           return handleOutbox();
         case 4:
           //View Stats
+          menu.showPlayers(activePlayers);
           return handleProfile();
         case 5:
           //Unregister
@@ -311,19 +311,17 @@ public class CLDriver implements ChadGameDriver {
    * @return an Unregister message
    */
   public UnregisterMessage handleUnregister() {
-    String email;
-    String pass;
-
-    menu.unregisterUser();
-    System.out.println("E-mail:");
-    email = requestLine();
-    System.out.println("Password:");
-    pass = requestLine();
-
     try {
+      String email;
+      String pass;
+      menu.unregisterUser();
+      System.out.println("[!] E-mail:");
+      email = requestLine();
+      System.out.println("[!] Password:");
+      pass = requestLine();
       return new UnregisterMessage(email, pass, nickname);
-    } catch (NoSuchAlgorithmException e) {
-      e.printStackTrace();
+
+    } catch(NoSuchAlgorithmException e) {
       return null;
     }
   }
@@ -352,10 +350,15 @@ public class CLDriver implements ChadGameDriver {
    */
   public ViewMessage handleMovePiece() {
     String from = "";
-    String to = "";
+    String to;
     while(true) {
+      clearScreen();
+      showGame();
+
       System.out.println("~ Select a piece (e.g. \"1a\"): ");
-      from = requestLine();
+      while(from.equals("")) {
+        from = requestLine();
+      }
       //check for exit or resignation
       if(from.toUpperCase().equals("EXIT")) {
         return handleMenu();

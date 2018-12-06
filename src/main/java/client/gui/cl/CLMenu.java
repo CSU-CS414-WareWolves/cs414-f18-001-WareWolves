@@ -97,7 +97,7 @@ public class CLMenu {
    */
   public void unregisterUser(){
     StringBuilder res = new StringBuilder();
-    res.append("+++ Unregister +++");
+    res.append("+++ Unregister +++\n");
     res.append("[!] FOR UNREGISTER CONFIRMATION, PLEASE RE-ENTER YOUR ACCOUNT'S CREDENTIALS");
     System.out.println(res);
   }
