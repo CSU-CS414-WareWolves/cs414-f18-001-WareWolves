@@ -1,8 +1,13 @@
 package client.gui.swing.panels;
 
+import client.gui.ChadGameDriver;
 import client.gui.swing.SwingGUIController;
 import client.presenter.controller.messages.RegisterMessage;
+import client.presenter.controller.messages.UnregisterMessage;
+import client.presenter.controller.messages.UnregisterResponseMessage;
+import com.intellij.uiDesigner.core.Spacer;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -18,21 +23,26 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-public class RegisterNewAccountPanel extends JPanel {
+public class UnregisterAccountPanel extends JPanel {
 
-  private JPanel newAccountPanel;
+  private JPanel mainPanel;
   private JTextField nicknameField;
-  private JButton registerAccount;
-  private JButton cancelRegister;
   private JTextField emailField;
   private JPasswordField passwordField;
+  private JButton registerAccount;
+  private JButton cancelRegister;
 
-  SwingGUIController controller;
-
-  public RegisterNewAccountPanel(SwingGUIController controller) {
-    super();
-    this.controller = controller;
-    this.add(newAccountPanel);
+  public UnregisterAccountPanel(ChadGameDriver controller) {
+    cancelRegister.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        try {
+          controller.handleViewMessage(new UnregisterMessage(null, "", null));
+        } catch (NoSuchAlgorithmException e1) {
+          System.err.println("The computer does not have SHA1 algorithm");
+        }
+      }
+    });
     registerAccount.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
@@ -42,25 +52,20 @@ public class RegisterNewAccountPanel extends JPanel {
 
         if (email.isEmpty() || password.isEmpty() || nickname.isEmpty()) {
 
-          JOptionPane.showMessageDialog(newAccountPanel,
+          JOptionPane.showMessageDialog(mainPanel,
               "You must enter values in the Email, Nickname, and Password fields");
 
           return;
         }
         try {
-          RegisterMessage message = new RegisterMessage(email, password, nickname);
-          controller.sendMessage(message);
+          passwordField.setText("");
+          UnregisterMessage message = new UnregisterMessage(email, password, nickname);
+          controller.handleViewMessage(message);
 
         } catch (NoSuchAlgorithmException e1) {
           System.err.println("The computer does not have SHA1 algorithm");
         }
 
-      }
-    });
-    cancelRegister.addActionListener(new ActionListener() {
-      @Override
-      public void actionPerformed(ActionEvent e) {
-        controller.actionPerformed(e);
       }
     });
   }
@@ -101,22 +106,34 @@ public class RegisterNewAccountPanel extends JPanel {
    * @noinspection ALL
    */
   private void $$$setupUI$$$() {
-    newAccountPanel = new JPanel();
-    newAccountPanel.setLayout(new BorderLayout(0, 0));
+    mainPanel = new JPanel();
+    mainPanel.setLayout(new BorderLayout(0, 0));
     final JPanel panel1 = new JPanel();
-    panel1.setLayout(new BorderLayout(0, 0));
-    newAccountPanel.add(panel1, BorderLayout.CENTER);
+    panel1.setLayout(new GridBagLayout());
+    mainPanel.add(panel1, BorderLayout.CENTER);
+    final JPanel spacer1 = new JPanel();
+    GridBagConstraints gbc;
+    gbc = new GridBagConstraints();
+    gbc.gridx = 1;
+    gbc.gridy = 0;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
+    panel1.add(spacer1, gbc);
     final JPanel panel2 = new JPanel();
-    panel2.setLayout(new GridBagLayout());
-    panel1.add(panel2, BorderLayout.CENTER);
+    panel2.setLayout(new BorderLayout(0, 0));
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 1;
+    panel1.add(panel2, gbc);
+    final JPanel panel3 = new JPanel();
+    panel3.setLayout(new GridBagLayout());
+    panel2.add(panel3, BorderLayout.CENTER);
     final JLabel label1 = new JLabel();
     label1.setText("Account Nickname");
-    GridBagConstraints gbc;
     gbc = new GridBagConstraints();
     gbc.gridx = 1;
     gbc.gridy = 2;
     gbc.anchor = GridBagConstraints.WEST;
-    panel2.add(label1, gbc);
+    panel3.add(label1, gbc);
     nicknameField = new JTextField();
     nicknameField.setColumns(30);
     gbc = new GridBagConstraints();
@@ -124,13 +141,13 @@ public class RegisterNewAccountPanel extends JPanel {
     gbc.gridy = 2;
     gbc.anchor = GridBagConstraints.WEST;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    panel2.add(nicknameField, gbc);
-    final JPanel spacer1 = new JPanel();
+    panel3.add(nicknameField, gbc);
+    final JPanel spacer2 = new JPanel();
     gbc = new GridBagConstraints();
     gbc.gridx = 2;
     gbc.gridy = 2;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    panel2.add(spacer1, gbc);
+    panel3.add(spacer2, gbc);
     final JLabel label2 = new JLabel();
     label2.setText("Account Email ");
     label2.putClientProperty("html.disable", Boolean.FALSE);
@@ -138,14 +155,14 @@ public class RegisterNewAccountPanel extends JPanel {
     gbc.gridx = 1;
     gbc.gridy = 1;
     gbc.anchor = GridBagConstraints.WEST;
-    panel2.add(label2, gbc);
+    panel3.add(label2, gbc);
     emailField = new JTextField();
     emailField.setColumns(30);
     emailField.setVerifyInputWhenFocusTarget(true);
     gbc = new GridBagConstraints();
     gbc.gridx = 3;
     gbc.gridy = 1;
-    panel2.add(emailField, gbc);
+    panel3.add(emailField, gbc);
     final JLabel label3 = new JLabel();
     label3.setText("Password");
     label3.putClientProperty("html.disable", Boolean.FALSE);
@@ -153,56 +170,82 @@ public class RegisterNewAccountPanel extends JPanel {
     gbc.gridx = 1;
     gbc.gridy = 3;
     gbc.anchor = GridBagConstraints.WEST;
-    panel2.add(label3, gbc);
+    panel3.add(label3, gbc);
     passwordField = new JPasswordField();
     passwordField.setColumns(30);
     gbc = new GridBagConstraints();
     gbc.gridx = 3;
     gbc.gridy = 3;
-    panel2.add(passwordField, gbc);
-    final JPanel spacer2 = new JPanel();
+    panel3.add(passwordField, gbc);
+    final JPanel spacer3 = new JPanel();
     gbc = new GridBagConstraints();
     gbc.gridx = 4;
     gbc.gridy = 1;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    panel2.add(spacer2, gbc);
-    final JPanel spacer3 = new JPanel();
+    panel3.add(spacer3, gbc);
+    final JPanel spacer4 = new JPanel();
     gbc = new GridBagConstraints();
     gbc.gridx = 0;
     gbc.gridy = 2;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    panel2.add(spacer3, gbc);
-    final JPanel spacer4 = new JPanel();
+    panel3.add(spacer4, gbc);
+    final JPanel spacer5 = new JPanel();
     gbc = new GridBagConstraints();
     gbc.gridx = 3;
     gbc.gridy = 0;
     gbc.fill = GridBagConstraints.VERTICAL;
-    panel2.add(spacer4, gbc);
-    final JPanel spacer5 = new JPanel();
+    panel3.add(spacer5, gbc);
+    final JPanel spacer6 = new JPanel();
     gbc = new GridBagConstraints();
     gbc.gridx = 3;
     gbc.gridy = 4;
     gbc.fill = GridBagConstraints.VERTICAL;
-    panel2.add(spacer5, gbc);
-    final JPanel panel3 = new JPanel();
-    panel3.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-    newAccountPanel.add(panel3, BorderLayout.SOUTH);
+    panel3.add(spacer6, gbc);
+    final JPanel panel4 = new JPanel();
+    panel4.setLayout(new BorderLayout(0, 0));
+    panel2.add(panel4, BorderLayout.NORTH);
+    final JPanel panel5 = new JPanel();
+    panel5.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+    panel4.add(panel5, BorderLayout.NORTH);
+    final JLabel label4 = new JLabel();
+    Font label4Font = this.$$$getFont$$$(null, -1, -1, label4.getFont());
+    if (label4Font != null) {
+      label4.setFont(label4Font);
+    }
+    label4.setText("Please enter your account infromation to unregister");
+    panel5.add(label4);
+    final JPanel panel6 = new JPanel();
+    panel6.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+    panel4.add(panel6, BorderLayout.CENTER);
+    final JLabel label5 = new JLabel();
+    Font label5Font = this.$$$getFont$$$(null, Font.BOLD, 14, label5.getFont());
+    if (label5Font != null) {
+      label5.setFont(label5Font);
+    }
+    label5.setForeground(new Color(-4509164));
+    label5.setText("There is no way to undo this action");
+    panel6.add(label5);
+    final JPanel panel7 = new JPanel();
+    panel7.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+    gbc = new GridBagConstraints();
+    gbc.gridx = 0;
+    gbc.gridy = 2;
+    panel1.add(panel7, gbc);
     registerAccount = new JButton();
-    registerAccount.setActionCommand("register Account");
-    registerAccount.setText("Register Account");
-    panel3.add(registerAccount);
+    registerAccount.setActionCommand("Unregister Account");
+    registerAccount.setLabel("Unregister Account");
+    registerAccount.setText("Unregister Account");
+    panel7.add(registerAccount);
     cancelRegister = new JButton();
     cancelRegister.setActionCommand("Login Screen");
     cancelRegister.setText("Cancel");
-    panel3.add(cancelRegister);
+    panel7.add(cancelRegister);
   }
 
   /**
    * @noinspection ALL
    */
   public JComponent $$$getRootComponent$$$() {
-    return newAccountPanel;
+    return mainPanel;
   }
 }
-
-

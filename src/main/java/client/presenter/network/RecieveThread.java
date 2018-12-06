@@ -105,7 +105,7 @@ public class RecieveThread extends Thread{
 			  message = new Players(msg);
         break;
 			case UNREGISTER_RESPONSE:
-			  new UnregisterResponse(msg);
+			  message = new UnregisterResponse(msg);
         break;
 			default:
 			  System.err.println("Could not parse message: "+msg);
