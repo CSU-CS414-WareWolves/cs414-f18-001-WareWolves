@@ -66,27 +66,26 @@ public class CLMenu {
   }
 
   /**
-   * Print the profile of the player selected,
-//   * @param username
-//   * @param total
-//   * @param wgames
-//   * @param tgames
-//   * @param lgames
+   * Print the profile of the player selected
+   * @param player requested player
+   * @param white player who played white
+   * @param black player who played black
+   * @param results which player won
    */
-  public void showStats(){
+  public void showStats(String player, String[] white, String[] black, boolean[] results){
     //This is the format that it will be printed as
     StringBuilder res = new StringBuilder();
-    res.append("+++ View Profile +++\n\n");
-    res.append("");
-//    res.append("| - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
-//    res.append("| Username: "+username+"\n");
-//    res.append("| - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
-//    res.append("| Games  : "+total+"\n");
-//    res.append("| Wins   : "+wgames+"\n");
-//    res.append("| Ties   : "+tgames+"\n");
-//    res.append("| Losses : "+lgames+"\n");
-//    res.append("| - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+    res.append("+++ "+ player + "'s Profile +++\n\n");
+    res.append("   W player   |   B player   |   Result");
+    for(int i = 0; i<white.length; i++) {
+      res.append(white[i]).append(" | ").append(black[i]).append(" | ").append(playerFromBool(results[i]));
+    }
+    //TODO: W/L ratio calc
     System.out.println(res);
+  }
+
+  public String playerFromBool(boolean p) {
+    return p ? "white" : "black";
   }
 
   /**

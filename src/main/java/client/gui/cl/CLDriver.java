@@ -29,6 +29,7 @@ public class CLDriver implements ChadGameDriver {
 
   private Game chadGame;
   private int gameid;
+  private String requestedName;
   private String[] activePlayers;
 
   public CLDriver(ChadPresenter _controller){
@@ -38,6 +39,7 @@ public class CLDriver implements ChadGameDriver {
     game = new CLGameView();
 
     activePlayers = new String[]{};
+    requestedName = "";
     keyboard = new KeyboardThread();
   }
 
@@ -104,11 +106,12 @@ public class CLDriver implements ChadGameDriver {
       case GAME_INFO:
         GameInfo gi = (GameInfo) message;
         chadGame = new Game(gi.gameBoard, gi.turn);
+        gameid = gi.gameID;
         showGame();
         break;
       case INBOX_RESPONSE:
         InboxResponse ir = (InboxResponse) message;
-        InboxMessage im = handleInbox(ir.inviteIDs, ir.sendDates, ir.senders);
+        InviteMessage im = handleInbox(ir.inviteIDs, ir.sendDates, ir.senders);
         controller.handleViewMessage(im);
         break;
       case LOGOUT:
@@ -123,9 +126,10 @@ public class CLDriver implements ChadGameDriver {
 //        controller.handleViewMessage(pm);
         break;
       case PROFILE_RESPONSE:
-        //high TODO: ask what this data is
         ProfileResponse pr = (ProfileResponse) message;
-//        menu.showStats(pr.whitePlayers, pr.blackPlayers, pr.results, pr.startDates, pr.endDates);
+        menu.showPlayers(activePlayers);
+        menu.showStats(requestedName, pr.whitePlayers, pr.blackPlayers, pr.results);
+        controller.handleViewMessage(handleProfile());
         break;
       case REGISTER_RESPONSE:
         RegisterResponse rr = (RegisterResponse) message;
@@ -280,7 +284,6 @@ public class CLDriver implements ChadGameDriver {
     int option = 0;
     while(true) {
       option = Integer.parseInt(requestLine());
-      System.out.println("[D] Grabbed selection during main menu");
       switch (option) {
         case 1:
           //View Active Games
@@ -300,7 +303,8 @@ public class CLDriver implements ChadGameDriver {
         case 6:
           //Logout
           System.out.println("[!] Hope to see you again soon, " + nickname + "!");
-          return new LogoutMessage();
+          controller.handleViewMessage(new LogoutMessage());
+          System.exit(0);
         default:
           warningValidOption();
           clearScreen();
@@ -338,6 +342,7 @@ public class CLDriver implements ChadGameDriver {
    * @return MenuMessage object with a String array = {gameId, opponent's nickname}
    */
   public void handleActiveGames(int[] ids, String[] opponents){
+    clearScreen();
     game.showCurrentGames(ids, opponents);
   }
 
@@ -346,8 +351,10 @@ public class CLDriver implements ChadGameDriver {
    * @return a GameRequestMessage with chosen gameID
    */
   public GameRequestMessage handleSelectGame() {
-    int option = requestInt();
-    return new GameRequestMessage(new String[]{Integer.toString(option)});
+    gameid  = requestInt();
+    String[] info = new String[1];
+    info[0] = Integer.toString(gameid);
+    return new GameRequestMessage(info);
   }
 
   /**
@@ -365,9 +372,8 @@ public class CLDriver implements ChadGameDriver {
         return handleMenu();
       }
       else if(from.toUpperCase().equals("RESIGN")) {
-        //high TODO: return new, updated Resign message
-        return handleMenu();
-//        return new ResignMessage();
+//        return handleMenu();
+        return new ResignMessage(gameid);
       }
 
       //Display valid moves for selected piece
@@ -402,19 +408,16 @@ public class CLDriver implements ChadGameDriver {
    * @param senders array with challenger nicknames
    * @return an AcceptInvite message with chosen id/nickname
    */
-  public InboxMessage handleInbox(int[] ids, String[] dates, String[] senders){
+  public InviteMessage handleInbox(int[] ids, String[] dates, String[] senders){
     clearScreen();
     menu.viewInvites(ids, dates, senders);
 
-    String[] info = new String[2];
-
-
+    String info = "";
     int option = requestInt();
 
-    info[0] = Integer.toString(ids[option]);
-    info[1] = senders[option];
-    //high TODO: return new Accept_Invite message
-    return new InboxMessage();
+    info = senders[option];
+    //high TODO: what do I return here?
+    return new InviteMessage(info, nickname);
   }
 
   /**
@@ -430,11 +433,15 @@ public class CLDriver implements ChadGameDriver {
     return new InviteMessage(nickname, info);
   }
 
-  public ProfileMessage handleProfile() {
+  public ViewMessage handleProfile() {
     clearScreen();
     menu.showPlayers(activePlayers);
     menu.requestUsername();
     String nick = requestLine();
+    if(nick.toUpperCase().equals("EXIT")){
+      return handleMenu();
+    }
+    requestedName = nick;
     return new ProfileMessage(nick);
   }
 
