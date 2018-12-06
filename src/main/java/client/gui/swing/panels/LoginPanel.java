@@ -50,6 +50,7 @@ public class LoginPanel extends JPanel {
         }
         try {
           LoginMessage message = new LoginMessage(email, password);
+          passwordField.setText("");
           controller.sendMessage(message);
 
         } catch (NoSuchAlgorithmException e1) {
