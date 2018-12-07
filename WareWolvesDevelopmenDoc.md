@@ -85,5 +85,5 @@ Run `client/presenter/Launcher` with the arguments AI, ip address of the server,
 
 - Run the command `mvn test`
 - Alternatively, you can run individual JUnit test cases from src/test/java/client
-- See [testing document](./P3/WareWolvesTestingDocument11-04-18.pdf) for non-junit test cases 
+- See [testing document](./P4/WareWolves_Testing_Document_12-02-18.pdf) for non-junit test cases 
 
