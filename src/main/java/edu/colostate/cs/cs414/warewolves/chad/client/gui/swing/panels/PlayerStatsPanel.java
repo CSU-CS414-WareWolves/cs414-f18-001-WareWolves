@@ -1,0 +1,190 @@
+package edu.colostate.cs.cs414.warewolves.chad.client.gui.swing.panels;
+
+import edu.colostate.cs.cs414.warewolves.chad.client.gui.swing.SwingGUIController;
+import edu.colostate.cs.cs414.warewolves.chad.client.presenter.controller.messages.ProfileMessage;
+import edu.colostate.cs.cs414.warewolves.chad.client.presenter.network.messages.NetworkMessage;
+import edu.colostate.cs.cs414.warewolves.chad.client.presenter.network.messages.Players;
+import edu.colostate.cs.cs414.warewolves.chad.client.presenter.network.messages.ProfileResponse;
+import com.intellij.uiDesigner.core.Spacer;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableModel;
+
+public class PlayerStatsPanel extends UpdatableJTableInPanel {
+
+  private final String[] statsColumns =
+          {"White Player", "Black Player", "Date Started", "Date Finished", "Winner"};
+
+  private String playerNickName;
+  private String currentSelected = "";
+  private boolean ignoreComboBox = true;
+
+  private JPanel mainPanel;
+  private JTable playerStatsTable;
+  private DefaultTableModel playerStatsModel;
+  private JLabel playerStats;
+  private JComboBox playerList;
+
+  public PlayerStatsPanel(SwingGUIController controller) {
+    $$$setupUI$$$();
+    playerList.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent e) {
+        String profileNickName = (String) playerList.getSelectedItem();
+        if (profileNickName == null || currentSelected.equals(profileNickName) || ignoreComboBox) {
+          return;
+        }
+        currentSelected = profileNickName;
+        playerNickName = profileNickName;
+        controller.sendMessage(new ProfileMessage(profileNickName));
+
+      }
+    });
+  }
+
+  @Override
+  public void updateTable(NetworkMessage message) {
+
+    if (!(message instanceof ProfileResponse)) {
+      throw new IllegalArgumentException("ActiveGamePanel:: Received message of type "
+              + message.getClass() + " expected" + ProfileResponse.class);
+    }
+
+    ProfileResponse profileResponse = (ProfileResponse) message;
+
+    // Reset current data
+    playerStatsModel.setNumRows(0);
+    if (profileResponse.whitePlayers[0].equals("-1")) {
+      playerStats.setText(playerNickName + " has not played any games.");
+      return;
+    }
+    int playerWins = 0;
+    int numberOfGames = profileResponse.results.length;
+    for (int i = 0; i < numberOfGames; i++) {
+      String winner;
+      if (profileResponse.results[i]) {
+        winner = profileResponse.blackPlayers[i];
+      } else {
+        winner = profileResponse.whitePlayers[i];
+      }
+      playerStatsModel.addRow(new Object[]{profileResponse.whitePlayers[i],
+              profileResponse.blackPlayers[i], profileResponse.startDates[i],
+              profileResponse.endDates[i], winner});
+
+      if (winner.equals(playerNickName)) {
+        playerWins++;
+      }
+    }
+
+    double winRate = numberOfGames > 0 ? playerWins / (double) numberOfGames : 0.0;
+    DecimalFormat df = new DecimalFormat("#.##");
+
+    playerStats.setText(
+            playerNickName + " won: " + playerWins + " games out of " + numberOfGames + " " + df
+                    .format(winRate * 100) + "%");
+
+
+  }
+
+
+  private void createUIComponents() {
+
+    playerStatsModel = new DefaultTableModel(new Object[][]{}, statsColumns);
+    playerStatsTable = new JTable(playerStatsModel) {
+      public boolean isCellEditable(int row, int column) {
+        return false;
+      }
+    };
+
+    playerStatsTable.setRowSelectionAllowed(true);
+    playerStatsTable.setColumnSelectionAllowed(false);
+    playerStatsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    playerStatsTable.setAutoCreateRowSorter(true);
+    playerStatsTable.getTableHeader().setReorderingAllowed(false);
+
+
+  }
+
+  public void setPlayerNickName(String playerNickName) {
+    this.playerNickName = playerNickName;
+  }
+
+  public void populatePlayersList(NetworkMessage message) {
+
+    if (!(message instanceof Players)) {
+      throw new IllegalArgumentException("PlayerStatsPanel:: Received message of type "
+              + message.getClass() + " expected" + Players.class);
+    }
+
+    Players players = (Players) message;
+    ignoreComboBox = true;
+    playerList.removeAllItems();
+    for (int i = 0; i < players.players.length; i++) {
+      playerList.addItem(players.players[i]);
+    }
+    currentSelected = "";
+    playerList.setSelectedIndex(-1);
+    ignoreComboBox = false;
+  }
+
+
+  /**
+   * Method generated by IntelliJ IDEA GUI Designer
+   * >>> IMPORTANT!! <<<
+   * DO NOT edit this method OR call it in your code!
+   *
+   * @noinspection ALL
+   */
+  private void $$$setupUI$$$() {
+    createUIComponents();
+    mainPanel = new JPanel();
+    mainPanel.setLayout(new BorderLayout(0, 0));
+    final JPanel panel1 = new JPanel();
+    panel1.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+    mainPanel.add(panel1, BorderLayout.NORTH);
+    final JLabel label1 = new JLabel();
+    label1.setText("Select Player");
+    panel1.add(label1);
+    final Spacer spacer1 = new Spacer();
+    panel1.add(spacer1);
+    playerList = new JComboBox();
+    playerList.setActionCommand("selectedPlayer");
+    playerList.setBackground(new Color(-3681323));
+    playerList.setDoubleBuffered(false);
+    playerList.setEditable(false);
+    playerList.setMaximumSize(new Dimension(500, 30));
+    playerList.setMinimumSize(new Dimension(500, 30));
+    playerList.setPreferredSize(new Dimension(500, 30));
+    playerList.setRequestFocusEnabled(true);
+    panel1.add(playerList);
+    final JScrollPane scrollPane1 = new JScrollPane();
+    mainPanel.add(scrollPane1, BorderLayout.CENTER);
+    playerStatsTable.setFillsViewportHeight(true);
+    scrollPane1.setViewportView(playerStatsTable);
+    final JPanel panel2 = new JPanel();
+    panel2.setLayout(new BorderLayout(0, 0));
+    mainPanel.add(panel2, BorderLayout.SOUTH);
+    playerStats = new JLabel();
+    playerStats.setText("Select player to see stats");
+    panel2.add(playerStats, BorderLayout.CENTER);
+  }
+
+  /**
+   * @noinspection ALL
+   */
+  public JComponent $$$getRootComponent$$$() {
+    return mainPanel;
+  }
+}
