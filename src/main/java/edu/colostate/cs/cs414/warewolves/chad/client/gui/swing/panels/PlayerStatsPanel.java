@@ -115,12 +115,7 @@ public class PlayerStatsPanel extends UpdatableJTableInPanel {
 
     for (int i = 0; i < numberOfGames; i++) {
       // Find the nickname of the player who won the game
-      String winner;
-      if (profileResponse.results[i]) {
-        winner = profileResponse.blackPlayers[i];
-      } else {
-        winner = profileResponse.whitePlayers[i];
-      }
+      String winner = getWinnerNickname(profileResponse, i);
       // add game to able
       playerStatsModel.addRow(new Object[]{profileResponse.whitePlayers[i],
               profileResponse.blackPlayers[i], profileResponse.startDates[i],
@@ -138,6 +133,22 @@ public class PlayerStatsPanel extends UpdatableJTableInPanel {
     playerStats.setText(
             lookedUpPlayerNickName + " won: " + playerWins + " games out of " + numberOfGames + " "
                 + df.format(winRate * 100) + "%");
+  }
+
+  /**
+   * Gets the winners nickname for a given game
+   * @param profileResponse message with all the game results
+   * @param index index to check
+   * @return the winners nickname
+   */
+  private String getWinnerNickname(ProfileResponse profileResponse, int index) {
+    String winner;
+    if (profileResponse.results[index]) {
+      winner = profileResponse.blackPlayers[index];
+    } else {
+      winner = profileResponse.whitePlayers[index];
+    }
+    return winner;
   }
 
   /**
