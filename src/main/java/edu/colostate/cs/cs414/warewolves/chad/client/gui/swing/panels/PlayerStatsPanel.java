@@ -98,10 +98,7 @@ public class PlayerStatsPanel extends UpdatableJTableInPanel {
   @Override
   public void updateTable(NetworkMessage message) {
     // Check for correct type of message
-    if (!(message instanceof ProfileResponse)) {
-      throw new IllegalArgumentException("ActiveGamePanel:: Received message of type "
-              + message.getClass() + " expected" + ProfileResponse.class);
-    }
+    checkValidMessageType(message,  ProfileResponse.class, "PlayerStatsPanel");
 
     ProfileResponse profileResponse = (ProfileResponse) message;
 
@@ -171,12 +168,10 @@ public class PlayerStatsPanel extends UpdatableJTableInPanel {
    * Populates the list of all the players in the game
    * @param message the message with all the players
    */
-  public void populatePlayersList(NetworkMessage message) {
-    // Check for correct type of message
-    if (!(message instanceof Players)) {
-      throw new IllegalArgumentException("PlayerStatsPanel:: Received message of type "
-              + message.getClass() + " expected" + Players.class);
-    }
+  public void populatePlayersList(NetworkMessage message){
+
+    checkValidMessageType(message,  Players.class, "PlayerStatsPanel");
+
     Players players = (Players) message;
 
     // Clear Data

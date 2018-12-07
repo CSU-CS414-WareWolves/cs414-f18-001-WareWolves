@@ -146,10 +146,7 @@ public class ActiveGamesPanel extends UpdatableJTableInPanel {
    */
   public void updateTable(NetworkMessage message) {
     // Check for correct type of message
-    if (!(message instanceof ActiveGameResponse)) {
-      throw new IllegalArgumentException("ActiveGamePanel:: Received message of type "
-          + message.getClass() + " expected" + ActiveGameResponse.class);
-    }
+    checkValidMessageType(message,  ActiveGameResponse.class, "ActiveGamePanel");
 
     ActiveGameResponse gameInfoMessage = (ActiveGameResponse) message;
 

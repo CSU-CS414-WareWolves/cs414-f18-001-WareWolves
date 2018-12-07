@@ -32,4 +32,16 @@ public abstract class UpdatableJTableInPanel extends JPanel {
     return selectedTableRow; // -1
   }
 
+  /**
+   * Checks to see if a NetworkMessage received is the one the class expected
+   * @param message the message
+   * @param expectedClass the expected type of NetworkMessage
+   * @param callingClassName the name of calling class
+   */
+  protected void checkValidMessageType(NetworkMessage message, Class expectedClass, String callingClassName) {
+    if (!expectedClass.isInstance(message)) {
+      throw new IllegalArgumentException(callingClassName + ":: Received message of type "
+              + message.getClass() + " expected" + expectedClass);
+    }
+  }
 }

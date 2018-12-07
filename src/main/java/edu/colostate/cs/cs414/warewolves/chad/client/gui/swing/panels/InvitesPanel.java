@@ -162,10 +162,7 @@ public class InvitesPanel extends UpdatableJTableInPanel {
   @Override
   public void updateTable(NetworkMessage tableInfo) {
     // Check for correct type of message
-    if (!(tableInfo instanceof InboxResponse)) {
-      throw new IllegalArgumentException("ActiveGamePanel:: Received message of type "
-              + tableInfo.getClass() + " expected" + InboxResponse.class);
-    }
+    checkValidMessageType(tableInfo,  InboxResponse.class, "InvitesPanel");
 
     InboxResponse inboxMessage = (InboxResponse) tableInfo;
 
