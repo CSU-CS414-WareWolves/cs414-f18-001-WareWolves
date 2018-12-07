@@ -23,43 +23,94 @@ import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+/**
+ * This class is the main game menu screen. It allows users to view their active games, invites,
+ * and the stats of all the players.
+ */
 public class MainMenuPanel extends SwingGUIController {
-
+  /**
+   * Layout manger for the changing menu panels
+   */
   private CardLayout cardLayout;
-
+  /**
+   * Classes main panel
+   */
   private JPanel mainPanel;
+  /**
+   * Button for changing to invitesPanel
+   */
   private JButton invitesButton;
+  /**
+   * Button for changing to playerStatsPanel
+   */
   private JButton profilesButton;
+  /**
+   * Button for changing to activeGamesPanel
+   */
   private JButton gamesButton;
+  /**
+   * Panel that displays the other panels
+   */
   private JPanel displayPanel;
+  /**
+   * Panel for active games table
+   */
   private ActiveGamesPanel activeGamesPanel;
+  /**
+   * Panel for invites table
+   */
   private InvitesPanel invitesPanel;
+  /**
+   * Panel for player stats table
+   */
   private PlayerStatsPanel playerStatsPanel;
 
+  /**
+   * Controller of this panel
+   */
   private ChadGameDriver controller;
 
+  /**
+   * All the player in the game
+   */
   private ArrayList<String> playersList = new ArrayList<>();
+  /**
+   * Nickname of the logged in player
+   */
   private String nickName;
 
+  /**
+   * Creates the GUI elements and sets the panels controller for ActionListeners
+   *
+   * @param controller the controller of the panel
+   */
   public MainMenuPanel(ChadGameDriver controller) {
 
     this.controller = controller;
 
-    $$$setupUI$$$();
+    $$$setupUI$$$(); // Needed for GUI
     cardLayout = (CardLayout) displayPanel.getLayout();
-    cardLayout.show(displayPanel, "Empty");
+    cardLayout.show(displayPanel, "Empty"); // Show empty panel at start
 
+    // Set button listeners
     gamesButton.addActionListener(this);
     invitesButton.addActionListener(this);
     profilesButton.addActionListener(this);
   }
 
+  /**
+   * Creates all the elements that the GUI needed custom constructors for
+   */
   private void createUIComponents() {
     activeGamesPanel = new ActiveGamesPanel(this);
     invitesPanel = new InvitesPanel(this);
     playerStatsPanel = new PlayerStatsPanel(this);
   }
 
+  /**
+   * Sends new ViewMessages or pass messages to this panels control;ers
+   * @param message the message to send
+   */
   @Override
   public void sendMessage(ViewMessage message) {
 
@@ -99,39 +150,20 @@ public class MainMenuPanel extends SwingGUIController {
             .println("MainMenuPanel::sendMessage - unknown message type " + message.getClass());
     }
 
-    if (message instanceof MenuMessage) {
-      MenuMessage menuMessage = (MenuMessage) message;
-      System.out.println("Invite ID: " + menuMessage.information[0] + " Accepting: "
-          + menuMessage.information[1]);
-    }
-
   }
+
 
   @Override
   public void receiveMessage(ViewMessage message) {
-
-    switch (message.messageType) {
-      case MENU:
-        break;
-      case REGISTER_RESPONSE:
-        break;
-      case LOGIN_RESPONSE:
-        break;
-      case UNREGISTER_RESPONSE:
-        break;
-      case MENU_RESPONSE:
-        break;
-      default:
-        System.err.println("MainMenuPanel::receiveMessage received invalid ViewMessage "
-            + message.messageType);
-
-    }
-
+    // method not need for this class
   }
 
+  /**
+   * Process NetworkMessages to populate panel tables
+   * @param message the message to process
+   */
   @Override
   public void receiveMessage(NetworkMessage message) {
-
     switch (message.type) {
       case ACTIVE_GAMES_RESPONSE:
         activeGamesPanel.updateTable(message);
@@ -143,8 +175,10 @@ public class MainMenuPanel extends SwingGUIController {
         playerStatsPanel.updateTable(message);
         break;
       case PLAYERS:
+        // Save the players list for new Invites
         Players players = (Players) message;
         playersList.addAll(Arrays.asList(players.players));
+
         playerStatsPanel.populatePlayersList(message);
         break;
       default:
@@ -153,6 +187,11 @@ public class MainMenuPanel extends SwingGUIController {
     }
   }
 
+  /**
+   * Receives action from buttons in the panel to switch visible panel and request infromation for
+   * the panel
+   * @param e the action
+   */
   @Override
   public void actionPerformed(ActionEvent e) {
 
@@ -174,9 +213,13 @@ public class MainMenuPanel extends SwingGUIController {
 
   }
 
-  public void setNickName(String nickName) {
-    this.nickName = nickName;
-    invitesPanel.setNickname(nickName);
+  /**
+   * Setst the nickname for the logged in player and shares the nickname with the invitesPanel
+   * @param nickname the nickname of the player
+   */
+  public void setNickName(String nickname) {
+    this.nickName = nickname;
+    invitesPanel.setNickname(nickname);
   }
 
   /**
