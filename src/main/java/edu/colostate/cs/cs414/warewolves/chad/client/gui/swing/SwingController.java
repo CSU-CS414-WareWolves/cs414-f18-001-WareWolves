@@ -30,34 +30,66 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+/**
+ * This class is the main controller for the swing GUI it acts as a facade passing information and
+ * commands to the various swing panels and switching between those panels.
+ */
 public class SwingController extends JFrame implements ChadGameDriver {
 
-  private JPanel mainPanel;
-  private MainMenuPanel menuPanel;
-  private LoginScreenPanel loginScreenPanel;
-  private GameJPanel gameJPanel;
-  private JPanel cardPanel;
-  private UnregisterAccountPanel unregisterAccountPanel;
-
   /**
-   * The menu bar
+   * Main panel for the class
+   */
+  private JPanel mainPanel;
+  /**
+   * Main Menu panel
+   */
+  private MainMenuPanel menuPanel;
+  /**
+   * Login screen panel
+   */
+  private LoginScreenPanel loginScreenPanel;
+  /**
+   * Game panel to show the game
+   */
+  private GameJPanel gameJPanel;
+  /**
+   * Panel for unregistering Account
+   */
+  private UnregisterAccountPanel unregisterAccountPanel;
+  /**
+   * Panel that holds all the other panels
+   */
+  private JPanel cardPanel;
+  /**
+   * The menu bar with logout and unregister options
    */
   JMenuBar menuBar;
-
-
+  /**
+   * Controller of the class
+   */
   private ChadGameDriver controller;
+  /**
+   * Card layout manager for changing panels
+   */
   private CardLayout cardLayout;
+  /**
+   * Is there a game being played currently
+   */
   private boolean playingGame = false;
 
-
+  /**
+   * Creates the GUI elements and sets the panels controller for ActionListeners
+   *
+   * @param controller the controller of the panel
+   */
   public SwingController(ChadGameDriver controller) {
 
     this.controller = controller;
 
-    $$$setupUI$$$();
+    $$$setupUI$$$(); // Needed for the GUI
     cardLayout = (CardLayout) cardPanel.getLayout();
     this.add(menuBar, BorderLayout.NORTH);
-    cardLayout.show(cardPanel, "LoginScreen");
+    cardLayout.show(cardPanel, "LoginScreen"); // Set default panel to login
   }
 
 
@@ -203,7 +235,9 @@ public class SwingController extends JFrame implements ChadGameDriver {
 
   }
 
-
+  /**
+   * Creates all the elements that the GUI needed custom constructors for
+   */
   private void createUIComponents() {
     menuPanel = new MainMenuPanel(this);
     loginScreenPanel = new LoginScreenPanel(this);
