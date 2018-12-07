@@ -3,6 +3,8 @@ package edu.colostate.cs.cs414.warewolves.chad.client.gui.swing.panels;
 import edu.colostate.cs.cs414.warewolves.chad.client.presenter.network.messages.NetworkMessage;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.TableColumnModel;
 
 /**
  * Any panel that has a JTable in it extends this class to allow the panels controller to update
@@ -43,5 +45,28 @@ public abstract class UpdatableJTableInPanel extends JPanel {
       throw new IllegalArgumentException(callingClassName + ":: Received message of type "
               + message.getClass() + " expected" + expectedClass);
     }
+  }
+
+  /**
+   * Sets the setting for a table and hides the first column if expected to
+   * @param table the table to setup
+   * @param hideFirstColumn if the user wants the first column hidden
+   */
+  protected void setTableSettings(JTable table, boolean hideFirstColumn) {
+    // Stop the user from reordering the columns
+    table.getTableHeader().setReorderingAllowed(false);
+    // Allow only row selection
+    table.setRowSelectionAllowed(true);
+    table.setColumnSelectionAllowed(false);
+    // Allow the user to sort the columns
+    table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    table.setAutoCreateRowSorter(true);
+
+    if (hideFirstColumn) {
+      // Stop the user from seeing the inviteID
+      TableColumnModel columnControl = table.getColumnModel();
+      columnControl.removeColumn(columnControl.getColumn(0));
+    }
+
   }
 }

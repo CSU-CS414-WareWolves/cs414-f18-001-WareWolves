@@ -115,6 +115,14 @@ public class ActiveGamesPanel extends UpdatableJTableInPanel {
    */
   private void createUIComponents() {
 
+    /*
+     * Attempts to extract all shared logic for creating tables to base class failed.
+     *
+     * I attempted to make a method that took the tableModel, JTable, and the column names
+     * as parameters and initialize the table. However, the table and the model
+     * were not initialized after the method call. I was able create the table and then
+     * set the settings for the table in a method in the base class
+     */
 
     // Setup the column names for the table
     gameInfoModel = new DefaultTableModel(new Object[][]{}, columnNames);
@@ -124,18 +132,7 @@ public class ActiveGamesPanel extends UpdatableJTableInPanel {
         return false;
       }
     };
-    // Stop the user from reordering the columns
-    activeGamesTable.getTableHeader().setReorderingAllowed(false);
-
-    // Allow only row selection
-    activeGamesTable.setRowSelectionAllowed(true);
-    activeGamesTable.setColumnSelectionAllowed(false);
-    // Allow the user to sort the columns
-    activeGamesTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    activeGamesTable.setAutoCreateRowSorter(true);
-    // Stop the user from seeing the gameID
-    TableColumnModel columnControl = activeGamesTable.getColumnModel();
-    columnControl.removeColumn(columnControl.getColumn(0));
+    setTableSettings(activeGamesTable, true);
 
   }
 
