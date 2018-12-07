@@ -56,7 +56,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>client.presenter.Launcher</mainClass>
+              <mainClass>edu.colostate.cs.cs414.warewolves.chad.Launcher</mainClass>
             </manifest>
           </archive>
         </configuration>

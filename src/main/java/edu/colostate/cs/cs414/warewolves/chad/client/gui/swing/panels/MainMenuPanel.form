@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="edu.colostate.cs.cs414.warewolves.chad.client.gui.swing.panels.MainMenuPanel">
+  <grid id="27dc6" binding="mainPanel" layout-manager="GridBagLayout">
+    <constraints>
+      <xy x="20" y="20" width="724" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <grid id="99381" layout-manager="GridBagLayout">
+        <constraints>
+          <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="54363" class="javax.swing.JButton" binding="invitesButton" default-binding="true">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <actionCommand value="viewInvites"/>
+              <text value="Invites"/>
+            </properties>
+          </component>
+          <component id="42a6b" class="javax.swing.JButton" binding="profilesButton" default-binding="true">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <actionCommand value="viewProfiles"/>
+              <text value="Profiles"/>
+            </properties>
+          </component>
+          <component id="46249" class="javax.swing.JButton" binding="gamesButton" default-binding="true">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <actionCommand value="viewGames"/>
+              <hideActionText value="false"/>
+              <text value="Games"/>
+            </properties>
+          </component>
+          <vspacer id="2ab7f">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+          </vspacer>
+          <vspacer id="d4e8">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+          </vspacer>
+        </children>
+      </grid>
+      <hspacer id="1cd8d">
+        <constraints>
+          <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+      </hspacer>
+      <vspacer id="7ae05">
+        <constraints>
+          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+      </vspacer>
+      <vspacer id="2e1e">
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+      </vspacer>
+      <grid id="37f03" binding="displayPanel" layout-manager="CardLayout" hgap="0" vgap="0" show="b5c47">
+        <constraints>
+          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <autoscrolls value="false"/>
+        </properties>
+        <border type="bevel-lowered"/>
+        <children>
+          <nested-form id="3889b" form-file="edu/colostate/cs/cs414/warewolves/chad/client/gui/swing/panels/ActiveGamesPanel.form" binding="activeGamesPanel" custom-create="true">
+            <constraints>
+              <card name="Games"/>
+            </constraints>
+          </nested-form>
+          <grid id="b5c47" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints>
+              <card name="Empty"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children/>
+          </grid>
+          <nested-form id="74702" form-file="edu/colostate/cs/cs414/warewolves/chad/client/gui/swing/panels/InvitesPanel.form" binding="invitesPanel" custom-create="true">
+            <constraints>
+              <card name="Invites"/>
+            </constraints>
+          </nested-form>
+          <nested-form id="643e5" form-file="edu/colostate/cs/cs414/warewolves/chad/client/gui/swing/panels/PlayerStatsPanel.form" binding="playerStatsPanel" custom-create="true">
+            <constraints>
+              <card name="Stats"/>
+            </constraints>
+          </nested-form>
+        </children>
+      </grid>
+      <hspacer id="b53d9">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+      </hspacer>
+      <hspacer id="b1e71">
+        <constraints>
+          <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+      </hspacer>
+    </children>
+  </grid>
+</form>
