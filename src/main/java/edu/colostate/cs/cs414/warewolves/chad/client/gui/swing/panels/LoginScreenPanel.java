@@ -12,23 +12,49 @@ import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+/**
+ * Panel that displays and is the controller for the LoginPanel and RegisterNewAccountPanel
+ */
 public class LoginScreenPanel extends SwingGUIController {
 
+  /**
+   * layout manger for the LoginPanel and RegisterNewAccountPanel
+   */
   private CardLayout cardLayout;
-
+  /**
+   * Main panel for class
+   */
   private JPanel mainPanel;
+  /**
+   * Login panel
+   */
   private LoginPanel loginPanel;
+  /**
+   * New account panel
+   */
   private RegisterNewAccountPanel registerNewAccountPanel;
+  /**
+   * Controller for this panel
+   */
   private ChadGameDriver controller;
 
+  /**
+   * Creates the GUI elements and sets the panels controller for ActionListeners
+   *
+   * @param controller the controller of the panel
+   */
   public LoginScreenPanel(ChadGameDriver controller) {
     this.controller = controller;
-    $$$setupUI$$$();
+    $$$setupUI$$$(); // Need for GUI creation
     cardLayout = (CardLayout) mainPanel.getLayout();
-    cardLayout.show(mainPanel, "Login");
+    cardLayout.show(mainPanel, "Login"); // show the login panel on startup
 
   }
 
+  /**
+   * Sends a login or register message the panels controller
+   * @param message the message to send
+   */
   @Override
   public void sendMessage(ViewMessage message) {
 
@@ -36,15 +62,20 @@ public class LoginScreenPanel extends SwingGUIController {
 
   }
 
+  /**
+   * Only receives the results of a login or register attempt that failed, and displays the
+   * information about the message in a popup
+   * @param message the message stating the failed to login or register
+   */
   @Override
   public void receiveMessage(ViewMessage message) {
 
     String messageInfo = "This is a default message!!! I should not be seen";
-
+    // Do not tell user why they failed to login
     if (message instanceof LoginResponseMessage) {
       messageInfo = "The password or email address entered is invalid";
     }
-
+    // Get why their register attempt failed
     if (message instanceof RegisterResponseMessage) {
       RegisterResponseMessage registerResponse = (RegisterResponseMessage) message;
       messageInfo = registerResponse.messages[0];
@@ -56,9 +87,14 @@ public class LoginScreenPanel extends SwingGUIController {
 
   @Override
   public void receiveMessage(NetworkMessage message) {
-    // Not needed for this class
+    // Not used for this class
   }
 
+  /**
+   * Receives action from buttons in the loginPanel and registerNewAccountPanel to switch
+   * the panel to display
+   * @param e the action
+   */
   @Override
   public void actionPerformed(ActionEvent e) {
 
@@ -75,6 +111,9 @@ public class LoginScreenPanel extends SwingGUIController {
 
   }
 
+  /**
+   * Creates all the elements that the GUI needed custom constructors for
+   */
   private void createUIComponents() {
 
     loginPanel = new LoginPanel(this);
