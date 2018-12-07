@@ -111,9 +111,10 @@ public class ActiveGamesPanel extends UpdatableJTableInPanel {
   }
 
   /**
-   * Creates all the elements that the GUI need custom constructors for
+   * Creates all the elements that the GUI needed custom constructors for
    */
   private void createUIComponents() {
+
 
     // Setup the column names for the table
     gameInfoModel = new DefaultTableModel(new Object[][]{}, columnNames);
