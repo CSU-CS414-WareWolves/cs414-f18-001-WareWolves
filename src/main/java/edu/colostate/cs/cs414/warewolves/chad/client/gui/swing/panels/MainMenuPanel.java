@@ -5,7 +5,6 @@ import edu.colostate.cs.cs414.warewolves.chad.client.gui.swing.SwingGUIControlle
 import edu.colostate.cs.cs414.warewolves.chad.client.presenter.controller.messages.ActiveGameMessage;
 import edu.colostate.cs.cs414.warewolves.chad.client.presenter.controller.messages.InboxMessage;
 import edu.colostate.cs.cs414.warewolves.chad.client.presenter.controller.messages.InviteMessage;
-import edu.colostate.cs.cs414.warewolves.chad.client.presenter.controller.messages.MenuMessage;
 import edu.colostate.cs.cs414.warewolves.chad.client.presenter.controller.messages.ProfileMessage;
 import edu.colostate.cs.cs414.warewolves.chad.client.presenter.controller.messages.ViewMessage;
 import edu.colostate.cs.cs414.warewolves.chad.client.presenter.network.messages.NetworkMessage;
@@ -121,20 +120,7 @@ public class MainMenuPanel extends SwingGUIController {
         System.out.println("View Stats: " + profileMessage.nickname);
         break;
       case NEW_INVITE:
-        ArrayList<String> removeSelf = (ArrayList<String>) playersList.clone();
-        removeSelf.remove(nickName);
-        String player = (String) JOptionPane.showInputDialog(
-            this,
-            "Select player to invite",
-            "Send New Invite",
-            JOptionPane.PLAIN_MESSAGE,
-            null,
-            removeSelf.toArray(),
-            removeSelf.get(0));
-        if ((player != null) && (player.length() > 0)) {
-          controller.handleViewMessage(new InviteMessage(nickName, player));
-          System.out.println("Sending Invite to: " + player);
-        }
+        sendPlayerNewInvite();
         break;
       case INVITE_RESPONSE:
         controller.handleViewMessage(message);
@@ -150,6 +136,37 @@ public class MainMenuPanel extends SwingGUIController {
             .println("MainMenuPanel::sendMessage - unknown message type " + message.getClass());
     }
 
+  }
+
+  /**
+   * Gives the player a list of all users in the game and sends an invite to the player
+   */
+  private void sendPlayerNewInvite() {
+    // You can not send invite to yourself
+    ArrayList<String> removeSelf = removePlayerFromListOfPlayers();
+    String player = (String) JOptionPane.showInputDialog(
+        this,
+        "Select player to invite",
+        "Send New Invite",
+        JOptionPane.PLAIN_MESSAGE,
+        null,
+        removeSelf.toArray(),
+        removeSelf.get(0));
+    // If the player selected a user send the invite
+    if ((player != null) && (player.length() > 0)) {
+      controller.handleViewMessage(new InviteMessage(nickName, player));
+      System.out.println("Sending Invite to: " + player);
+    }
+  }
+
+  /**
+   * Removes the current player from the list of all the users in the game
+   * @return list of all the players except the current player
+   */
+  private ArrayList<String> removePlayerFromListOfPlayers() {
+    ArrayList<String> removeSelf = (ArrayList<String>) playersList.clone();
+    removeSelf.remove(nickName);
+    return removeSelf;
   }
 
 
