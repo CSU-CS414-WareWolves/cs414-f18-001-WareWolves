@@ -395,26 +395,36 @@ public class ChadPresenter implements ChadGameDriver{
         viewDriver.handleNetMessage(players);
         break;
       case UNREGISTER_RESPONSE:
-        UnregisterResponse unregisterResponse = (UnregisterResponse) message;
-        if(unregisterResponse.success) {
-          // Successfully unregistered
-          String[] messages = {"Successfully Unregistered."};
-          UnregisterResponseMessage unregisterResponseMessage = new UnregisterResponseMessage(unregisterResponse.success, messages);
-          viewDriver.handleViewMessage(unregisterResponseMessage);
-          playerNickname = "";
-          currentGame = null;
-        }
-        else {
-          // Not successful
-          String[] messages = {"Unable to unregister. User Information did not match, try again."};
-          UnregisterResponseMessage unregisterResponseMessage = new UnregisterResponseMessage(unregisterResponse.success, messages);
-          viewDriver.handleViewMessage(unregisterResponseMessage);
-        }
+        handleUnregisterNetMessage((UnregisterResponse) message);
         break;
     }
 
   }
 
+  /**
+   * Sends the results of an unregister attempt to the view
+   * @param message the result of the unregister attempt
+   */
+  private void handleUnregisterNetMessage(UnregisterResponse message) {
+    String[] resultsMessage = new String[1];
+    if(message.success) {
+      // Successfully unregistered
+      resultsMessage[0] = "Successfully Unregistered.";
+      // Remove data on current login
+      playerNickname = "";
+      currentGame = null;
+    }
+    else {
+      // Not successful
+      resultsMessage[0] = "Unable to unregister. User Information did not match, try again.";
+    }
+    viewDriver.handleViewMessage( new UnregisterResponseMessage(message.success, resultsMessage));
+  }
+
+  /**
+   * Gets the player of the current turn's nickname and their color
+   * @return the info about the current turn
+   */
   private String getMoveMessage() {
     return getCurrentPlayer(chadGame.getTurn()) + "'s turn. Playing: " + getPlayerColor(chadGame.getTurn()) + ".";
   }
