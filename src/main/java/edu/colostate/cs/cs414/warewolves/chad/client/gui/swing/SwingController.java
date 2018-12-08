@@ -93,6 +93,10 @@ public class SwingController extends JFrame implements ChadGameDriver {
   }
 
 
+  /**
+   * Handles the logic for the message type it is given
+   * @param message the message to process
+   */
   @Override
   public void handleViewMessage(ViewMessage message) {
     System.out.println("SwingController::handleViewMessage " + message.messageType);
@@ -119,6 +123,19 @@ public class SwingController extends JFrame implements ChadGameDriver {
         handleLogoutFromGameScreen();
         break;
       // Pass other message types to controller
+      default:
+        handlePassThroughMessage(message);
+        break;
+    }
+  }
+
+  /**
+   * Handles all the messages that only need to be sent to the controller
+   * @param message the message to pass to the controller
+   */
+  private void handlePassThroughMessage(ViewMessage message) {
+    System.out.println("SwingController::handlePassThroughMessage " + message.messageType);
+    switch (message.messageType) {
       case PROFILE:
       case ACTIVE_GAMES:
       case INBOX:
@@ -133,11 +150,9 @@ public class SwingController extends JFrame implements ChadGameDriver {
         controller.handleViewMessage(message);
         break;
       default:
-        System.err.println("SwingController::handleViewMessage sent invalid message type "
+        System.err.println("SwingController::handlePassThroughMessage sent invalid message type "
             + message.messageType);
     }
-
-
   }
 
   /**
