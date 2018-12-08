@@ -96,74 +96,29 @@ public class SwingController extends JFrame implements ChadGameDriver {
   @Override
   public void handleViewMessage(ViewMessage message) {
     System.out.println("SwingController::handleViewMessage " + message.messageType);
-
     switch (message.messageType) {
-
-
       case UNREGISTER:
-        UnregisterMessage unregisterMessage = (UnregisterMessage) message;
-        if (unregisterMessage.email == null) {
-          cardLayout.show(cardPanel, "MenuScreen");
-          menuBar.setVisible(true);
-          return;
-        }
-        controller.handleViewMessage(message);
+        handleUnregisterMessage((UnregisterMessage) message);
         break;
-
       case REGISTER_RESPONSE:
-        RegisterResponseMessage registerResponse = (RegisterResponseMessage) message;
-        if (registerResponse.success) {
-          menuPanel.setNickName(registerResponse.messages[0]);
-          cardLayout.show(cardPanel, "MenuScreen");
-          menuBar.setVisible(true);
-        } else {
-          loginScreenPanel.receiveMessage(message);
-        }
+        handleRegisterResponse((RegisterResponseMessage) message);
         break;
       case LOGIN_RESPONSE:
-        LoginResponseMessage loginResponse = (LoginResponseMessage) message;
-        if (loginResponse.success) {
-          menuPanel.setNickName(loginResponse.nickname);
-          cardLayout.show(cardPanel, "MenuScreen");
-          menuBar.setVisible(true);
-        } else {
-          loginScreenPanel.receiveMessage(message);
-        }
+        handleLoginResponse((LoginResponseMessage) message);
         break;
       case UNREGISTER_RESPONSE:
-        UnregisterResponseMessage unregisterResponse = (UnregisterResponseMessage) message;
-        JOptionPane.showMessageDialog(gameJPanel, unregisterResponse.messages[0]);
-        if (unregisterResponse.success) {
-          cardLayout.show(cardPanel, "LoginScreen");
-          menuBar.setVisible(false);
-        }
+        handleUnregisterResponse((UnregisterResponseMessage) message);
         break;
       case SHOW_VALID_MOVES_RESPONSE:
-        ViewValidMovesResponse validMoves = (ViewValidMovesResponse) message;
-        gameJPanel.setValidMoves(validMoves.locations[0]);
+        handleValidMoveResponse((ViewValidMovesResponse) message);
         break;
       case MOVE_PIECE_RESPONSE:
-        if (!playingGame) {
-          cardLayout.show(cardPanel, "GameScreen");
-          playingGame = true;
-          menuBar.setVisible(false);
-        }
-        MovePieceResponse moves = (MovePieceResponse) message;
-        gameJPanel.clearValidMoves();
-        gameJPanel.setSetGameStatus(moves.message);
-        gameJPanel.setBoardPieces(moves.gameBoard);
+        handleMovePieceResponse((MovePieceResponse) message);
         break;
-
       case LOGOUT:
-        if (playingGame) {
-          cardLayout.show(cardPanel, "MenuScreen");
-          controller.handleViewMessage(new ActiveGameMessage());
-          gameJPanel.setBoardPieces("");
-          playingGame = false;
-          menuBar.setVisible(true);
-        }
+        handleLogoutFromGameScreen();
         break;
-        // Pass all other message types to controller
+      // Pass other message types to controller
       case PROFILE:
       case ACTIVE_GAMES:
       case INBOX:
@@ -185,15 +140,116 @@ public class SwingController extends JFrame implements ChadGameDriver {
 
   }
 
+  /**
+   * Handles a users attempt to login. If they were successful, the active panel is changed to the
+   * main menu. If they were not successful, a pop up displays why
+   *
+   * @param message the results of the login attempt attempt
+   */
+  private void handleLoginResponse(LoginResponseMessage message) {
+    if (message.success) {
+      menuPanel.setNickName(message.nickname);
+      cardLayout.show(cardPanel, "MenuScreen");
+      menuBar.setVisible(true);
+    } else {
+      loginScreenPanel.receiveMessage(message);
+    }
+  }
 
   /**
-   * Passes a NetworkMessage to the menuPanel these message are used to update the tables
-   * in the menu.
-   * Valid NetworkMessage types:
-   * ACTIVE_GAMES_RESPONSE
-   * INBOX_RESPONSE
-   * PROFILE_RESPONSE
-   * PLAYERS
+   * Handles a users attempt to register. If they were successful, the active panel is changed to the
+   * main menu. If they were not successful, a pop up displays why
+   *
+   * @param message the results of the registration attempt
+   */
+  private void handleRegisterResponse(RegisterResponseMessage message) {
+    // Successful registration
+    if (message.success) {
+      menuPanel.setNickName(message.messages[0]);
+      cardLayout.show(cardPanel, "MenuScreen");
+      menuBar.setVisible(true);
+    } else {
+      // Unsuccessful registration
+      loginScreenPanel.receiveMessage(message);
+    }
+  }
+
+  /**
+   * Handles a message for the user trying to unregister. If they canceled the attempt, the active
+   * panel is changed to the menu screen. If they did not cancel the message is passed to the
+   * controller
+   *
+   * @param message a users attempt to unregister
+   */
+  private void handleUnregisterMessage(UnregisterMessage message) {
+    // player canceled the unregister attempt
+    if (message.email == null) {
+      cardLayout.show(cardPanel, "MenuScreen");
+      menuBar.setVisible(true);
+      return;
+    }
+    controller.handleViewMessage(message);
+  }
+
+  /**
+   * Changes the active panel to the login screen if the user was unregistered, or displays why the
+   * unregister attempt was not successful
+   *
+   * @param message the results of unregister a user
+   */
+  private void handleUnregisterResponse(UnregisterResponseMessage message) {
+    JOptionPane.showMessageDialog(gameJPanel, message.messages[0]);
+    if (message.success) {
+      cardLayout.show(cardPanel, "LoginScreen");
+      menuBar.setVisible(false);
+    }
+  }
+
+  /**
+   * Shows the valid moves on a game board
+   *
+   * @param message the valid moves
+   */
+  private void handleValidMoveResponse(ViewValidMovesResponse message) {
+    gameJPanel.setValidMoves(message.locations[0]);
+  }
+
+  /**
+   * Activates the game screen and print out the game board of a game
+   *
+   * @param message the game board
+   */
+  private void handleMovePieceResponse(MovePieceResponse message) {
+    // Change panel to game
+    if (!playingGame) {
+      cardLayout.show(cardPanel, "GameScreen");
+      playingGame = true;
+      menuBar.setVisible(false);
+    }
+    // Display game board
+    gameJPanel.clearValidMoves();
+    gameJPanel.setSetGameStatus(message.message);
+    gameJPanel.setBoardPieces(message.gameBoard);
+  }
+
+  /**
+   * Sets the active panel to the game menu and updates the active game list
+   */
+  private void handleLogoutFromGameScreen() {
+    if (playingGame) {
+      cardLayout.show(cardPanel, "MenuScreen");
+      controller.handleViewMessage(new ActiveGameMessage());
+      gameJPanel.setBoardPieces("");
+      playingGame = false;
+      menuBar.setVisible(true);
+    }
+  }
+
+
+  /**
+   * Passes a NetworkMessage to the menuPanel these message are used to update the tables in the menu.
+   * Valid NetworkMessage types: ACTIVE_GAMES_RESPONSE INBOX_RESPONSE PROFILE_RESPONSE PLAYERS
+   *
    * @param message the message to process
    */
   @Override
@@ -228,7 +284,7 @@ public class SwingController extends JFrame implements ChadGameDriver {
 
 
   /**
-   * Creates the menu items
+   * Creates the menu for controller
    */
   private void createMenuBar() {
 
@@ -360,5 +416,4 @@ public class SwingController extends JFrame implements ChadGameDriver {
   public JComponent $$$getRootComponent$$$() {
     return mainPanel;
   }
-
 }
