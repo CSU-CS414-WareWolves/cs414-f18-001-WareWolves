@@ -119,9 +119,7 @@ public class ChadPresenter implements ChadGameDriver{
         break;
       case GAME_REQUEST:
         // Send a game request to the net manager
-        handleGameRequestViewMessage(
-            (GameRequestMessage) message);
-
+        handleGameRequestViewMessage((GameRequestMessage) message);
         break;
       case NEW_INVITE:
         // Send an invite request to the net manager
@@ -309,40 +307,7 @@ public class ChadPresenter implements ChadGameDriver{
         handleLoginResponseNetMessage((LoginResponse) message);
         break;
       case MOVE:
-        if(currentGame == null){
-          return;
-        }
-        Move move = (Move) message;
-        // Check if the move message is for the current game
-        if( currentGame.getGameID() == move.gameID) {
-          if (move.ending) {
-            // The game has ended
-            if (move.draw) {
-              // The game ends in a draw
-              // Show draw
-              MovePieceResponse movePieceResponse = new MovePieceResponse("The game has ended in a draw.", move.board);
-              viewDriver.handleViewMessage(movePieceResponse);
-            } else {
-              // Show game ending
-              // Creates a string with who won the game
-              String winner = getCurrentPlayer(chadGame.getTurn()) + " has won.";
-              MovePieceResponse movePieceResponse = new MovePieceResponse(winner, move.board);
-              viewDriver.handleViewMessage(movePieceResponse);
-            }
-          } else {
-            // Game is not over
-            Point moveFrom = new Point(move.move.substring(1, 3));
-            Point moveTo = new Point(move.move.substring(3));
-
-            MovePieceResponse boardBeforeMove = new MovePieceResponse(getCurrentPlayer(chadGame.getTurn()) + " moved.", chadGame.getBoard());
-            viewDriver.handleViewMessage(boardBeforeMove);
-            String opponentsMoves = chadGame.validMoves(moveFrom.toString());
-            viewDriver.handleViewMessage(new ViewValidMovesResponse(new String[] {opponentsMoves}));
-            chadGame.move(moveFrom.toString(), moveTo.toString());
-            MovePieceResponse movePieceResponse = new MovePieceResponse(getMoveMessage(), chadGame.getBoard());
-            viewDriver.handleViewMessage(movePieceResponse);
-          }
-        }
+        handleMoveNetMessage((Move) message);
         break;
       case REGISTER_RESPONSE:
         handleRegisterResponseNetMessage((RegisterResponse) message);
@@ -362,6 +327,54 @@ public class ChadPresenter implements ChadGameDriver{
     }
 
   }
+
+  private boolean currentlyPlayingGame(int gameID){
+    return currentGame != null && currentGame.getGameID() == gameID;
+  }
+
+  /**
+   * Handles a move message from the server
+   * @param message info about a move
+   */
+  private void handleMoveNetMessage(Move message) {
+    // Ignore if not playing the game
+    if (!currentlyPlayingGame(message.gameID)) {
+      return;
+    }
+    // Check if the move message is for the current game
+    if (message.ending) {
+      handleWinningMoveNetMessage(message);
+      networkManager.sendMessage(new SeeResults(message.gameID, currentGame.getColor()));
+
+    }
+
+    // Game is not over
+
+    // Find move info
+    Point moveFrom = new Point(message.move.substring(1, 3));
+    Point moveTo = new Point(message.move.substring(3));
+
+    chadGame.move(moveFrom.toString(), moveTo.toString());
+    viewDriver.handleViewMessage( new MovePieceResponse(getMoveMessage(), chadGame.getBoard()));
+
+  }
+
+
+  /**
+   * Displays the results of a move the opponent used to end the game
+   * @param message the move info
+   */
+  private void handleWinningMoveNetMessage(Move message) {
+    String endingMessage;
+    if (message.draw) {
+      endingMessage = "The game has ended in a draw.";
+    } else {
+      endingMessage = getCurrentPlayer(chadGame.getTurn()) + " has won.";
+    }
+    viewDriver.handleViewMessage(new MovePieceResponse(endingMessage, message.board));
+  }
+
+
 
   /**
    * Handles a login response from the server
