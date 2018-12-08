@@ -99,12 +99,7 @@ public class SwingController extends JFrame implements ChadGameDriver {
 
     switch (message.messageType) {
 
-      case REGISTER:
-        controller.handleViewMessage(message);
-        break;
-      case LOGIN:
-        controller.handleViewMessage(message);
-        break;
+
       case UNREGISTER:
         UnregisterMessage unregisterMessage = (UnregisterMessage) message;
         if (unregisterMessage.email == null) {
@@ -114,12 +109,7 @@ public class SwingController extends JFrame implements ChadGameDriver {
         }
         controller.handleViewMessage(message);
         break;
-      case SHOW_VALID_MOVES:
-        controller.handleViewMessage(message);
-        break;
-      case MOVE_PIECE:
-        controller.handleViewMessage(message);
-        break;
+
       case REGISTER_RESPONSE:
         RegisterResponseMessage registerResponse = (RegisterResponseMessage) message;
         if (registerResponse.success) {
@@ -152,8 +142,6 @@ public class SwingController extends JFrame implements ChadGameDriver {
         ViewValidMovesResponse validMoves = (ViewValidMovesResponse) message;
         gameJPanel.setValidMoves(validMoves.locations[0]);
         break;
-      case MENU_RESPONSE:
-        break;
       case MOVE_PIECE_RESPONSE:
         if (!playingGame) {
           cardLayout.show(cardPanel, "GameScreen");
@@ -165,24 +153,7 @@ public class SwingController extends JFrame implements ChadGameDriver {
         gameJPanel.setSetGameStatus(moves.message);
         gameJPanel.setBoardPieces(moves.gameBoard);
         break;
-      case PROFILE:
-        controller.handleViewMessage(message);
-        break;
-      case ACTIVE_GAMES:
-        controller.handleViewMessage(message);
-        break;
-      case INBOX:
-        controller.handleViewMessage(message);
-        break;
-      case GAME_REQUEST:
-        controller.handleViewMessage(message);
-        break;
-      case NEW_INVITE:
-        controller.handleViewMessage(message);
-        break;
-      case INVITE_RESPONSE:
-        controller.handleViewMessage(message);
-        break;
+
       case LOGOUT:
         if (playingGame) {
           cardLayout.show(cardPanel, "MenuScreen");
@@ -192,45 +163,53 @@ public class SwingController extends JFrame implements ChadGameDriver {
           menuBar.setVisible(true);
         }
         break;
+        // Pass all other message types to controller
+      case PROFILE:
+      case ACTIVE_GAMES:
+      case INBOX:
+      case GAME_REQUEST:
+      case NEW_INVITE:
+      case INVITE_RESPONSE:
       case RESIGN:
+      case SHOW_VALID_MOVES:
+      case MOVE_PIECE:
+      case REGISTER:
+      case LOGIN:
         controller.handleViewMessage(message);
         break;
+      default:
+        System.err.println("SwingController::handleViewMessage sent invalid message type "
+            + message.messageType);
     }
 
 
   }
 
 
+  /**
+   * Passes a NetworkMessage to the menuPanel these message are used to update the tables
+   * in the menu.
+   * Valid NetworkMessage types:
+   * ACTIVE_GAMES_RESPONSE
+   * INBOX_RESPONSE
+   * PROFILE_RESPONSE
+   * PLAYERS
+   * @param message the message to process
+   */
   @Override
   public void handleNetMessage(NetworkMessage message) {
-    System.out.println("SwingController::handleViewMessage " + message.type);
+    System.out.println("SwingController::handleNetMessage " + message.type);
     switch (message.type) {
-
-      case LOGIN_RESPONSE:
-        break;
-      case MOVE:
-        break;
+      // Pass message to menuController
       case ACTIVE_GAMES_RESPONSE:
-        menuPanel.receiveMessage(message);
-        break;
-      case INVITE_RESPONSE:
-        break;
-      case REGISTER_RESPONSE:
-        break;
       case INBOX_RESPONSE:
-        menuPanel.receiveMessage(message);
-        break;
       case PROFILE_RESPONSE:
-        menuPanel.receiveMessage(message);
-        break;
       case PLAYERS:
         menuPanel.receiveMessage(message);
         break;
-      case UNREGISTER_RESPONSE:
-
-        break;
-      case SEE_RESULTS:
-        break;
+      default:
+        System.err.println("SwingController::handleNetMessage sent invalid message type "
+            + message.type);
     }
 
   }
@@ -381,9 +360,5 @@ public class SwingController extends JFrame implements ChadGameDriver {
   public JComponent $$$getRootComponent$$$() {
     return mainPanel;
   }
-
-  /**
-   * This code is need for packaging project into a jar and running code in Eclipse
-   */
 
 }
