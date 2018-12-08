@@ -99,6 +99,7 @@ public class CLDriver implements ChadGameDriver {
    * @param message a NetworkMessage with a type and data dependent on its type
    */
   public void handleNetMessage(NetworkMessage message){
+    clearScreen();
     switch(message.type){
       case ACTIVE_GAMES_RESPONSE:
         ActiveGameResponse agr = (ActiveGameResponse) message;
@@ -140,8 +141,6 @@ public class CLDriver implements ChadGameDriver {
         break;
       case PROFILE_RESPONSE:
         ProfileResponse pr = (ProfileResponse) message;
-
-        clearScreen();
         menu.showStats(requestedName, pr.whitePlayers, pr.blackPlayers, pr.results);
         clearScreen();
 
@@ -155,6 +154,7 @@ public class CLDriver implements ChadGameDriver {
    * @param message a ViewMessage with a type and data dependent on its type
    */
   public void handleViewMessage(ViewMessage message){
+    clearScreen();
     switch (message.messageType){
       case LOGIN_RESPONSE:
         LoginResponseMessage lrm = (LoginResponseMessage) message;
@@ -164,7 +164,6 @@ public class CLDriver implements ChadGameDriver {
           controller.handleViewMessage(vm);
         }
         else {
-          clearScreen();
           login.failedCreds(0);
           handleTitleScreen();
         }
@@ -204,7 +203,6 @@ public class CLDriver implements ChadGameDriver {
         game.showValidMoves(validMovesArray1);
         break;
       case UNREGISTER:
-        clearScreen();
         menu.unregisterUser();
         UnregisterMessage um = handleUnregister();
         controller.handleViewMessage(um);
@@ -230,7 +228,6 @@ public class CLDriver implements ChadGameDriver {
    * @return a LoginMessage with the user's input
    */
   public LoginMessage handleLogin() throws NoSuchAlgorithmException {
-    clearScreen();
     String email = "";
     String pass = "";
 
@@ -248,7 +245,6 @@ public class CLDriver implements ChadGameDriver {
    * @throws NoSuchAlgorithmException
    */
   public RegisterMessage handleRegister() throws NoSuchAlgorithmException {
-    clearScreen();
     String email = "";
     String pass = "";
     String nick = "";
@@ -275,7 +271,6 @@ public class CLDriver implements ChadGameDriver {
   public ViewMessage handleMenu(){
     clearScreen();
     menu.showMenu(nickname);
-
     int option = 0;
     while(true) {
       option = Integer.parseInt(requestLine());
@@ -338,9 +333,18 @@ public class CLDriver implements ChadGameDriver {
    * @return int of selected game id
    */
   public int showActiveGames(int[] gameIDs, String[] opponents, boolean[] turns, boolean[] color){
-    clearScreen();
     game.showCurrentGames(gameIDs, opponents, turns, color);
     return requestInt();
+  }
+
+  /**
+   * Helper method to show in-game view.
+   * (returns nothing but prints a nice view)
+   */
+  public void showGame(){
+    clearScreen();
+    game.showGameBoard(chadGame.getBoard());
+    game.showInGameMenu();
   }
 
   /**
@@ -351,7 +355,6 @@ public class CLDriver implements ChadGameDriver {
     String from = "";
     String to;
     while(true) {
-      clearScreen();
       showGame();
 
       System.out.println("~ Select a piece (e.g. \"1a\"): ");
@@ -382,16 +385,6 @@ public class CLDriver implements ChadGameDriver {
   }
 
   /**
-   * Helper method to show in-game view.
-   * (returns nothing but prints a nice view)
-   */
-  public void showGame(){
-    clearScreen();
-    game.showGameBoard(chadGame.getBoard());
-    game.showInGameMenu();
-  }
-
-  /**
    * Handle inbox interactions
    * @param ids array with ids for games
    * @param dates array with invite received dates
@@ -399,7 +392,6 @@ public class CLDriver implements ChadGameDriver {
    * @return an AcceptInvite message with chosen id/nickname
    */
   public ViewMessage handleInbox(int[] ids, String[] dates, String[] senders){
-    clearScreen();
     boolean check = menu.viewInvites(ids, dates, senders);
     if(check) {
       String temp = requestLine();
@@ -430,7 +422,6 @@ public class CLDriver implements ChadGameDriver {
    * @return a MenuMessage of type SEND_INVITE with a String array of nicknames||emails(?)
    */
   public InviteMessage handleOutbox() {
-    clearScreen();
     String info = "";
     menu.requestUsername();
     info = requestLine();
@@ -439,7 +430,6 @@ public class CLDriver implements ChadGameDriver {
   }
 
   public ViewMessage handleProfile() {
-    clearScreen();
     menu.showPlayers(activePlayers);
     menu.requestUsername();
     String nick = requestLine();
