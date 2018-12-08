@@ -184,6 +184,7 @@ public class CLDriver implements ChadGameDriver {
         }
         else {
           game.showGameBoard(mpr.gameBoard);
+          controller.handleViewMessage(handleMenu());
         }
         break;
       case REGISTER:
