@@ -351,54 +351,46 @@ public class ChadPresenter implements ChadGameDriver{
           }
         }
         break;
-      case ACTIVE_GAMES_RESPONSE:
-        ActiveGameResponse activeGameResponse = (ActiveGameResponse) message;
-        // Send to the view controller to display Active Games in view with ID, board, opponents, start dates, current turn, color and if it has ended
-        viewDriver.handleNetMessage(activeGameResponse);
-        break;
       case REGISTER_RESPONSE:
-        RegisterResponse registerResponse = (RegisterResponse) message;
-        if(registerResponse.success) {
-          // Successful Register
-          String[] messages = {"Sucessfully Registered."};
-          RegisterResponseMessage registerResponseMessage = new RegisterResponseMessage(registerResponse.success, messages);
-          viewDriver.handleViewMessage(registerResponseMessage);
-        }
-        else {
-          if(registerResponse.reason) {
-            // Nickname already taken
-            String[] messages = {"Could not register. Nickname already in use."};
-            RegisterResponseMessage registerResponseMessage = new RegisterResponseMessage(registerResponse.success, messages);
-            viewDriver.handleViewMessage(registerResponseMessage);
-          }
-          else {
-            // Email already taken
-            // Display unsuccessful register email taken (Not Implemented)
-            String[] messages = {"Could not register. Email already in use."};
-            RegisterResponseMessage registerResponseMessage = new RegisterResponseMessage(registerResponse.success, messages);
-            viewDriver.handleViewMessage(registerResponseMessage);
-          }
-        }
-        break;
-      case INBOX_RESPONSE:
-        InboxResponse inboxResponse = (InboxResponse) message;
-        // Send to the view controller to display inbox of messages with ids, senders, recipients, and send dates
-        viewDriver.handleNetMessage(inboxResponse);
-        break;
-      case PROFILE_RESPONSE:
-        ProfileResponse profileResponse = (ProfileResponse) message;
-        // Send to the view controller to display profile with games player played white and black, start and end dates of games, and results of games
-        viewDriver.handleNetMessage(profileResponse);
-        break;
-      case PLAYERS:
-        Players players = (Players) message;
-        viewDriver.handleNetMessage(players);
+        handleRegisterResponseNetMessage((RegisterResponse) message);
         break;
       case UNREGISTER_RESPONSE:
         handleUnregisterNetMessage((UnregisterResponse) message);
         break;
+      // Pass through all responses the are handled by the view
+      case INBOX_RESPONSE:
+      case PROFILE_RESPONSE:
+      case PLAYERS:
+      case ACTIVE_GAMES_RESPONSE:
+        viewDriver.handleNetMessage(message);
+        break;
+      default:
+        System.err.println("Presenter::handleNetMessage:: received invalid message " + message.type);
     }
 
+  }
+
+  /**
+   * Handles the response from a registration attempt from the view
+   * @param message the results from a registration attempt
+   */
+  private void handleRegisterResponseNetMessage(RegisterResponse message) {
+    String[] resultsMessage = new String[1];
+    if(message.success) {
+      // Successful Register
+      resultsMessage[0] = "Successfully Registered.";
+    } else {
+      if(message.reason) {
+        // Nickname already taken
+        resultsMessage[0] = "Could not register. Nickname already in use.";
+      } else {
+        // Email already taken
+        resultsMessage[0] = "Could not register. Email already in use.";
+      }
+    }
+
+    RegisterResponseMessage registerResponseMessage = new RegisterResponseMessage(message.success, resultsMessage);
+    viewDriver.handleViewMessage(registerResponseMessage);
   }
 
   /**
