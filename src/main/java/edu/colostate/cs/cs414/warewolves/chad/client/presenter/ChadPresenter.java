@@ -99,50 +99,7 @@ public class ChadPresenter implements ChadGameDriver{
       case MENU:
         break;
       case MOVE_PIECE:
-        MovePieceMessage moves = (MovePieceMessage) message;
-        boolean draw = false;
-        boolean ending = false;
-        if(chadGame.getTurn() != currentGame.getColor()) {
-          viewDriver.handleViewMessage(new MovePieceResponse(getMoveMessage(), chadGame.getBoard()));
-        }
-        // Checks to see if the move was successful
-        if(chadGame.move(moves.fromLocation.toString(), moves.toLocation.toString())){
-         // Show the winner if the game is over
-         if (chadGame.gameover()) {
-           ending = true;
-           // Check if draw
-           if (chadGame.isDraw()) {
-             draw = true;
-             // Create message response with draw
-             MovePieceResponse movePieceResponse = new MovePieceResponse("The game has ended in a draw.",
-                 chadGame.getBoard());
-             viewDriver.handleViewMessage(movePieceResponse);
-           } else {
-             String winner =  playerNickname + " has won the game.";
-             // Create message response with winner
-             MovePieceResponse movePieceResponse = new MovePieceResponse(winner,
-                 chadGame.getBoard());
-             viewDriver.handleViewMessage(movePieceResponse);
-           }
-         } else {
-           // Game is not over
-           MovePieceResponse movePieceResponse = new MovePieceResponse(getMoveMessage(), chadGame.getBoard());
-           viewDriver.handleViewMessage(movePieceResponse);
-         }
-           // Send Move to Server
-           // Get piece being moved
-           int index = chadGame.getBoard().indexOf(moves.toLocation.toString());
-           String board = chadGame.getBoard();
-           char piece = board.charAt(index - 1);
-           String moveString = piece + moves.fromLocation.toString() + moves.toLocation.toString();
-           Move move = new Move(currentGame.getGameID(), moveString, chadGame.getBoard(), ending, draw);
-           networkManager.sendMessage(move);
-      } else {
-          // Send a move piece response message with an error
-           String error = "Invalid Move.";
-           MovePieceResponse movePieceResponse = new MovePieceResponse(error, chadGame.getBoard());
-          viewDriver.handleViewMessage(movePieceResponse);
-        }
+        handleMovePieceViewMessage((MovePieceMessage) message);
         break;
       case PROFILE:
         // Send a profile request to the net manager
@@ -196,6 +153,70 @@ public class ChadPresenter implements ChadGameDriver{
         networkManager.sendMessage(new ActiveGameRequest(playerNickname));
         break;
     }
+  }
+
+  /**
+   * Handle a move message from the view
+   * @param message the message with the move
+   */
+  private void handleMovePieceViewMessage(MovePieceMessage message) {
+    // It is not the players turn just redraw the board
+    if(chadGame.getTurn() != currentGame.getColor()) {
+      viewDriver.handleViewMessage(new MovePieceResponse(getMoveMessage(), chadGame.getBoard()));
+    }
+
+    // Check to see if the move was valid
+    if(chadGame.move(message.fromLocation.toString(), message.toLocation.toString())){
+
+      boolean endingMove = chadGame.gameover();
+      boolean gameIsDraw = chadGame.isDraw();
+      String moveMessage = createMoveMessage(endingMove, gameIsDraw);
+
+      MovePieceResponse movePieceResponse = new MovePieceResponse(moveMessage, chadGame.getBoard());
+      viewDriver.handleViewMessage(movePieceResponse);
+      sentMoveToServer(message, gameIsDraw, endingMove);
+
+    } else {
+      // Send a move piece response message with an error
+       String error = "Invalid Move.";
+       MovePieceResponse movePieceResponse = new MovePieceResponse(error, chadGame.getBoard());
+       viewDriver.handleViewMessage(movePieceResponse);
+    }
+  }
+
+  /**
+   * Finds the string reputation of the results of the move
+   * @param ending did the move end the game
+   * @param draw did the move result in a draw
+   * @return the status of the game
+   */
+  private String createMoveMessage(boolean ending, boolean draw) {
+    String message;
+    if(draw){
+      message = "The game has ended in a draw.";
+    } else if(ending){
+      message = playerNickname + " has won the game.";
+    } else {
+      message = getMoveMessage();
+    }
+    return message;
+
+  }
+
+  /**
+   * Sends a move to the server
+   * @param message the information on the move
+   * @param draw did the move result in a draw
+   * @param ending did the move end the game
+   */
+  private void sentMoveToServer(MovePieceMessage message, boolean draw, boolean ending) {
+    // Get piece being moved
+    int index = chadGame.getBoard().indexOf(message.toLocation.toString());
+    String board = chadGame.getBoard();
+    char piece = board.charAt(index - 1);
+    String moveString = piece + message.fromLocation.toString() + message.toLocation.toString();
+    Move move = new Move(currentGame.getGameID(), moveString, chadGame.getBoard(), ending, draw);
+    networkManager.sendMessage(move);
   }
 
   /**
