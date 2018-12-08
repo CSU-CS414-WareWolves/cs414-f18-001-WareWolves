@@ -306,14 +306,7 @@ public class ChadPresenter implements ChadGameDriver{
     System.out.println("Presenter::handleNetMessage:: " + message.type);
     switch (message.type){
       case LOGIN_RESPONSE:
-        LoginResponse loginResponse = (LoginResponse) message;
-        // If the login was successful
-        if(loginResponse.success) {
-          this.playerNickname = loginResponse.nickname;
-        }
-        LoginResponseMessage loginResponseMessage = new LoginResponseMessage(loginResponse.success, loginResponse.nickname);
-        // Send message to gui/cli handle view message
-        viewDriver.handleViewMessage(loginResponseMessage);
+        handleLoginResponseNetMessage((LoginResponse) message);
         break;
       case MOVE:
         if(currentGame == null){
@@ -371,7 +364,19 @@ public class ChadPresenter implements ChadGameDriver{
   }
 
   /**
-   * Handles the response from a registration attempt from the view
+   * Handles a login response from the server
+   * @param message the results of the login attempt
+   */
+  private void handleLoginResponseNetMessage(LoginResponse message) {
+    // If the login was successful
+    if(message.success) {
+      this.playerNickname = message.nickname;
+    }
+    viewDriver.handleViewMessage(new LoginResponseMessage(message.success, message.nickname));
+  }
+
+  /**
+   * Handles the response from for a registration attempt
    * @param message the results from a registration attempt
    */
   private void handleRegisterResponseNetMessage(RegisterResponse message) {
@@ -394,7 +399,7 @@ public class ChadPresenter implements ChadGameDriver{
   }
 
   /**
-   * Sends the results of an unregister attempt to the view
+   * Sends the results of an unregister attempt
    * @param message the result of the unregister attempt
    */
   private void handleUnregisterNetMessage(UnregisterResponse message) {
