@@ -93,15 +93,8 @@ public class ChadPresenter implements ChadGameDriver{
         UnregisterMessage unregisterMessage = (UnregisterMessage) message;
         networkManager.sendMessage(new Unregister(unregisterMessage.email, unregisterMessage.nickname, unregisterMessage.password));
         break;
-      case SHOW_VALID_MOVES: // Need to change with addition of CLI
-        // if the game is over no valid moves
-        if(chadGame.gameover()){return;}
-        if(chadGame.getTurn() != currentGame.getColor()) {return;}
-        // Find the valid moves
-        ViewValidMoves validMovesMessage = (ViewValidMoves) message;
-        String validMoves = chadGame.validMoves(validMovesMessage.location.toString());
-        // Tell GUI to what moves to show
-        viewDriver.handleViewMessage(new ViewValidMovesResponse(new String [] {validMoves}));
+      case SHOW_VALID_MOVES:
+        handleViewValidMoves((ViewValidMoves) message);
         break;
       case MENU:
         break;
@@ -205,6 +198,26 @@ public class ChadPresenter implements ChadGameDriver{
     }
   }
 
+  /**
+   * Handles the views request for the valid moves of a piece
+   * @param message the info on the piece to get the valid moves for
+   */
+  private void handleViewValidMoves(ViewValidMoves message) {
+    // if the game is over there are no more valid moves
+    if(chadGame.gameover()){return;}
+    // If it is not your turn there are no valid moves
+    if(chadGame.getTurn() != currentGame.getColor()) {return;}
+    // Find the valid moves
+    String validMoves = chadGame.validMoves(message.location.toString());
+    // Tell GUI to what moves to show
+    viewDriver.handleViewMessage(new ViewValidMovesResponse(new String [] {validMoves}));
+  }
+
+  /**
+   * Checks if a word contains a # or :
+   * @param word the word to check
+   * @return if the word contains # or :
+   */
   private boolean containsInvalidCharacters(String word){
     return word.contains("#") || word.contains(":");
   }
