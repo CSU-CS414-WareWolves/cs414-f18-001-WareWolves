@@ -48,7 +48,7 @@ public class CLDriver implements ChadGameDriver {
    * Creates space for readability of the command-line
    * (returns nothing, but prints a long line and some space for readability)
    */
-  private void clearScreen() {
+  void clearScreen() {
     System.out.println("\n-----------------------------------------------------------\n");
   }
 
