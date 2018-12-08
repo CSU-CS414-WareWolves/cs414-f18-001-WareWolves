@@ -9,11 +9,9 @@ import client.presenter.controller.messages.*;
 import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.GameInfo;
 import client.presenter.network.messages.InboxResponse;
-import client.presenter.network.messages.Move;
 import client.presenter.network.messages.NetworkMessage;
 import client.presenter.network.messages.Players;
 import client.presenter.network.messages.ProfileResponse;
-import client.presenter.network.messages.RegisterResponse;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -86,7 +84,6 @@ public class CLDriver implements ChadGameDriver {
             controller.handleViewMessage(handleRegister());
             return;
           case 3:
-            //Log out
             return;
           default:
             warningValidOption();
@@ -105,11 +102,16 @@ public class CLDriver implements ChadGameDriver {
     switch(message.type){
       case ACTIVE_GAMES_RESPONSE:
         ActiveGameResponse agr = (ActiveGameResponse) message;
-        showActiveGames(agr.gameIDs, agr.opponents, agr.turns, agr.color);
-        gameid = handleSelectGame();
-        ActiveGameInfo agi = new ActiveGameInfo(gameid, agr.gameBoards[gameid], agr.opponents[gameid],
-            agr.startDates[gameid], agr.turns[gameid], agr.color[gameid], agr.ended[gameid]);
-        controller.handleViewMessage(new GameRequestMessage(agi.getInfoArray()));
+        gameid = showActiveGames(agr.gameIDs, agr.opponents, agr.turns, agr.color);
+        if(gameid == 0) {
+          controller.handleViewMessage(handleMenu());
+        }
+        else {
+          ActiveGameInfo agi = new ActiveGameInfo(gameid, agr.opponents[gameid],
+              agr.opponents[gameid], agr.startDates[gameid], agr.turns[gameid],
+              agr.color[gameid], agr.ended[gameid]);
+          controller.handleViewMessage(new GameRequestMessage(agi.getInfoArray()));
+        }
         break;
       case GAME_INFO:
         GameInfo gi = (GameInfo) message;
@@ -121,7 +123,10 @@ public class CLDriver implements ChadGameDriver {
       case INBOX_RESPONSE:
         InboxResponse ir = (InboxResponse) message;
         ViewMessage im = handleInbox(ir.inviteIDs, ir.sendDates, ir.senders);
+        //send an invite
         controller.handleViewMessage(im);
+        //jump back to menu
+        controller.handleViewMessage(handleMenu());
         break;
       case LOGOUT:
         login.showLogout();
@@ -140,7 +145,6 @@ public class CLDriver implements ChadGameDriver {
         menu.showStats(requestedName, pr.whitePlayers, pr.blackPlayers, pr.results);
         clearScreen();
 
-        menu.showPlayers(activePlayers);
         controller.handleViewMessage(handleProfile());
         break;
     }
@@ -185,7 +189,6 @@ public class CLDriver implements ChadGameDriver {
         RegisterResponseMessage rrm = (RegisterResponseMessage) message;
         if(rrm.success){
           System.out.println("[!] "+arrayToString(rrm.messages));
-          menu.showMenu(nickname);
           ViewMessage vmm = handleMenu();
           controller.handleViewMessage(vmm);
         }
@@ -261,6 +264,7 @@ public class CLDriver implements ChadGameDriver {
     System.out.println("Enter a strong password:");
     pass = requestLine();
 
+    nickname = nick;
     return new RegisterMessage(email, pass, nick);
   }
 
@@ -327,19 +331,15 @@ public class CLDriver implements ChadGameDriver {
 
   /**
    * Shows the user's active games
-   * @param ids list of ids of invitations
-   * @param opponents list of nicknames the player has an invite from
+   * @param gameIDs game ids
+   * @param opponents String array of opponent nicknames
+   * @param turns whose turn is it in game
+   * @param color current player's color in game
+   * @return int of selected game id
    */
-  public void showActiveGames(int[] ids, String[] opponents, boolean[] turns, boolean[] color){
+  public int showActiveGames(int[] gameIDs, String[] opponents, boolean[] turns, boolean[] color){
     clearScreen();
-    game.showCurrentGames(ids, opponents, turns, color);
-  }
-
-  /**
-   * Handle the game selection screen
-   * @return gameid int
-   */
-  public int handleSelectGame() {
+    game.showCurrentGames(gameIDs, opponents, turns, color);
     return requestInt();
   }
 
@@ -363,7 +363,6 @@ public class CLDriver implements ChadGameDriver {
         return handleMenu();
       }
       else if(from.toUpperCase().equals("RESIGN")) {
-//        return handleMenu();
         return new ResignMessage(gameid);
       }
 
@@ -403,13 +402,23 @@ public class CLDriver implements ChadGameDriver {
     clearScreen();
     boolean check = menu.viewInvites(ids, dates, senders);
     if(check) {
-      String info = "";
-      int option = requestInt();
+      String temp = requestLine();
+      String[] info = temp.split(" ");
 
-      info = senders[option];
-      //high TODO: what do I return here?
-      // probably not an invite lol, needs an accept_invite
-      return new InviteMessage(info, nickname);
+      int id = Integer.parseInt(info[0]);
+      boolean response;
+      if(info[1].toUpperCase().equals("ACCEPT")) {
+        response = true;
+      }
+      else if(info[1].toUpperCase().equals("REJECT")){
+        response = false;
+      }
+      else {
+        warningValidOption();
+        return handleMenu();
+      }
+
+      return new InviteMessageResponse(id, response);
     }
     else {
       return handleMenu();

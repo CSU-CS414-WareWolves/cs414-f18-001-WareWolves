@@ -33,6 +33,7 @@ public class CLMenu {
     } else {
       StringBuilder res = new StringBuilder();
       res.append("+++ Inbox +++\n");
+      res.append("Enter as: \"GameID accept/reject\"\n\n");
       for (int i = 0; i < ids.length; i++) {
         res.append("[" + ids[i] + "]: "+ dates[i] + " - " + players[i] + " has invited you to a game!\n");
       }

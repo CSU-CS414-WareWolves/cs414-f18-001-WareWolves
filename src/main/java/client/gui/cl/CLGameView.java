@@ -27,7 +27,8 @@ public class CLGameView {
     //Print the list in a nice fashion
     StringBuilder res = new StringBuilder();
 
-    res.append("+++ Select the Game you wish to continue +++\n\n");
+    res.append("+++ Select the Game you wish to continue +++\n");
+    res.append("Enter 0 to return to previous menu\n");
     for(int i=0; i<players.length; i++){
       res.append("[").append(ids[i]).append("]: ");
       res.append(players[i]);
