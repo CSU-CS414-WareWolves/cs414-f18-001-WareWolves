@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 public class CLDriver implements ChadGameDriver {
 
-  private ChadPresenter controller;
+  private ChadGameDriver controller;
 
   private CLLogin login;
   private CLMenu menu;
@@ -33,7 +33,7 @@ public class CLDriver implements ChadGameDriver {
   private String requestedName;
   private String[] activePlayers;
 
-  public CLDriver(ChadPresenter _controller){
+  public CLDriver(ChadGameDriver _controller){
     controller = _controller;
     login = new CLLogin();
     menu = new CLMenu();
