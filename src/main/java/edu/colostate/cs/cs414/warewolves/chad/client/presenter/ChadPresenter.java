@@ -119,14 +119,8 @@ public class ChadPresenter implements ChadGameDriver{
         break;
       case GAME_REQUEST:
         // Send a game request to the net manager
-        GameRequestMessage gameRequestMessage = (GameRequestMessage) message;
-        currentGame = new ActiveGameInfo(gameRequestMessage.gameInfo);
-        chadGame = new Game(currentGame.getGameBoard(), currentGame.getTurn());
-        viewDriver.handleViewMessage(new MovePieceResponse(getMoveMessage(), chadGame.getBoard()));
-
-        if(currentGame.getEnded()){
-          networkManager.sendMessage(new SeeResults(currentGame.getGameID(), currentGame.getColor()));
-        }
+        handleGameRequestViewMessage(
+            (GameRequestMessage) message);
 
         break;
       case NEW_INVITE:
@@ -146,13 +140,36 @@ public class ChadPresenter implements ChadGameDriver{
         playerNickname = null;
         break;
       case RESIGN:
-        // Send a resign request to the net manager
-        ResignMessage resignMessage = (ResignMessage) message;
-        Resign resign = new Resign(resignMessage.gameID, playerNickname);
-        networkManager.sendMessage(resign);
-        networkManager.sendMessage(new ActiveGameRequest(playerNickname));
+        handleResignViewMessage((ResignMessage) message);
         break;
     }
+  }
+
+  /**
+   * Handles the views request to start a game
+   * @param message the info about the game
+   */
+  private void handleGameRequestViewMessage(GameRequestMessage message) {
+    // Load the game
+    currentGame = new ActiveGameInfo(message.gameInfo);
+    chadGame = new Game(currentGame.getGameBoard(), currentGame.getTurn());
+    viewDriver.handleViewMessage(new MovePieceResponse(getMoveMessage(), chadGame.getBoard()));
+
+    // If the game was finished tell the server we saw the results
+    if(currentGame.getEnded()){
+      networkManager.sendMessage(new SeeResults(currentGame.getGameID(), currentGame.getColor()));
+    }
+  }
+
+  /**
+   * Handles the view resigning a game
+   * @param message the info about the game being resigned
+   */
+  private void handleResignViewMessage(ResignMessage message) {
+    Resign resign = new Resign(message.gameID, playerNickname);
+    networkManager.sendMessage(resign);
+    // Request new active games
+    networkManager.sendMessage(new ActiveGameRequest(playerNickname));
   }
 
   /**
