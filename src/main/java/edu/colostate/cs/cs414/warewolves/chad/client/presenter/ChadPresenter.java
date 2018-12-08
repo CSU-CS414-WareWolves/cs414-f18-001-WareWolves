@@ -83,31 +83,7 @@ public class ChadPresenter implements ChadGameDriver{
     System.out.println(message.messageType);
     switch (message.messageType){
       case REGISTER:
-        RegisterMessage registerMessage = (RegisterMessage) message;
-        // Check if messages have invalid characters
-        int nicknamePound = registerMessage.nickname.indexOf('#');
-        int nicknameColon = registerMessage.nickname.indexOf(':');
-        int emailPound = registerMessage.email.indexOf('#');
-        int emailColon = registerMessage.email.indexOf(':');
-        if(nicknameColon != -1 || nicknamePound != -1) {
-          // Nickname contains invalid characters
-          String[] messages = {"Invalid Nickname - Nickname can not have # or : in it"};
-          RegisterResponseMessage registerResponseMessage = new RegisterResponseMessage(false, messages);
-          // Send message to gui/cli handle view message
-          viewDriver.handleViewMessage(registerResponseMessage);
-        }
-        else if (emailColon != -1 || emailPound != -1) {
-          // Email contains invalid characters
-          String[] messages = {"Invalid Email - Emails can not have # or : in them"};
-          RegisterResponseMessage registerResponseMessage = new RegisterResponseMessage(false, messages);
-          // Send message to gui/cli handle view message
-          viewDriver.handleViewMessage(registerResponseMessage);
-        }
-        else {
-          // Email and nickname do not contain any invalid characters. Send to network manager.
-            networkManager.sendMessage(new Register(registerMessage.email, registerMessage.nickname,
-                registerMessage.password));
-        }
+        handleViewRegister((RegisterMessage) message);
         break;
       case LOGIN:
         LoginMessage loginMessage = (LoginMessage) message;
@@ -227,6 +203,47 @@ public class ChadPresenter implements ChadGameDriver{
         networkManager.sendMessage(new ActiveGameRequest(playerNickname));
         break;
     }
+  }
+
+  private boolean containsInvalidCharacters(String word){
+    return word.contains("#") || word.contains(":");
+  }
+
+  /**
+   * Handles the logic for an new user registering
+   * @param message the registration info
+   */
+  private void handleViewRegister(RegisterMessage message) {
+    // Check if messages have invalid characters
+
+    if(!checkForValidUserInfo(message)){
+      return;
+    }
+    // Email and nickname do not contain any invalid characters. Send to network manager.
+    networkManager.sendMessage(new Register(message.email, message.nickname, message.password));
+  }
+
+  /**
+   * Checks to see if the user entered valid nickname and email
+   * @param message the message with the user info
+   * @return true if user name is valid, false otherwise
+   */
+  private boolean checkForValidUserInfo(RegisterMessage message) {
+    boolean validInfo = true;
+    String[] messages =  new String[1];
+
+    if(containsInvalidCharacters(message.nickname)){
+      messages[0] = "Invalid Nickname - Nickname can not have # or : in it";
+      validInfo = false;
+    } else if (containsInvalidCharacters(message.email)){
+      messages[0] = "Invalid Email - Emails can not have # or : in them";
+      validInfo = false;
+    }
+    // Send failed Register Response Message with reason
+    if(!validInfo){
+      viewDriver.handleViewMessage(new RegisterResponseMessage(false, messages));
+    }
+    return validInfo;
   }
 
 
