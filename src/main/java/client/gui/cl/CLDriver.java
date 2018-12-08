@@ -27,6 +27,7 @@ public class CLDriver implements ChadGameDriver {
 
   // Active player nickname
   private String nickname;
+  private ActiveGameInfo gameInfo;
 
   private Game chadGame;
   private int gameid;
@@ -103,23 +104,25 @@ public class CLDriver implements ChadGameDriver {
     switch(message.type){
       case ACTIVE_GAMES_RESPONSE:
         ActiveGameResponse agr = (ActiveGameResponse) message;
-        gameid = showActiveGames(agr.gameIDs, agr.opponents, agr.turns, agr.color);
-        if(gameid == 0) {
+        int index = showActiveGames(agr.gameIDs, agr.opponents, agr.turns, agr.color);
+        if(index == 0) {
+          controller.handleViewMessage(handleMenu());
+        }
+        else if(index == -1) {
+          warningValidOption();
           controller.handleViewMessage(handleMenu());
         }
         else {
-          ActiveGameInfo agi = new ActiveGameInfo(gameid, agr.opponents[gameid],
-              agr.opponents[gameid], agr.startDates[gameid], agr.turns[gameid],
-              agr.color[gameid], agr.ended[gameid]);
-          controller.handleViewMessage(new GameRequestMessage(agi.getInfoArray()));
+          gameInfo = new ActiveGameInfo(gameid, agr.gameBoards[index],
+              agr.opponents[index], agr.startDates[index],
+              agr.turns[index], agr.color[index], agr.ended[index]);
+          controller.handleViewMessage(new GameRequestMessage(gameInfo.getInfoArray()));
         }
         break;
       case GAME_INFO:
         GameInfo gi = (GameInfo) message;
         chadGame = new Game(gi.gameBoard, gi.turn);
         gameid = gi.gameID;
-        showGame();
-        controller.handleViewMessage(handleMovePiece());
         break;
       case INBOX_RESPONSE:
         InboxResponse ir = (InboxResponse) message;
@@ -131,9 +134,6 @@ public class CLDriver implements ChadGameDriver {
         break;
       case LOGOUT:
         login.showLogout();
-        break;
-      case MOVE:
-        controller.handleViewMessage(handleMovePiece());
         break;
       case PLAYERS:
         Players p = (Players) message;
@@ -170,9 +170,21 @@ public class CLDriver implements ChadGameDriver {
         break;
       case MOVE_PIECE_RESPONSE:
         MovePieceResponse mpr = (MovePieceResponse) message;
-        game.showGameBoard(mpr.gameBoard);
-        System.out.println(mpr.message);
-        controller.handleViewMessage(handleMenu());
+
+        System.out.println("[!] "+mpr.message);
+        if(mpr.message.contains("'s turn. Playing: ")) {
+          chadGame = new Game(mpr.gameBoard, gameInfo.getTurn());
+          showGame();
+          if(gameInfo.getColor() == gameInfo.getTurn()) {
+            controller.handleViewMessage(handleMovePiece(true));
+          }
+          else{
+            controller.handleViewMessage(handleMovePiece(false));
+          }
+        }
+        else {
+          game.showGameBoard(mpr.gameBoard);
+        }
         break;
       case REGISTER:
         try {
@@ -334,7 +346,13 @@ public class CLDriver implements ChadGameDriver {
    */
   public int showActiveGames(int[] gameIDs, String[] opponents, boolean[] turns, boolean[] color){
     game.showCurrentGames(gameIDs, opponents, turns, color);
-    return requestInt();
+    gameid = requestInt();
+    for(int i = 0; i < gameIDs.length; i++) {
+      if(gameid == gameIDs[i]) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   /**
@@ -349,14 +367,14 @@ public class CLDriver implements ChadGameDriver {
 
   /**
    * Handle in-game interactions with the board
+   * @param turn true=current players turn
    * @return a ViewMessage corresponding to the user's actions
    */
-  public ViewMessage handleMovePiece() {
+  public ViewMessage handleMovePiece(boolean turn) {
     String from = "";
-    String to;
-    while(true) {
-      showGame();
+    String to = "";
 
+    while(turn) {
       System.out.println("~ Select a piece (e.g. \"1a\"): ");
       while(from.equals("")) {
         from = requestLine();
@@ -369,19 +387,20 @@ public class CLDriver implements ChadGameDriver {
         return new ResignMessage(gameid);
       }
 
-      //Display valid moves for selected piece
-      //low TODO: helper to convert validMoves String into String[]
-      String[] moves = {chadGame.validMoves(from)};
+      //display valid moves for selected piece
+      String[] moves = stringToArray(chadGame.validMoves(from));
       game.showValidMoves(moves);
 
       System.out.println("[!] Type \"c\" to cancel piece selection");
       System.out.println("~ Select space to move to (e.g. \"1a\"): ");
       to = requestLine();
       if (!to.equals("c")) {
-        break;
+        return new MovePieceMessage(new Point(from), new Point(to));
       }
+      showGame();
     }
-    return new MovePieceMessage(new Point(from), new Point(to));
+
+    return handleMenu();
   }
 
   /**
