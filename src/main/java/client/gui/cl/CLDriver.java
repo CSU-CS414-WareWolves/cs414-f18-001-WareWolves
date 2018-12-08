@@ -4,7 +4,6 @@ import client.Point;
 import client.game.Game;
 import client.gui.ChadGameDriver;
 import client.gui.swing.info.ActiveGameInfo;
-import client.presenter.ChadPresenter;
 import client.presenter.controller.messages.*;
 import client.presenter.network.messages.ActiveGameResponse;
 import client.presenter.network.messages.GameInfo;
@@ -49,7 +48,7 @@ public class CLDriver implements ChadGameDriver {
    * Creates space for readability of the command-line
    * (returns nothing, but prints a long line and some space for readability)
    */
-  public void clearScreen() {
+  private void clearScreen() {
     System.out.println("\n-----------------------------------------------------------\n");
   }
 
@@ -70,9 +69,9 @@ public class CLDriver implements ChadGameDriver {
   /**
    *
    */
-  public void handleTitleScreen() {
+  private void handleTitleScreen() {
     clearScreen();
-    int option = 0;
+    int option;
     try {
       while(true) {
         login.showLogin();
@@ -240,9 +239,9 @@ public class CLDriver implements ChadGameDriver {
    * Handles login for an existing user
    * @return a LoginMessage with the user's input
    */
-  public LoginMessage handleLogin() throws NoSuchAlgorithmException {
-    String email = "";
-    String pass = "";
+  private LoginMessage handleLogin() throws NoSuchAlgorithmException {
+    String email;
+    String pass;
 
     System.out.println("Enter your e-mail:");
     email = requestLine();
@@ -255,11 +254,11 @@ public class CLDriver implements ChadGameDriver {
   /**
    * Handles registration for a new user
    * @return a RegisterMessage with the new user's input
-   * @throws NoSuchAlgorithmException
+   * @throws NoSuchAlgorithmException in case of Hash fail
    */
-  public RegisterMessage handleRegister() throws NoSuchAlgorithmException {
+  private RegisterMessage handleRegister() throws NoSuchAlgorithmException {
     String email = "";
-    String pass = "";
+    String pass;
     String nick = "";
 
     System.out.println("Please enter a valid e-mail:");
@@ -281,10 +280,10 @@ public class CLDriver implements ChadGameDriver {
    * Handles main menu interactions
    * @return a ViewMessage corresponding to the option chosen
    */
-  public ViewMessage handleMenu(){
+  private ViewMessage handleMenu(){
     clearScreen();
     menu.showMenu(nickname);
-    int option = 0;
+    int option;
     while(true) {
       option = Integer.parseInt(requestLine());
       switch (option) {
@@ -321,7 +320,7 @@ public class CLDriver implements ChadGameDriver {
    * Handles unregister confirmation for current user
    * @return an Unregister message
    */
-  public UnregisterMessage handleUnregister() {
+  private UnregisterMessage handleUnregister() {
     try {
       String email;
       String pass;
@@ -345,7 +344,7 @@ public class CLDriver implements ChadGameDriver {
    * @param color current player's color in game
    * @return int of selected game id
    */
-  public int showActiveGames(int[] gameIDs, String[] opponents, boolean[] turns, boolean[] color){
+  private int showActiveGames(int[] gameIDs, String[] opponents, boolean[] turns, boolean[] color){
     game.showCurrentGames(gameIDs, opponents, turns, color);
     gameid = requestInt();
     for(int i = 0; i < gameIDs.length; i++) {
@@ -360,7 +359,7 @@ public class CLDriver implements ChadGameDriver {
    * Helper method to show in-game view.
    * (returns nothing but prints a nice view)
    */
-  public void showGame(){
+  private void showGame(){
     clearScreen();
     game.showGameBoard(chadGame.getBoard());
     game.showInGameMenu();
@@ -371,9 +370,9 @@ public class CLDriver implements ChadGameDriver {
    * @param turn true=current players turn
    * @return a ViewMessage corresponding to the user's actions
    */
-  public ViewMessage handleMovePiece(boolean turn) {
+  private ViewMessage handleMovePiece(boolean turn) {
     String from = "";
-    String to = "";
+    String to;
 
     while(turn) {
       System.out.println("~ Select a piece (e.g. \"1a\"): ");
@@ -411,7 +410,7 @@ public class CLDriver implements ChadGameDriver {
    * @param senders array with challenger nicknames
    * @return an AcceptInvite message with chosen id/nickname
    */
-  public ViewMessage handleInbox(int[] ids, String[] dates, String[] senders){
+  private ViewMessage handleInbox(int[] ids, String[] dates, String[] senders){
     boolean check = menu.viewInvites(ids, dates, senders);
     if(check) {
       String temp = requestLine();
@@ -441,15 +440,15 @@ public class CLDriver implements ChadGameDriver {
    * Takes input from the user to send a number of invites according to their selection
    * @return a MenuMessage of type SEND_INVITE with a String array of nicknames||emails(?)
    */
-  public InviteMessage handleOutbox() {
-    String info = "";
+  private InviteMessage handleOutbox() {
+    String info;
     menu.requestUsername();
     info = requestLine();
     System.out.println("Invite will be sent to: " + info);
     return new InviteMessage(nickname, info);
   }
 
-  public ViewMessage handleProfile() {
+  private ViewMessage handleProfile() {
     menu.showPlayers(activePlayers);
     menu.requestUsername();
     String nick = requestLine();
@@ -470,18 +469,17 @@ public class CLDriver implements ChadGameDriver {
 
   /**
    * Parses valid moves String to array
-   * @param s
+   * @param s String value
    */
-  public String[] stringToArray(String s) {
-    String[] res = s.split("");
-    return res;
+  private String[] stringToArray(String s) {
+    return s.split("");
   }
 
   /**
    * Prints array nicely with commas, no comma added at the end.
    * @param S String[] array
    */
-  public String arrayToString(String[] S) {
+  private String arrayToString(String[] S) {
     StringBuilder res = new StringBuilder();
     for(int i = 0; i < S.length; i++) {
       if(i+1 != S.length) {
@@ -494,12 +492,12 @@ public class CLDriver implements ChadGameDriver {
     return res.toString();
   }
 
-  public String requestLine() {
+  private String requestLine() {
     keyboard.keys = new Scanner(System.in);
     return keyboard.keys.nextLine();
   }
 
-  public int requestInt() {
+  private int requestInt() {
     keyboard.keys = new Scanner(System.in);
     return keyboard.keys.nextInt();
   }
@@ -507,7 +505,7 @@ public class CLDriver implements ChadGameDriver {
   public class KeyboardThread extends Thread {
     Scanner keys = new Scanner(System.in);
 
-    public KeyboardThread() {
+    private KeyboardThread() {
     }
 
     public void run() {
