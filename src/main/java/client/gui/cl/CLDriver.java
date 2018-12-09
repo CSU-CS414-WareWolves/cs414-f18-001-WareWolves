@@ -1,17 +1,17 @@
-package client.gui.cl;
+package edu.colostate.cs.cs414.warewolves.chad.client.gui.cl;
 
-import client.Point;
-import client.game.Game;
-import client.gui.ChadGameDriver;
-import client.gui.swing.info.ActiveGameInfo;
-import client.presenter.controller.messages.*;
-import client.presenter.network.messages.ActiveGameResponse;
-import client.presenter.network.messages.GameInfo;
-import client.presenter.network.messages.InboxResponse;
-import client.presenter.network.messages.NetworkMessage;
-import client.presenter.network.messages.Players;
-import client.presenter.network.messages.ProfileResponse;
-import java.io.ByteArrayInputStream;
+
+import edu.colostate.cs.cs414.warewolves.chad.client.Point;
+import edu.colostate.cs.cs414.warewolves.chad.client.game.Game;
+import edu.colostate.cs.cs414.warewolves.chad.client.gui.ChadGameDriver;
+import edu.colostate.cs.cs414.warewolves.chad.client.gui.swing.info.ActiveGameInfo;
+import edu.colostate.cs.cs414.warewolves.chad.client.presenter.controller.messages.*;
+import edu.colostate.cs.cs414.warewolves.chad.client.presenter.network.messages.ActiveGameResponse;
+import edu.colostate.cs.cs414.warewolves.chad.client.presenter.network.messages.GameInfo;
+import edu.colostate.cs.cs414.warewolves.chad.client.presenter.network.messages.InboxResponse;
+import edu.colostate.cs.cs414.warewolves.chad.client.presenter.network.messages.NetworkMessage;
+import edu.colostate.cs.cs414.warewolves.chad.client.presenter.network.messages.Players;
+import edu.colostate.cs.cs414.warewolves.chad.client.presenter.network.messages.ProfileResponse;import java.io.ByteArrayInputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
