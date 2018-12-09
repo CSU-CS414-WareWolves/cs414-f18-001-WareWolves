@@ -59,6 +59,7 @@ public class CLDriver implements ChadGameDriver {
   public void createAndShowGUI(){
     login.showSplash();
     chadGame = new Game();
+    warningBugs();
     delay();
     handleTitleScreen();
   }
@@ -375,7 +376,6 @@ public class CLDriver implements ChadGameDriver {
    */
   private ViewMessage handleMovePiece(boolean turn) {
     String from = "";
-    String to;
 
     while(turn) {
       System.out.println("~ Select a piece (e.g. \"cE\"): ");
@@ -405,7 +405,7 @@ public class CLDriver implements ChadGameDriver {
 
       System.out.println("[!] Type \"C\" to cancel piece selection");
       System.out.println("~ Select space to move to (e.g. \"bE\"): ");
-      to = requestLine();
+      String to = requestLine();
 
       if (!to.toUpperCase().equals("C")) {
         return new MovePieceMessage(new Point(from), new Point(to));
@@ -413,7 +413,6 @@ public class CLDriver implements ChadGameDriver {
       clearScreen();
       showGame();
       from = "";
-      to = "";
     }
 
     clearScreen();
@@ -484,6 +483,19 @@ public class CLDriver implements ChadGameDriver {
    */
   private void warningValidOption() {
     System.err.println("[!] Please input a valid option\n");
+  }
+
+  /**
+   * Prints title screen warning about bugs
+   */
+  private void warningBugs() {
+    System.err.println("[!]  ~  WARNING  ~  [!]");
+    delay();
+    System.err.println("- Due to some unresolved bugs, the CL interface is unable to resume games");
+    System.err.println("- All other menu functions should be normal");
+    delay();
+    System.err.println("\n- Thank you for your cooporation, and enjoy Chad Chess!");
+    clearScreen();
   }
 
   /**
