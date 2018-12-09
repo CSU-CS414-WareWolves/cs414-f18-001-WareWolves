@@ -490,7 +490,7 @@ public class CLDriver implements ChadGameDriver {
    * Parses valid moves String to array, splits at every two characters
    * @param moves String value
    */
-  private static String[] stringToArray(String moves) {
+  static String[] stringToArray(String moves) {
     String[] temps = new String[(moves.length()/2)];
     StringBuilder temp = new StringBuilder();
     for(int i = 0, index = 0; i < moves.length(); i = i+2) {

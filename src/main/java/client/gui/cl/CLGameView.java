@@ -5,8 +5,6 @@ import client.game.pieces.King;
 import client.game.pieces.Piece;
 import client.game.pieces.Queen;
 import client.game.pieces.Rook;
-import client.gui.GameView;
-import java.util.ArrayList;
 
 public class CLGameView {
 
@@ -17,6 +15,8 @@ public class CLGameView {
   private static final String BKING = "\u265A";
   private static final String BQUEEN = "\u265B";
   private static final String BROOK = "\u265C";
+  private static final String TILE = "\u2610";
+  private static final String WALL = "\u25A3";
 
   /**
    * Prints all current games of the user
@@ -46,30 +46,40 @@ public class CLGameView {
    */
   void showGameBoard(String board) {
     GameBoard gb = new GameBoard(board);
-    char row = 'l';
-    StringBuilder res = new StringBuilder();
-    res.append("\n~[Type EXIT to leave]~[Type RESIGN to forfeit]~\n");
-    for(int i=11; i>=0; --i) {
-      res.append("      ").append(row--).append(" {");
-        for (int j=11; j>=0; --j) {
-          //check for walls, represent with ▣ = "\u25A3"
-          if(checkWall(i,j)) {
-            res.append(" ").append("\u25A3");
-          }
-          //place a piece or blank square
-          else {
-            res.append(" ").append(pieceToCharacter(gb.getPieceAt(j, i)));
-          }
-          if(j==0) {
-            res.append(" }\n");
-          }
+    System.out.println(gb);
+
+    String[][] newBoard = new String[12][12];
+    for(int row = 0; row < newBoard.length; row++) {
+      for(int col = 0; col < newBoard.length; col++) {
+        if(isWall(row, col)){
+          newBoard[row][col] = WALL + " ";
         }
+        else {
+          Piece pc = gb.getPieceAt(row, col);
+          newBoard[row][col] = pieceToCharacter(pc) + " ";
+        }
+      }
     }
-    res.append("        { A B  C D  E F  G H I  J K  L }\n");
+    printDoubleArray(newBoard);
+  }
+
+  private void printDoubleArray(String[][] array) {
+    StringBuilder res = new StringBuilder();
+    char rowLetter = 'l';
+
+    res.append("\n~[Type EXIT to leave]~[Type RESIGN to forfeit]~\n");
+    for(String[] row : array) {
+      res.append("       ").append(rowLetter--).append(" {");
+      for(String p : row) {
+        res.append(p);
+      }
+      res.append("}\n");
+    }
+    res.append("         { A B C D  E F  G H I  J K  L}\n");
     System.out.println(res);
   }
 
-  boolean checkWall(int row, int col){
+  private boolean isWall(int row, int col) {
     return (row==6 &&(col==2 || col==3 || col==4))
         || (row==10 &&(col==2 || col==3 || col==4))
         || (col==6 &&(row==2 || row==3 || row==4))
@@ -88,7 +98,7 @@ public class CLGameView {
    */
   String pieceToCharacter(Piece p){
     if (p == null)
-      return "\u2610";
+      return TILE;
     if (p.getClass() == Rook.class){
       return p.getColor() ? BROOK : WROOK;
     }
@@ -120,5 +130,10 @@ public class CLGameView {
 
   private String playerFromBool(boolean p) {
     return p ? "white" : "black";
+  }
+
+  public static void main(String[] args) {
+    CLGameView g = new CLGameView();
+    g.showGameBoard("rdCreDRiHRjIrcCkdDreERhHKiIRjJrcDrdERhIRiJrcERhJreCRjH");
   }
 }
