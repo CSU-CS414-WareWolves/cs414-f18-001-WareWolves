@@ -121,8 +121,4 @@ public class CLGameView {
   private String playerFromBool(boolean p) {
     return p ? "white" : "black";
   }
-
-  public void showGameover(boolean p) {
-    System.out.println(playerFromBool(p)+" player won the game!");
-  }
 }
