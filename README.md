@@ -44,7 +44,7 @@ Testing Document: [PDF](./P4/WareWolves_Testing_Document_12-02-18.pdf)
 
 Development Manual: [MD](./P4/WareWolvesDevelopmenDoc.md)
 
-Traceability Link Matrix: [PDF](./P4/Traceability_Link_Matrix_12-02-18.xlsx)
+Traceability Link Matrix: [XLSX](./P4/Traceability_Link_Matrix_12-02-18.xlsx)
 
 Updated Use Case Document: [PDF](./P4/Warewolves_Use_Case_Document_12-02-18.pdf)
 
