@@ -3,8 +3,11 @@ package client.gui.cl;
 import static org.junit.jupiter.api.Assertions.*;
 
 import client.presenter.ChadPresenter;
+import client.presenter.network.messages.ActiveGameResponse;
 import java.io.ByteArrayInputStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,8 +32,8 @@ class CLDriverTest {
   @Test
   void createAndShowGUI() {
     try {
-//      setMyIn("3");
-//      driver.createAndShowGUI();
+      setMyIn("3");
+      driver.createAndShowGUI();
     } catch(Exception e) {
       e.printStackTrace();
       fail("");
@@ -38,7 +41,7 @@ class CLDriverTest {
   }
 
   @Test
-  void handleNetworkMessage() {
+  void handleNetMessage() {
 
   }
 
@@ -49,22 +52,18 @@ class CLDriverTest {
 
   @Test
   void handleLogin() {
-    //TODO: run driver.handleLogin() and send in input
-    // Do I need to start two threads for this?
-
-    setMyIn("user");
-    Scanner sc = new Scanner(System.in);
-    sc.nextLine();
-
-    setMyIn("pswd");
-    sc = new Scanner(System.in);
-    sc.nextLine();
-
-    sc.close();
+    try {
+      driver.handleLogin();
+      setMyIn("test1\ntest1");
+      Assertions.assertTrue("test1".equalsIgnoreCase(driver.getNickname()));
+    } catch(NoSuchAlgorithmException e){
+      fail("");
+    }
   }
 
   @Test
   void handleRegister() {
+
   }
 
   @Test
@@ -78,11 +77,9 @@ class CLDriverTest {
     boolean[] ts = {true, false};
     boolean[] color = {false, true};
 
-//    try {
-//      driver.showActiveGames(ids, nicks, ts, color);
-//    } catch(Exception e) {
-//      fail("");
-//    }
+    setMyIn("23");
+    driver.showActiveGames(ids, nicks, ts, color);
+    Assertions.assertEquals(23, driver.getGameID());
   }
 
   @Test
@@ -93,41 +90,6 @@ class CLDriverTest {
 //    MenuMessage check = driver.handleSelectGame(ids, nicks);
 //
 //    assertTrue(check.menuType.equals(MenuMessageTypes.SELECT_GAME));
-  }
-
-  @Test
-  void handleInGame() {
-
-  }
-
-  @Test
-  void handleMovePiece() {
-
-  }
-
-  @Test
-  void handleGameQuit() {
-
-  }
-
-  @Test
-  void handleGameResign() {
-
-  }
-
-  @Test
-  void showGame() {
-
-  }
-
-  @Test
-  void handleInbox() {
-
-  }
-
-  @Test
-  void handleOutbox() {
-
   }
 
   /**

@@ -65,7 +65,7 @@ public class CLDriver implements ChadGameDriver {
   }
 
   /**
-   *
+   * Handles title screen interactions
    */
   private void handleTitleScreen() {
     clearScreen();
@@ -240,7 +240,7 @@ public class CLDriver implements ChadGameDriver {
    * Handles login for an existing user
    * @return a LoginMessage with the user's input
    */
-  private LoginMessage handleLogin() throws NoSuchAlgorithmException {
+  LoginMessage handleLogin() throws NoSuchAlgorithmException {
     String email;
     String pass;
 
@@ -345,7 +345,7 @@ public class CLDriver implements ChadGameDriver {
    * @param color current player's color in game
    * @return int of selected game id
    */
-  private int showActiveGames(int[] gameIDs, String[] opponents, boolean[] turns, boolean[] color){
+  int showActiveGames(int[] gameIDs, String[] opponents, boolean[] turns, boolean[] color){
     game.showCurrentGames(gameIDs, opponents, turns, color);
     //get next input, returns -1 if not correct input
     int temp = requestInt();
@@ -554,6 +554,62 @@ public class CLDriver implements ChadGameDriver {
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * TESTING: gets CLLogin instance
+   */
+  public CLLogin getLogin() {
+    return login;
+  }
+
+  /**
+   * TESTING: gets CLMenu instance
+   */
+  public CLMenu getMenu() {
+    return menu;
+  }
+
+  /**
+   * TESTING: gets CLGameView instance
+   */
+  public CLGameView getGame() {
+    return game;
+  }
+
+  /**
+   * TESTING: gets current game's id
+   */
+  public String getNickname() {
+    return nickname;
+  }
+
+  /**
+   * TESTING: gets current game's info
+   */
+  public ActiveGameInfo getGameInfo() {
+    return gameInfo;
+  }
+
+  /**
+   * TESTING: gets Game instance
+   */
+  public Game getChadGame() {
+    return chadGame;
+  }
+
+  /**
+   * TESTING: gets array of active players
+   */
+  public String[] getActivePlayers() {
+    return activePlayers;
+  }
+
+  /**
+   * TESTING: gets current game's id
+   */
+  public int getGameid() {
+    return gameid;
   }
 
   public class KeyboardThread extends Thread {
