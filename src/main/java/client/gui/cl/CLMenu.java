@@ -1,7 +1,4 @@
-package client.gui.cl;
-
-import client.gui.MenuView;
-import java.util.ArrayList;
+package edu.colostate.cs.cs414.warewolves.chad.client.gui.cl;
 
 public class CLMenu {
   /**
