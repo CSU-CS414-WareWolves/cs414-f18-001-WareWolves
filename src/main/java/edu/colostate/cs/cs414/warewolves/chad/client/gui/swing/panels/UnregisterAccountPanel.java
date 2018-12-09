@@ -18,46 +18,76 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-
+/**
+ * Panel for creating an unregistering account. It asks the user to verify their
+ * email address, nickname, and password.
+ */
 public class UnregisterAccountPanel extends JPanel {
 
+  /**
+   * Main panel for the class
+   */
   private JPanel mainPanel;
+  /**
+   * Text field for users nickname
+   */
   private JTextField nicknameField;
+  /**
+   * Text field for users email
+   */
   private JTextField emailField;
+  /**
+   * Text field for users password
+   */
   private JPasswordField passwordField;
-  private JButton registerAccount;
+  /**
+   * Button to unregister account
+   */
+  private JButton unregisterAccount;
+  /**
+   * Button to go back to main menu
+   */
   private JButton cancelRegister;
 
+
+  /**
+   * Creates the GUI elements and sets the panels controller for ActionListeners
+   *
+   * @param controller the controller of the panel
+   */
   public UnregisterAccountPanel(ChadGameDriver controller) {
+    // Setup cancel button
     cancelRegister.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
         try {
+          // send message to controller with invalid UnregisterMessage
           controller.handleViewMessage(new UnregisterMessage(null, "", null));
         } catch (NoSuchAlgorithmException e1) {
           System.err.println("The computer does not have SHA1 algorithm");
         }
       }
     });
-    registerAccount.addActionListener(new ActionListener() {
+
+    // Setup cancel button
+    unregisterAccount.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
+        // Get user info
         String email = emailField.getText();
         String nickname = nicknameField.getText();
         String password = new String(passwordField.getPassword());
-
+        // All fields must have data
         if (email.isEmpty() || password.isEmpty() || nickname.isEmpty()) {
-
           JOptionPane.showMessageDialog(mainPanel,
               "You must enter values in the Email, Nickname, and Password fields");
-
           return;
         }
         try {
-          passwordField.setText("");
+          // Send  unregistration request
+          passwordField.setText(""); // clear password
           UnregisterMessage message = new UnregisterMessage(email, password, nickname);
           controller.handleViewMessage(message);
-
         } catch (NoSuchAlgorithmException e1) {
           System.err.println("The computer does not have SHA1 algorithm");
         }
@@ -227,11 +257,11 @@ public class UnregisterAccountPanel extends JPanel {
     gbc.gridx = 0;
     gbc.gridy = 2;
     panel1.add(panel7, gbc);
-    registerAccount = new JButton();
-    registerAccount.setActionCommand("Unregister Account");
-    registerAccount.setLabel("Unregister Account");
-    registerAccount.setText("Unregister Account");
-    panel7.add(registerAccount);
+    unregisterAccount = new JButton();
+    unregisterAccount.setActionCommand("Unregister Account");
+    unregisterAccount.setLabel("Unregister Account");
+    unregisterAccount.setText("Unregister Account");
+    panel7.add(unregisterAccount);
     cancelRegister = new JButton();
     cancelRegister.setActionCommand("Login Screen");
     cancelRegister.setText("Cancel");

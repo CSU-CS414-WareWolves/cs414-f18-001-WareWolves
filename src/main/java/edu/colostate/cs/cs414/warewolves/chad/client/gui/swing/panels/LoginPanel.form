@@ -17,7 +17,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="7ec19" class="javax.swing.JButton" binding="Login">
+              <component id="7ec19" class="javax.swing.JButton" binding="login">
                 <constraints/>
                 <properties>
                   <text value="Login"/>

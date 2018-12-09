@@ -30,180 +30,264 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+/**
+ * This class is the main controller for the swing GUI it acts as a facade passing information and
+ * commands to the various swing panels and switching between those panels.
+ */
 public class SwingController extends JFrame implements ChadGameDriver {
 
-  private JPanel mainPanel;
-  private MainMenuPanel menuPanel;
-  private LoginScreenPanel loginScreenPanel;
-  private GameJPanel gameJPanel;
-  private JPanel cardPanel;
-  private UnregisterAccountPanel unregisterAccountPanel;
-
   /**
-   * The menu bar
+   * Main panel for the class
+   */
+  private JPanel mainPanel;
+  /**
+   * Main Menu panel
+   */
+  private MainMenuPanel menuPanel;
+  /**
+   * Login screen panel
+   */
+  private LoginScreenPanel loginScreenPanel;
+  /**
+   * Game panel to show the game
+   */
+  private GameJPanel gameJPanel;
+  /**
+   * Panel for unregistering Account
+   */
+  private UnregisterAccountPanel unregisterAccountPanel;
+  /**
+   * Panel that holds all the other panels
+   */
+  private JPanel cardPanel;
+  /**
+   * The menu bar with logout and unregister options
    */
   JMenuBar menuBar;
-
-
+  /**
+   * Controller of the class
+   */
   private ChadGameDriver controller;
+  /**
+   * Card layout manager for changing panels
+   */
   private CardLayout cardLayout;
+  /**
+   * Is there a game being played currently
+   */
   private boolean playingGame = false;
 
-
+  /**
+   * Creates the GUI elements and sets the panels controller for ActionListeners
+   *
+   * @param controller the controller of the panel
+   */
   public SwingController(ChadGameDriver controller) {
 
     this.controller = controller;
 
-    $$$setupUI$$$();
+    $$$setupUI$$$(); // Needed for the GUI
     cardLayout = (CardLayout) cardPanel.getLayout();
     this.add(menuBar, BorderLayout.NORTH);
-    cardLayout.show(cardPanel, "LoginScreen");
+    cardLayout.show(cardPanel, "LoginScreen"); // Set default panel to login
   }
 
 
+  /**
+   * Handles the logic for the message type it is given
+   * @param message the message to process
+   */
   @Override
   public void handleViewMessage(ViewMessage message) {
     System.out.println("SwingController::handleViewMessage " + message.messageType);
-
     switch (message.messageType) {
-
-      case REGISTER:
-        controller.handleViewMessage(message);
+      case UNREGISTER:
+        handleUnregisterMessage((UnregisterMessage) message);
         break;
+      case REGISTER_RESPONSE:
+        handleRegisterResponse((RegisterResponseMessage) message);
+        break;
+      case LOGIN_RESPONSE:
+        handleLoginResponse((LoginResponseMessage) message);
+        break;
+      case UNREGISTER_RESPONSE:
+        handleUnregisterResponse((UnregisterResponseMessage) message);
+        break;
+      case SHOW_VALID_MOVES_RESPONSE:
+        handleValidMoveResponse((ViewValidMovesResponse) message);
+        break;
+      case MOVE_PIECE_RESPONSE:
+        handleMovePieceResponse((MovePieceResponse) message);
+        break;
+      case LOGOUT:
+        handleLogoutFromGameScreen();
+        break;
+      // Pass other message types to controller
+      default:
+        handlePassThroughMessage(message);
+        break;
+    }
+  }
+
+  /**
+   * Handles all the messages that only need to be sent to the controller
+   * @param message the message to pass to the controller
+   */
+  private void handlePassThroughMessage(ViewMessage message) {
+    System.out.println("SwingController::handlePassThroughMessage " + message.messageType);
+    switch (message.messageType) {
+      case PROFILE:
+      case ACTIVE_GAMES:
+      case INBOX:
+      case GAME_REQUEST:
+      case NEW_INVITE:
+      case INVITE_RESPONSE:
+      case RESIGN:
+      case SHOW_VALID_MOVES:
+      case MOVE_PIECE:
+      case REGISTER:
       case LOGIN:
         controller.handleViewMessage(message);
         break;
-      case UNREGISTER:
-        UnregisterMessage unregisterMessage = (UnregisterMessage) message;
-        if (unregisterMessage.email == null) {
-          cardLayout.show(cardPanel, "MenuScreen");
-          menuBar.setVisible(true);
-          return;
-        }
-        controller.handleViewMessage(message);
-        break;
-      case SHOW_VALID_MOVES:
-        controller.handleViewMessage(message);
-        break;
-      case MOVE_PIECE:
-        controller.handleViewMessage(message);
-        break;
-      case REGISTER_RESPONSE:
-        RegisterResponseMessage registerResponse = (RegisterResponseMessage) message;
-        if (registerResponse.success) {
-          menuPanel.setNickName(registerResponse.messages[0]);
-          cardLayout.show(cardPanel, "MenuScreen");
-          menuBar.setVisible(true);
-        } else {
-          loginScreenPanel.receiveMessage(message);
-        }
-        break;
-      case LOGIN_RESPONSE:
-        LoginResponseMessage loginResponse = (LoginResponseMessage) message;
-        if (loginResponse.success) {
-          menuPanel.setNickName(loginResponse.nickname);
-          cardLayout.show(cardPanel, "MenuScreen");
-          menuBar.setVisible(true);
-        } else {
-          loginScreenPanel.receiveMessage(message);
-        }
-        break;
-      case UNREGISTER_RESPONSE:
-        UnregisterResponseMessage unregisterResponse = (UnregisterResponseMessage) message;
-        JOptionPane.showMessageDialog(gameJPanel, unregisterResponse.messages[0]);
-        if (unregisterResponse.success) {
-          cardLayout.show(cardPanel, "LoginScreen");
-          menuBar.setVisible(false);
-        }
-        break;
-      case SHOW_VALID_MOVES_RESPONSE:
-        ViewValidMovesResponse validMoves = (ViewValidMovesResponse) message;
-        gameJPanel.setValidMoves(validMoves.locations[0]);
-        break;
-      case MENU_RESPONSE:
-        break;
-      case MOVE_PIECE_RESPONSE:
-        if (!playingGame) {
-          cardLayout.show(cardPanel, "GameScreen");
-          playingGame = true;
-          menuBar.setVisible(false);
-        }
-        MovePieceResponse moves = (MovePieceResponse) message;
-        gameJPanel.clearValidMoves();
-        gameJPanel.setSetGameStatus(moves.message);
-        gameJPanel.setBoardPieces(moves.gameBoard);
-        break;
-      case PROFILE:
-        controller.handleViewMessage(message);
-        break;
-      case ACTIVE_GAMES:
-        controller.handleViewMessage(message);
-        break;
-      case INBOX:
-        controller.handleViewMessage(message);
-        break;
-      case GAME_REQUEST:
-        controller.handleViewMessage(message);
-        break;
-      case NEW_INVITE:
-        controller.handleViewMessage(message);
-        break;
-      case INVITE_RESPONSE:
-        controller.handleViewMessage(message);
-        break;
-      case LOGOUT:
-        if (playingGame) {
-          cardLayout.show(cardPanel, "MenuScreen");
-          controller.handleViewMessage(new ActiveGameMessage());
-          gameJPanel.setBoardPieces("");
-          playingGame = false;
-          menuBar.setVisible(true);
-        }
-        break;
-      case RESIGN:
-        controller.handleViewMessage(message);
-        break;
+      default:
+        System.err.println("SwingController::handlePassThroughMessage sent invalid message type "
+            + message.messageType);
     }
+  }
 
+  /**
+   * Handles a users attempt to login. If they were successful, the active panel is changed to the
+   * main menu. If they were not successful, a pop up displays why
+   *
+   * @param message the results of the login attempt attempt
+   */
+  private void handleLoginResponse(LoginResponseMessage message) {
+    if (message.success) {
+      menuPanel.setNickName(message.nickname);
+      cardLayout.show(cardPanel, "MenuScreen");
+      menuBar.setVisible(true);
+    } else {
+      loginScreenPanel.receiveMessage(message);
+    }
+  }
 
+  /**
+   * Handles a users attempt to register. If they were successful, the active panel is changed to the
+   * main menu. If they were not successful, a pop up displays why
+   *
+   * @param message the results of the registration attempt
+   */
+  private void handleRegisterResponse(RegisterResponseMessage message) {
+    // Successful registration
+    if (message.success) {
+      menuPanel.setNickName(message.messages[0]);
+      cardLayout.show(cardPanel, "MenuScreen");
+      menuBar.setVisible(true);
+    } else {
+      // Unsuccessful registration
+      loginScreenPanel.receiveMessage(message);
+    }
+  }
+
+  /**
+   * Handles a message for the user trying to unregister. If they canceled the attempt, the active
+   * panel is changed to the menu screen. If they did not cancel the message is passed to the
+   * controller
+   *
+   * @param message a users attempt to unregister
+   */
+  private void handleUnregisterMessage(UnregisterMessage message) {
+    // player canceled the unregister attempt
+    if (message.email == null) {
+      cardLayout.show(cardPanel, "MenuScreen");
+      menuBar.setVisible(true);
+      return;
+    }
+    controller.handleViewMessage(message);
+  }
+
+  /**
+   * Changes the active panel to the login screen if the user was unregistered, or displays why the
+   * unregister attempt was not successful
+   *
+   * @param message the results of unregister a user
+   */
+  private void handleUnregisterResponse(UnregisterResponseMessage message) {
+    JOptionPane.showMessageDialog(gameJPanel, message.messages[0]);
+    if (message.success) {
+      cardLayout.show(cardPanel, "LoginScreen");
+      menuBar.setVisible(false);
+    }
+  }
+
+  /**
+   * Shows the valid moves on a game board
+   *
+   * @param message the valid moves
+   */
+  private void handleValidMoveResponse(ViewValidMovesResponse message) {
+    gameJPanel.setValidMoves(message.locations[0]);
+  }
+
+  /**
+   * Activates the game screen and print out the game board of a game
+   *
+   * @param message the game board
+   */
+  private void handleMovePieceResponse(MovePieceResponse message) {
+    // Change panel to game
+    if (!playingGame) {
+      cardLayout.show(cardPanel, "GameScreen");
+      playingGame = true;
+      menuBar.setVisible(false);
+    }
+    // Display game board
+    gameJPanel.clearValidMoves();
+    gameJPanel.setSetGameStatus(message.message);
+    gameJPanel.setBoardPieces(message.gameBoard);
+  }
+
+  /**
+   * Sets the active panel to the game menu and updates the active game list
+   */
+  private void handleLogoutFromGameScreen() {
+    if (playingGame) {
+      cardLayout.show(cardPanel, "MenuScreen");
+      controller.handleViewMessage(new ActiveGameMessage());
+      gameJPanel.setBoardPieces("");
+      playingGame = false;
+      menuBar.setVisible(true);
+    }
   }
 
 
+  /**
+   * Passes a NetworkMessage to the menuPanel these message are used to update the tables in the menu.
+   * Valid NetworkMessage types: ACTIVE_GAMES_RESPONSE INBOX_RESPONSE PROFILE_RESPONSE PLAYERS
+   *
+   * @param message the message to process
+   */
   @Override
   public void handleNetMessage(NetworkMessage message) {
-    System.out.println("SwingController::handleViewMessage " + message.type);
+    System.out.println("SwingController::handleNetMessage " + message.type);
     switch (message.type) {
-
-      case LOGIN_RESPONSE:
-        break;
-      case MOVE:
-        break;
+      // Pass message to menuController
       case ACTIVE_GAMES_RESPONSE:
-        menuPanel.receiveMessage(message);
-        break;
-      case INVITE_RESPONSE:
-        break;
-      case REGISTER_RESPONSE:
-        break;
       case INBOX_RESPONSE:
-        menuPanel.receiveMessage(message);
-        break;
       case PROFILE_RESPONSE:
-        menuPanel.receiveMessage(message);
-        break;
       case PLAYERS:
         menuPanel.receiveMessage(message);
         break;
-      case UNREGISTER_RESPONSE:
-
-        break;
-      case SEE_RESULTS:
-        break;
+      default:
+        System.err.println("SwingController::handleNetMessage sent invalid message type "
+            + message.type);
     }
 
   }
 
-
+  /**
+   * Creates all the elements that the GUI needed custom constructors for
+   */
   private void createUIComponents() {
     menuPanel = new MainMenuPanel(this);
     loginScreenPanel = new LoginScreenPanel(this);
@@ -215,7 +299,7 @@ public class SwingController extends JFrame implements ChadGameDriver {
 
 
   /**
-   * Creates the menu items
+   * Creates the menu for controller
    */
   private void createMenuBar() {
 
@@ -347,9 +431,4 @@ public class SwingController extends JFrame implements ChadGameDriver {
   public JComponent $$$getRootComponent$$$() {
     return mainPanel;
   }
-
-  /**
-   * This code is need for packaging project into a jar and running code in Eclipse
-   */
-
 }

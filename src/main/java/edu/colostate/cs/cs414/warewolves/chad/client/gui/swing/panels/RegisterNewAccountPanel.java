@@ -18,38 +18,62 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+/**
+ * Panel for creating an new account. It asks the user for a email address, nickname, and password.
+ */
 public class RegisterNewAccountPanel extends JPanel {
 
+  /**
+   * Main panel for the class
+   */
   private JPanel newAccountPanel;
+  /**
+   * Text field for users nickname
+   */
   private JTextField nicknameField;
-  private JButton registerAccount;
-  private JButton cancelRegister;
+  /**
+   * Text field for users email
+   */
   private JTextField emailField;
+  /**
+   * Text field for users password
+   */
   private JPasswordField passwordField;
+  /**
+   * Button to register new account
+   */
+  private JButton registerAccount;
+  /**
+   * Button to go back to login screen
+   */
+  private JButton cancelRegister;
 
-  SwingGUIController controller;
-
+  /**
+   * Creates the GUI elements and sets the panels controller for ActionListeners
+   *
+   * @param controller the controller of the panel
+   */
   public RegisterNewAccountPanel(SwingGUIController controller) {
-    super();
-    this.controller = controller;
     this.add(newAccountPanel);
+    // Setup register button
     registerAccount.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
+        // Get user info
         String email = emailField.getText();
         String nickname = nicknameField.getText();
         String password = new String(passwordField.getPassword());
-
+        // All fields must have data
         if (email.isEmpty() || password.isEmpty() || nickname.isEmpty()) {
-
           JOptionPane.showMessageDialog(newAccountPanel,
               "You must enter values in the Email, Nickname, and Password fields");
-
           return;
         }
+
         try {
+          // Send new registration request
           RegisterMessage message = new RegisterMessage(email, password, nickname);
-          passwordField.setText("");
+          passwordField.setText(""); // clear password
           controller.sendMessage(message);
 
         } catch (NoSuchAlgorithmException e1) {
@@ -58,9 +82,12 @@ public class RegisterNewAccountPanel extends JPanel {
 
       }
     });
+
+    // Setup cancel new account button
     cancelRegister.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
+        // tell controller to switch to new login panel
         controller.actionPerformed(e);
       }
     });

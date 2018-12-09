@@ -172,7 +172,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="3a0c3" class="javax.swing.JButton" binding="registerAccount">
+              <component id="3a0c3" class="javax.swing.JButton" binding="unregisterAccount">
                 <constraints/>
                 <properties>
                   <actionCommand value="Unregister Account"/>
