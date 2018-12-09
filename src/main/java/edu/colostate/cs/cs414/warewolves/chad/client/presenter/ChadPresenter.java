@@ -3,6 +3,7 @@ package edu.colostate.cs.cs414.warewolves.chad.client.presenter;
 import edu.colostate.cs.cs414.warewolves.chad.client.Point;
 import edu.colostate.cs.cs414.warewolves.chad.client.game.Game;
 import edu.colostate.cs.cs414.warewolves.chad.client.gui.ChadGameDriver;
+import edu.colostate.cs.cs414.warewolves.chad.client.gui.cl.CLDriver;
 import edu.colostate.cs.cs414.warewolves.chad.client.gui.swing.SwingController;
 import edu.colostate.cs.cs414.warewolves.chad.client.gui.swing.info.ActiveGameInfo;
 import edu.colostate.cs.cs414.warewolves.chad.client.presenter.controller.messages.GameRequestMessage;
@@ -132,7 +133,7 @@ public class ChadPresenter implements ChadGameDriver{
         InviteMessageResponse inviteMessageResponse = (InviteMessageResponse) message;
         networkManager.sendMessage(new InviteResponse(inviteMessageResponse.inviteID, inviteMessageResponse.response));
         networkManager.sendMessage(new InboxRequest(playerNickname));
-       break;
+        break;
       case LOGOUT:
         networkManager.sendMessage(new Logout(playerNickname));
         playerNickname = null;
@@ -193,9 +194,9 @@ public class ChadPresenter implements ChadGameDriver{
 
     } else {
       // Send a move piece response message with an error
-       String error = "Invalid Move.";
-       MovePieceResponse movePieceResponse = new MovePieceResponse(error, chadGame.getBoard());
-       viewDriver.handleViewMessage(movePieceResponse);
+      String error = "Invalid Move.";
+      MovePieceResponse movePieceResponse = new MovePieceResponse(error, chadGame.getBoard());
+      viewDriver.handleViewMessage(movePieceResponse);
     }
   }
 
@@ -455,6 +456,7 @@ public class ChadPresenter implements ChadGameDriver{
     } catch (IOException e) { }
     if(userInterface.equals("cli")){
       // Instantiate CLI Controller
+      viewDriver = new CLDriver(this);
     } else if(userInterface.equals("gui")){
       // Instantiate GUI Controller
       viewDriver = new SwingController(this);
@@ -469,15 +471,27 @@ public class ChadPresenter implements ChadGameDriver{
   }
 
   /**
-   * Starts a thread for the Swing GUI
+   * Starts a thread for the Swing GUI or CLI
+   * @param gui String with GUI option
    */
-  public void start(){
-
-    javax.swing.SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
+  public void start(String gui){
+    if(gui.equals("gui")) {
+      javax.swing.SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
           viewDriver.createAndShowGUI();
-      }
-    });
+        }
+      });
+    }
+    else {
+      CLIThread cl = new CLIThread();
+      cl.run();
+    }
+  }
+
+  public class CLIThread extends Thread {
+    public void run() {
+      viewDriver.createAndShowGUI();
+    }
   }
 
   /**
@@ -498,6 +512,6 @@ public class ChadPresenter implements ChadGameDriver{
   public static void main(String[] args) {
     // args[0] = "cli" or "gui", args[1] server host, args[2] server port
     ChadPresenter app = new ChadPresenter(args[1], args[2], args[0]);
-    app.start();
+    app.start(args[1]);
   }
 }
