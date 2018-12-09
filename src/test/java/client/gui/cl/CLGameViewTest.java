@@ -85,14 +85,4 @@ class CLGameViewTest {
     }
   }
 
-  @Test
-  void showInGameMenu() {
-    try {
-      game.showInGameMenu();
-    } catch(Exception e) {
-      e.printStackTrace();
-      fail("");
-    }
-  }
-
 }

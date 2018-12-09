@@ -46,24 +46,26 @@ public class CLGameView {
    */
   void showGameBoard(String board) {
     GameBoard gb = new GameBoard(board);
-    char row = 'a';
+    char row = 'l';
     StringBuilder res = new StringBuilder();
-    for(int i=0; i<12; ++i){
-      res.append(row++).append(" {");
-        for (int j=0; j<12; ++j) {
+    res.append("\n~[Type EXIT to leave]~[Type RESIGN to forfeit]~\n");
+    for(int i=11; i>=0; --i) {
+      res.append("      ").append(row--).append(" {");
+        for (int j=11; j>=0; --j) {
           //check for walls, represent with ▣ = "\u25A3"
-          if(checkWall(i,j)){
+          if(checkWall(i,j)) {
             res.append(" ").append("\u25A3");
           }
+          //place a piece or blank square
           else {
             res.append(" ").append(pieceToCharacter(gb.getPieceAt(j, i)));
           }
-          if(j==11){
+          if(j==0) {
             res.append(" }\n");
           }
         }
     }
-    res.append("  { L K  J I  H G  F E D  C B  A }");
+    res.append("        { A B  C D  E F  G H I  J K  L }\n");
     System.out.println(res);
   }
 
@@ -118,13 +120,6 @@ public class CLGameView {
 
   private String playerFromBool(boolean p) {
     return p ? "white" : "black";
-  }
-
-  /**
-   * Print in-game menu for player's benefit
-   */
-  void showInGameMenu(){
-    System.out.println("~[ Type EXIT to leave ]~[ Type RESIGN to forfeit ]~\n");
   }
 
   public void showGameover(boolean p) {

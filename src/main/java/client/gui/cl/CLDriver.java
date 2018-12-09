@@ -362,12 +362,10 @@ public class CLDriver implements ChadGameDriver {
 
   /**
    * Helper method to show in-game view.
-   * (returns nothing but prints a nice view)
    */
   private void showGame(){
     clearScreen();
     game.showGameBoard(chadGame.getBoard());
-    game.showInGameMenu();
   }
 
   /**
@@ -380,7 +378,7 @@ public class CLDriver implements ChadGameDriver {
     String to;
 
     while(turn) {
-      System.out.println("~ Select a piece (e.g. \"1a\"): ");
+      System.out.println("~ Select a piece (e.g. \"cE\"): ");
       while(from.equals("")) {
         from = requestLine();
         //check input
@@ -406,7 +404,7 @@ public class CLDriver implements ChadGameDriver {
       game.showValidMoves(moves);
 
       System.out.println("[!] Type \"C\" to cancel piece selection");
-      System.out.println("~ Select space to move to (e.g. \"1a\"): ");
+      System.out.println("~ Select space to move to (e.g. \"bE\"): ");
       to = requestLine();
       if (!to.toUpperCase().equals("C")) {
         return new MovePieceMessage(new Point(from), new Point(to));
