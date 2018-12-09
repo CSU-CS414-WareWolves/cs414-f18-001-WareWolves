@@ -406,6 +406,7 @@ public class CLDriver implements ChadGameDriver {
       System.out.println("[!] Type \"C\" to cancel piece selection");
       System.out.println("~ Select space to move to (e.g. \"bE\"): ");
       to = requestLine();
+
       if (!to.toUpperCase().equals("C")) {
         return new MovePieceMessage(new Point(from), new Point(to));
       }
