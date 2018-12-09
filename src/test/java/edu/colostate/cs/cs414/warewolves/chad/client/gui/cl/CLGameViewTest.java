@@ -3,9 +3,9 @@ package edu.colostate.cs.cs414.warewolves.chad.client.gui.cl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import client.game.pieces.King;
-import client.game.pieces.Piece;
-import client.gui.cl.CLGameView;
+import edu.colostate.cs.cs414.warewolves.chad.client.game.pieces.*;
+import edu.colostate.cs.cs414.warewolves.chad.client.gui.cl.CLGameView;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
