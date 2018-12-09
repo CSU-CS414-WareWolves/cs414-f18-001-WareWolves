@@ -1,5 +1,6 @@
 package client.gui.cl;
 
+import client.Point;
 import client.game.GameBoard;
 import client.game.pieces.King;
 import client.game.pieces.Piece;
@@ -49,27 +50,33 @@ public class CLGameView {
     System.out.println(gb);
 
     String[][] newBoard = new String[12][12];
-    for(int row = 0; row < newBoard.length; row++) {
-      for(int col = 0; col < newBoard.length; col++) {
+    for(int row = 11; row >= 0; row--) {
+      for(int col = 11; col >= 0; col--) {
         if(isWall(row, col)){
           newBoard[row][col] = WALL + " ";
         }
         else {
-          Piece pc = gb.getPieceAt(row, col);
-          newBoard[row][col] = pieceToCharacter(pc) + " ";
+          Piece pc = gb.getPieceAt(row,col);
+          if(pc == null) {
+            newBoard[row][col] = TILE + " ";
+          }
+          else {
+            newBoard[row][col] = pieceToCharacter(pc) + " ";
+          }
         }
       }
     }
-    printDoubleArray(newBoard);
+    printGameBoard(newBoard);
   }
 
-  private void printDoubleArray(String[][] array) {
+  private void printGameBoard(String[][] array) {
     StringBuilder res = new StringBuilder();
     char rowLetter = 'l';
 
     res.append("\n~[Type EXIT to leave]~[Type RESIGN to forfeit]~\n");
+    int i=0;
     for(String[] row : array) {
-      res.append("       ").append(rowLetter--).append(" {");
+      res.append(i++).append("       ").append(rowLetter--).append(" {");
       for(String p : row) {
         res.append(p);
       }
@@ -91,14 +98,17 @@ public class CLGameView {
         || (col==5 &&(row==7 || row==8 || row==9));
   }
 
+  Point convertLocation(Point p) {
+
+    return new Point(0,0);
+  }
+
   /**
    * Returns the valid ASCII character for the chess piece
    * @param p An instance of a Piece
    * @return ASCII representation of Piece
    */
   String pieceToCharacter(Piece p){
-    if (p == null)
-      return TILE;
     if (p.getClass() == Rook.class){
       return p.getColor() ? BROOK : WROOK;
     }
