@@ -13,7 +13,7 @@ public class Launcher {
         switch (args[0]){
             case "interface":
                 ChadPresenter app = new ChadPresenter(args[2], args[3], args[1]);
-                app.start();
+                app.start(args[2]);
                 break;
             case "AI":
                 AiDriver driver = new AiDriver(InetAddress.getByName(args[1]), Integer.parseInt(args[2]));
