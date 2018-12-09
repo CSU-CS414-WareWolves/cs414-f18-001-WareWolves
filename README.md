@@ -32,3 +32,22 @@ Traceability Link Matrix: [PDF](./P3/TraceabilityLinkMatrix11-01-18.pdf)
 
 Updated Use Case Document: [PDF](./P3/WarewolvesUseCaseDocument10-28-18.pdf)
 
+
+## P4:
+Presentation 4: [PDF](./P4/WareWolves_P4_Presentation.pdf)
+
+Design Document: [PDF](./P4/) -Update-
+
+Raw images of all class diagrams and sequence diagrams are located [Here](./P4/Documentation)
+
+Testing Document: [PDF](./P4/WareWolves_Testing_Document_12-02-18.pdf)
+
+Development Manual: [MD](./P4/WareWolvesDevelopmenDoc.md)
+
+Traceability Link Matrix: [PDF](./P4/Traceability_Link_Matrix_12-02-18.xlsx)
+
+Updated Use Case Document: [PDF](./P4/Warewolves_Use_Case_Document_12-02-18.pdf)
+
+Challenges and Lessons Learned: [PDF](./P4/Warewolves_Challenges_and_Lessons_Learned_12-06-18.pdf)
+
+Refactoring and Design Pattern List: [PDF](./P4/) -Update-
