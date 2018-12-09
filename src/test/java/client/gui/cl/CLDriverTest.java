@@ -32,7 +32,7 @@ class CLDriverTest {
   @Test
   void createAndShowGUI() {
     try {
-      setMyIn("3");
+      driver.setKeyboard("3");
       driver.createAndShowGUI();
     } catch(Exception e) {
       e.printStackTrace();
@@ -53,50 +53,63 @@ class CLDriverTest {
   @Test
   void handleLogin() {
     try {
+      driver.setKeyboard("test1\ntest1");
       driver.handleLogin();
-      setMyIn("test1\ntest1");
-      Assertions.assertTrue("test1".equalsIgnoreCase(driver.getNickname()));
     } catch(NoSuchAlgorithmException e){
+      e.printStackTrace();
       fail("");
     }
   }
 
   @Test
   void handleRegister() {
-
+    try {
+      driver.setKeyboard("reg\ntest\nreg");
+      driver.handleRegister();
+    } catch(NoSuchAlgorithmException e){
+      e.printStackTrace();
+      fail("");
+    }
   }
 
   @Test
   void handleUnregister() {
+    try {
+      driver.setKeyboard("test1\ntest1");
+      driver.handleUnregister();
+    } catch(Exception e){
+      e.printStackTrace();
+      fail("");
+    }
   }
 
   @Test
-  void handleActiveGames() {
+  void showActiveGames() {
     int[] ids = {23,12};
     String[] nicks = {"theGameMaster", "AI"};
     boolean[] ts = {true, false};
     boolean[] color = {false, true};
 
-    setMyIn("23");
+    driver.setKeyboard("23");
     driver.showActiveGames(ids, nicks, ts, color);
-    Assertions.assertEquals(23, driver.getGameID());
+    Assertions.assertEquals(23, driver.getGameid());
   }
 
   @Test
-  void handleSelectGame() {
-    int[] ids = {23,12};
-    String[] nicks = {"theGameMaster", "AI"};
-
-//    MenuMessage check = driver.handleSelectGame(ids, nicks);
-//
-//    assertTrue(check.menuType.equals(MenuMessageTypes.SELECT_GAME));
+  void setKeyboard() {
+    try{
+      driver.setKeyboard("12");
+    }catch(Exception e) {
+      e.printStackTrace();
+      fail("");
+    }
   }
 
   /**
    * Set the input stream for automatic keyboard input
    * @param input the String that will be set in the input stream
    */
-  void setMyIn(String input) {
+  private void setMyIn(String input) {
     ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
     System.setIn(in);
   }

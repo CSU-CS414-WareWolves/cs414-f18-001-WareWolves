@@ -11,6 +11,7 @@ import client.presenter.network.messages.InboxResponse;
 import client.presenter.network.messages.NetworkMessage;
 import client.presenter.network.messages.Players;
 import client.presenter.network.messages.ProfileResponse;
+import java.io.ByteArrayInputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -83,7 +84,7 @@ public class CLDriver implements ChadGameDriver {
             return;
           case 3:
             System.out.println("[!] Hope to see you soon!");
-            System.exit(0);
+            return;
           default:
             warningValidOption();
             delay();
@@ -257,7 +258,7 @@ public class CLDriver implements ChadGameDriver {
    * @return a RegisterMessage with the new user's input
    * @throws NoSuchAlgorithmException in case of Hash fail
    */
-  private RegisterMessage handleRegister() throws NoSuchAlgorithmException {
+  RegisterMessage handleRegister() throws NoSuchAlgorithmException {
     String email = "";
     String pass;
     String nick = "";
@@ -321,7 +322,7 @@ public class CLDriver implements ChadGameDriver {
    * Handles unregister confirmation for current user
    * @return an Unregister message
    */
-  private UnregisterMessage handleUnregister() {
+  UnregisterMessage handleUnregister() {
     try {
       String email;
       String pass;
@@ -532,22 +533,6 @@ public class CLDriver implements ChadGameDriver {
     return res.toString();
   }
 
-  private String requestLine() {
-    keyboard.keys = new Scanner(System.in);
-    return keyboard.keys.nextLine();
-  }
-
-  private int requestInt() {
-    keyboard.keys = new Scanner(System.in);
-    int ret;
-    try {
-      ret = keyboard.keys.nextInt();
-    } catch (InputMismatchException e) {
-      return -1;
-    }
-    return ret;
-  }
-
   private void delay() {
     try {
       TimeUnit.SECONDS.sleep(1);
@@ -612,6 +597,36 @@ public class CLDriver implements ChadGameDriver {
     return gameid;
   }
 
+  void setKeyboard(String s) {
+    keyboard.setMyIn(s);
+  }
+
+  private String requestLine() {
+    if(keyboard.keys.hasNext()) {
+      return keyboard.keys.nextLine();
+    }
+    else {
+      keyboard.setMyIn("");
+      return keyboard.keys.nextLine();
+    }
+  }
+
+  private int requestInt() {
+    if(keyboard.keys.hasNext()) {
+      return keyboard.keys.nextInt();
+    }
+    else {
+      keyboard.setMyIn("");
+      int ret;
+      try {
+        ret = keyboard.keys.nextInt();
+      } catch (InputMismatchException e) {
+        return -1;
+      }
+      return ret;
+    }
+  }
+
   public class KeyboardThread extends Thread {
     Scanner keys = new Scanner(System.in);
 
@@ -619,6 +634,16 @@ public class CLDriver implements ChadGameDriver {
     }
 
     public void run() {
+    }
+
+    public void setMyIn(String input) {
+      if(!input.equals("")) {
+        ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
+        keys = new Scanner(in);
+      }
+      else {
+        keys = new Scanner(System.in);
+      }
     }
   }
 
