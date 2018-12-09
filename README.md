@@ -51,3 +51,6 @@ Updated Use Case Document: [PDF](./P4/Warewolves_Use_Case_Document_12-02-18.pdf)
 Challenges and Lessons Learned: [PDF](./P4/Warewolves_Challenges_and_Lessons_Learned_12-06-18.pdf)
 
 Refactoring and Design Pattern List: [PDF](./P4/) -Update-
+
+*Note on P4: CLI has some bugs and because of time constraints, they couldn't be resolved. All options within the CL main menu should function fine with the exception of the "Resume Game" option.
+-Luis*
