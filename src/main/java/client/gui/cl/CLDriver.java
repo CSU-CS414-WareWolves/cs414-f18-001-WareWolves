@@ -383,17 +383,23 @@ public class CLDriver implements ChadGameDriver {
       System.out.println("~ Select a piece (e.g. \"1a\"): ");
       while(from.equals("")) {
         from = requestLine();
+        //check input
         if(from.length() != 2) {
-          from = "";
+          //check for exit
+          if(from.toUpperCase().equals("EXIT")) {
+            return handleMenu();
+          }
+          //check for resign
+          else if(from.toUpperCase().equals("RESIGN")) {
+            return new ResignMessage(gameid);
+          }
+          //incorrect format, try again
+          else {
+            from = "";
+          }
         }
       }
       //check for exit or resignation
-      if(from.toUpperCase().equals("EXIT")) {
-        return handleMenu();
-      }
-      else if(from.toUpperCase().equals("RESIGN")) {
-        return new ResignMessage(gameid);
-      }
 
       //display valid moves for selected piece
       String[] moves = stringToArray(chadGame.validMoves(from));
@@ -476,7 +482,6 @@ public class CLDriver implements ChadGameDriver {
 
   /**
    * Prints a warning if incorrect input is entered
-   * >>May not be needed in this class<<
    */
   private void warningValidOption() {
     System.err.println("[!] Please input a valid option\n");
@@ -486,12 +491,15 @@ public class CLDriver implements ChadGameDriver {
    * Parses valid moves String to array, splits at every two characters
    * @param moves String value
    */
-  private String[] stringToArray(String moves) {
+  private static String[] stringToArray(String moves) {
     String[] temps = new String[(moves.length()/2)];
-    int index = 0;
-    for(int i = 0; i < moves.length(); i = i+2) {
-      System.out.println(i +"&"+ i+1);
-      temps[index++] = Integer.toString(moves.charAt(i) + moves.charAt(i+1));
+    StringBuilder temp = new StringBuilder();
+    for(int i = 0, index = 0; i < moves.length(); i = i+2) {
+      temp.append(moves.charAt(i));
+      temp.append(moves.charAt(i + 1));
+      temps[index] = temp.toString();
+      index++;
+      temp = new StringBuilder();
     }
     return temps;
   }
@@ -500,7 +508,7 @@ public class CLDriver implements ChadGameDriver {
    * Prints array nicely with commas, no comma added at the end.
    * @param S String[] array
    */
-  private String arrayToString(String[] S) {
+  private static String arrayToString(String[] S) {
     StringBuilder res = new StringBuilder();
     for(int i = 0; i < S.length; i++) {
       if(i+1 != S.length) {
@@ -548,6 +556,5 @@ public class CLDriver implements ChadGameDriver {
   }
 
   public static void main(String[] args) {
-
   }
 }
