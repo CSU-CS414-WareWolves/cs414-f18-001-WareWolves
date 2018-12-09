@@ -1,11 +1,8 @@
 package client.gui.cl;
 
-import client.Point;
-import client.game.GameBoard;
-import client.game.pieces.King;
-import client.game.pieces.Piece;
-import client.game.pieces.Queen;
-import client.game.pieces.Rook;
+import edu.colostate.cs.cs414.warewolves.chad.client.Point;
+import edu.colostate.cs.cs414.warewolves.chad.client.game.GameBoard;
+import edu.colostate.cs.cs414.warewolves.chad.client.game.pieces.*;
 
 public class CLGameView {
 
