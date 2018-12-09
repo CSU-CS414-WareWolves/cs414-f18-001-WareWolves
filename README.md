@@ -36,7 +36,7 @@ Updated Use Case Document: [PDF](./P3/WarewolvesUseCaseDocument10-28-18.pdf)
 ## P4:
 Presentation 4: [PDF](./P4/WareWolves_P4_Presentation.pdf)
 
-Design Document: [PDF](./P4/) -Update-
+Design Document: [PDF](./P4/WareWolves_Design_Document_12-09-18.pdf)
 
 Raw images of all class diagrams and sequence diagrams are located [Here](./P4/Documentation)
 
@@ -50,7 +50,7 @@ Updated Use Case Document: [PDF](./P4/Warewolves_Use_Case_Document_12-02-18.pdf)
 
 Challenges and Lessons Learned: [PDF](./P4/Warewolves_Challenges_and_Lessons_Learned_12-06-18.pdf)
 
-Refactoring and Design Pattern List: [PDF](./P4/) -Update-
+Refactoring and Design Pattern List: [PDF](./P4/Warewolves_Refactoring_and_Design_Patterns_List_12-06-18.pdf)
 
 *Note on P4: CLI has some bugs and because of time constraints, they couldn't be resolved. All options within the CL main menu should function fine with the exception of the "Resume Game" option.
 -Luis*
