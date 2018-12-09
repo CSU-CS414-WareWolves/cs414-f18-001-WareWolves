@@ -83,31 +83,7 @@ public class ChadPresenter implements ChadGameDriver{
     System.out.println(message.messageType);
     switch (message.messageType){
       case REGISTER:
-        RegisterMessage registerMessage = (RegisterMessage) message;
-        // Check if messages have invalid characters
-        int nicknamePound = registerMessage.nickname.indexOf('#');
-        int nicknameColon = registerMessage.nickname.indexOf(':');
-        int emailPound = registerMessage.email.indexOf('#');
-        int emailColon = registerMessage.email.indexOf(':');
-        if(nicknameColon != -1 || nicknamePound != -1) {
-          // Nickname contains invalid characters
-          String[] messages = {"Invalid Nickname - Nickname can not have # or : in it"};
-          RegisterResponseMessage registerResponseMessage = new RegisterResponseMessage(false, messages);
-          // Send message to gui/cli handle view message
-          viewDriver.handleViewMessage(registerResponseMessage);
-        }
-        else if (emailColon != -1 || emailPound != -1) {
-          // Email contains invalid characters
-          String[] messages = {"Invalid Email - Emails can not have # or : in them"};
-          RegisterResponseMessage registerResponseMessage = new RegisterResponseMessage(false, messages);
-          // Send message to gui/cli handle view message
-          viewDriver.handleViewMessage(registerResponseMessage);
-        }
-        else {
-          // Email and nickname do not contain any invalid characters. Send to network manager.
-            networkManager.sendMessage(new Register(registerMessage.email, registerMessage.nickname,
-                registerMessage.password));
-        }
+        handleViewRegister((RegisterMessage) message);
         break;
       case LOGIN:
         LoginMessage loginMessage = (LoginMessage) message;
@@ -117,63 +93,13 @@ public class ChadPresenter implements ChadGameDriver{
         UnregisterMessage unregisterMessage = (UnregisterMessage) message;
         networkManager.sendMessage(new Unregister(unregisterMessage.email, unregisterMessage.nickname, unregisterMessage.password));
         break;
-      case SHOW_VALID_MOVES: // Need to change with addition of CLI
-        // if the game is over no valid moves
-        if(chadGame.gameover()){return;}
-        if(chadGame.getTurn() != currentGame.getColor()) {return;}
-        // Find the valid moves
-        ViewValidMoves validMovesMessage = (ViewValidMoves) message;
-        String validMoves = chadGame.validMoves(validMovesMessage.location.toString());
-        // Tell GUI to what moves to show
-        viewDriver.handleViewMessage(new ViewValidMovesResponse(new String [] {validMoves}));
+      case SHOW_VALID_MOVES:
+        handleViewValidMoves((ViewValidMoves) message);
         break;
       case MENU:
         break;
       case MOVE_PIECE:
-        MovePieceMessage moves = (MovePieceMessage) message;
-        boolean draw = false;
-        boolean ending = false;
-        if(chadGame.getTurn() != currentGame.getColor()) {
-          viewDriver.handleViewMessage(new MovePieceResponse(getMoveMessage(), chadGame.getBoard()));
-        }
-        // Checks to see if the move was successful
-        if(chadGame.move(moves.fromLocation.toString(), moves.toLocation.toString())){
-         // Show the winner if the game is over
-         if (chadGame.gameover()) {
-           ending = true;
-           // Check if draw
-           if (chadGame.isDraw()) {
-             draw = true;
-             // Create message response with draw
-             MovePieceResponse movePieceResponse = new MovePieceResponse("The game has ended in a draw.",
-                 chadGame.getBoard());
-             viewDriver.handleViewMessage(movePieceResponse);
-           } else {
-             String winner =  playerNickname + " has won the game.";
-             // Create message response with winner
-             MovePieceResponse movePieceResponse = new MovePieceResponse(winner,
-                 chadGame.getBoard());
-             viewDriver.handleViewMessage(movePieceResponse);
-           }
-         } else {
-           // Game is not over
-           MovePieceResponse movePieceResponse = new MovePieceResponse(getMoveMessage(), chadGame.getBoard());
-           viewDriver.handleViewMessage(movePieceResponse);
-         }
-           // Send Move to Server
-           // Get piece being moved
-           int index = chadGame.getBoard().indexOf(moves.toLocation.toString());
-           String board = chadGame.getBoard();
-           char piece = board.charAt(index - 1);
-           String moveString = piece + moves.fromLocation.toString() + moves.toLocation.toString();
-           Move move = new Move(currentGame.getGameID(), moveString, chadGame.getBoard(), ending, draw);
-           networkManager.sendMessage(move);
-      } else {
-          // Send a move piece response message with an error
-           String error = "Invalid Move.";
-           MovePieceResponse movePieceResponse = new MovePieceResponse(error, chadGame.getBoard());
-          viewDriver.handleViewMessage(movePieceResponse);
-        }
+        handleMovePieceViewMessage((MovePieceMessage) message);
         break;
       case PROFILE:
         // Send a profile request to the net manager
@@ -193,15 +119,7 @@ public class ChadPresenter implements ChadGameDriver{
         break;
       case GAME_REQUEST:
         // Send a game request to the net manager
-        GameRequestMessage gameRequestMessage = (GameRequestMessage) message;
-        currentGame = new ActiveGameInfo(gameRequestMessage.gameInfo);
-        chadGame = new Game(currentGame.getGameBoard(), currentGame.getTurn());
-        viewDriver.handleViewMessage(new MovePieceResponse(getMoveMessage(), chadGame.getBoard()));
-
-        if(currentGame.getEnded()){
-          networkManager.sendMessage(new SeeResults(currentGame.getGameID(), currentGame.getColor()));
-        }
-
+        handleGameRequestViewMessage((GameRequestMessage) message);
         break;
       case NEW_INVITE:
         // Send an invite request to the net manager
@@ -220,13 +138,161 @@ public class ChadPresenter implements ChadGameDriver{
         playerNickname = null;
         break;
       case RESIGN:
-        // Send a resign request to the net manager
-        ResignMessage resignMessage = (ResignMessage) message;
-        Resign resign = new Resign(resignMessage.gameID, playerNickname);
-        networkManager.sendMessage(resign);
-        networkManager.sendMessage(new ActiveGameRequest(playerNickname));
+        handleResignViewMessage((ResignMessage) message);
         break;
     }
+  }
+
+  /**
+   * Handles the views request to start a game
+   * @param message the info about the game
+   */
+  private void handleGameRequestViewMessage(GameRequestMessage message) {
+    // Load the game
+    currentGame = new ActiveGameInfo(message.gameInfo);
+    chadGame = new Game(currentGame.getGameBoard(), currentGame.getTurn());
+    viewDriver.handleViewMessage(new MovePieceResponse(getMoveMessage(), chadGame.getBoard()));
+
+    // If the game was finished tell the server we saw the results
+    if(currentGame.getEnded()){
+      networkManager.sendMessage(new SeeResults(currentGame.getGameID(), currentGame.getColor()));
+    }
+  }
+
+  /**
+   * Handles the view resigning a game
+   * @param message the info about the game being resigned
+   */
+  private void handleResignViewMessage(ResignMessage message) {
+    Resign resign = new Resign(message.gameID, playerNickname);
+    networkManager.sendMessage(resign);
+    // Request new active games
+    networkManager.sendMessage(new ActiveGameRequest(playerNickname));
+  }
+
+  /**
+   * Handle a move message from the view
+   * @param message the message with the move
+   */
+  private void handleMovePieceViewMessage(MovePieceMessage message) {
+    // It is not the players turn just redraw the board
+    if(chadGame.getTurn() != currentGame.getColor()) {
+      viewDriver.handleViewMessage(new MovePieceResponse(getMoveMessage(), chadGame.getBoard()));
+    }
+
+    // Check to see if the move was valid
+    if(chadGame.move(message.fromLocation.toString(), message.toLocation.toString())){
+
+      boolean endingMove = chadGame.gameover();
+      boolean gameIsDraw = chadGame.isDraw();
+      String moveMessage = createMoveMessage(endingMove, gameIsDraw);
+
+      MovePieceResponse movePieceResponse = new MovePieceResponse(moveMessage, chadGame.getBoard());
+      viewDriver.handleViewMessage(movePieceResponse);
+      sentMoveToServer(message, gameIsDraw, endingMove);
+
+    } else {
+      // Send a move piece response message with an error
+       String error = "Invalid Move.";
+       MovePieceResponse movePieceResponse = new MovePieceResponse(error, chadGame.getBoard());
+       viewDriver.handleViewMessage(movePieceResponse);
+    }
+  }
+
+  /**
+   * Finds the string reputation of the results of the move
+   * @param ending did the move end the game
+   * @param draw did the move result in a draw
+   * @return the status of the game
+   */
+  private String createMoveMessage(boolean ending, boolean draw) {
+    String message;
+    if(draw){
+      message = "The game has ended in a draw.";
+    } else if(ending){
+      message = playerNickname + " has won the game.";
+    } else {
+      message = getMoveMessage();
+    }
+    return message;
+
+  }
+
+  /**
+   * Sends a move to the server
+   * @param message the information on the move
+   * @param draw did the move result in a draw
+   * @param ending did the move end the game
+   */
+  private void sentMoveToServer(MovePieceMessage message, boolean draw, boolean ending) {
+    // Get piece being moved
+    int index = chadGame.getBoard().indexOf(message.toLocation.toString());
+    String board = chadGame.getBoard();
+    char piece = board.charAt(index - 1);
+    String moveString = piece + message.fromLocation.toString() + message.toLocation.toString();
+    Move move = new Move(currentGame.getGameID(), moveString, chadGame.getBoard(), ending, draw);
+    networkManager.sendMessage(move);
+  }
+
+  /**
+   * Handles the views request for the valid moves of a piece
+   * @param message the info on the piece to get the valid moves for
+   */
+  private void handleViewValidMoves(ViewValidMoves message) {
+    // if the game is over there are no more valid moves
+    if(chadGame.gameover()){return;}
+    // If it is not your turn there are no valid moves
+    if(chadGame.getTurn() != currentGame.getColor()) {return;}
+    // Find the valid moves
+    String validMoves = chadGame.validMoves(message.location.toString());
+    // Tell GUI to what moves to show
+    viewDriver.handleViewMessage(new ViewValidMovesResponse(new String [] {validMoves}));
+  }
+
+  /**
+   * Checks if a word contains a # or :
+   * @param word the word to check
+   * @return if the word contains # or :
+   */
+  private boolean containsInvalidCharacters(String word){
+    return word.contains("#") || word.contains(":");
+  }
+
+  /**
+   * Handles the logic for an new user registering
+   * @param message the registration info
+   */
+  private void handleViewRegister(RegisterMessage message) {
+    // Check if messages have invalid characters
+
+    if(!checkForValidUserInfo(message)){
+      return;
+    }
+    // Email and nickname do not contain any invalid characters. Send to network manager.
+    networkManager.sendMessage(new Register(message.email, message.nickname, message.password));
+  }
+
+  /**
+   * Checks to see if the user entered valid nickname and email
+   * @param message the message with the user info
+   * @return true if user name is valid, false otherwise
+   */
+  private boolean checkForValidUserInfo(RegisterMessage message) {
+    boolean validInfo = true;
+    String[] messages =  new String[1];
+
+    if(containsInvalidCharacters(message.nickname)){
+      messages[0] = "Invalid Nickname - Nickname can not have # or : in it";
+      validInfo = false;
+    } else if (containsInvalidCharacters(message.email)){
+      messages[0] = "Invalid Email - Emails can not have # or : in them";
+      validInfo = false;
+    }
+    // Send failed Register Response Message with reason
+    if(!validInfo){
+      viewDriver.handleViewMessage(new RegisterResponseMessage(false, messages));
+    }
+    return validInfo;
   }
 
 
@@ -238,115 +304,137 @@ public class ChadPresenter implements ChadGameDriver{
     System.out.println("Presenter::handleNetMessage:: " + message.type);
     switch (message.type){
       case LOGIN_RESPONSE:
-        LoginResponse loginResponse = (LoginResponse) message;
-        // If the login was successful
-        if(loginResponse.success) {
-          this.playerNickname = loginResponse.nickname;
-        }
-        LoginResponseMessage loginResponseMessage = new LoginResponseMessage(loginResponse.success, loginResponse.nickname);
-        // Send message to gui/cli handle view message
-        viewDriver.handleViewMessage(loginResponseMessage);
+        handleLoginResponseNetMessage((LoginResponse) message);
         break;
       case MOVE:
-        if(currentGame == null){
-          return;
-        }
-        Move move = (Move) message;
-        // Check if the move message is for the current game
-        if( currentGame.getGameID() == move.gameID) {
-          if (move.ending) {
-            // The game has ended
-            if (move.draw) {
-              // The game ends in a draw
-              // Show draw
-              MovePieceResponse movePieceResponse = new MovePieceResponse("The game has ended in a draw.", move.board);
-              viewDriver.handleViewMessage(movePieceResponse);
-            } else {
-              // Show game ending
-              // Creates a string with who won the game
-              String winner = getCurrentPlayer(chadGame.getTurn()) + " has won.";
-              MovePieceResponse movePieceResponse = new MovePieceResponse(winner, move.board);
-              viewDriver.handleViewMessage(movePieceResponse);
-            }
-          } else {
-            // Game is not over
-            Point moveFrom = new Point(move.move.substring(1, 3));
-            Point moveTo = new Point(move.move.substring(3));
-
-            MovePieceResponse boardBeforeMove = new MovePieceResponse(getCurrentPlayer(chadGame.getTurn()) + " moved.", chadGame.getBoard());
-            viewDriver.handleViewMessage(boardBeforeMove);
-            String opponentsMoves = chadGame.validMoves(moveFrom.toString());
-            viewDriver.handleViewMessage(new ViewValidMovesResponse(new String[] {opponentsMoves}));
-            chadGame.move(moveFrom.toString(), moveTo.toString());
-            MovePieceResponse movePieceResponse = new MovePieceResponse(getMoveMessage(), chadGame.getBoard());
-            viewDriver.handleViewMessage(movePieceResponse);
-          }
-        }
-        break;
-      case ACTIVE_GAMES_RESPONSE:
-        ActiveGameResponse activeGameResponse = (ActiveGameResponse) message;
-        // Send to the view controller to display Active Games in view with ID, board, opponents, start dates, current turn, color and if it has ended
-        viewDriver.handleNetMessage(activeGameResponse);
+        handleMoveNetMessage((Move) message);
         break;
       case REGISTER_RESPONSE:
-        RegisterResponse registerResponse = (RegisterResponse) message;
-        if(registerResponse.success) {
-          // Successful Register
-          String[] messages = {"Sucessfully Registered."};
-          RegisterResponseMessage registerResponseMessage = new RegisterResponseMessage(registerResponse.success, messages);
-          viewDriver.handleViewMessage(registerResponseMessage);
-        }
-        else {
-          if(registerResponse.reason) {
-            // Nickname already taken
-            String[] messages = {"Could not register. Nickname already in use."};
-            RegisterResponseMessage registerResponseMessage = new RegisterResponseMessage(registerResponse.success, messages);
-            viewDriver.handleViewMessage(registerResponseMessage);
-          }
-          else {
-            // Email already taken
-            // Display unsuccessful register email taken (Not Implemented)
-            String[] messages = {"Could not register. Email already in use."};
-            RegisterResponseMessage registerResponseMessage = new RegisterResponseMessage(registerResponse.success, messages);
-            viewDriver.handleViewMessage(registerResponseMessage);
-          }
-        }
-        break;
-      case INBOX_RESPONSE:
-        InboxResponse inboxResponse = (InboxResponse) message;
-        // Send to the view controller to display inbox of messages with ids, senders, recipients, and send dates
-        viewDriver.handleNetMessage(inboxResponse);
-        break;
-      case PROFILE_RESPONSE:
-        ProfileResponse profileResponse = (ProfileResponse) message;
-        // Send to the view controller to display profile with games player played white and black, start and end dates of games, and results of games
-        viewDriver.handleNetMessage(profileResponse);
-        break;
-      case PLAYERS:
-        Players players = (Players) message;
-        viewDriver.handleNetMessage(players);
+        handleRegisterResponseNetMessage((RegisterResponse) message);
         break;
       case UNREGISTER_RESPONSE:
-        UnregisterResponse unregisterResponse = (UnregisterResponse) message;
-        if(unregisterResponse.success) {
-          // Successfully unregistered
-          String[] messages = {"Successfully Unregistered."};
-          UnregisterResponseMessage unregisterResponseMessage = new UnregisterResponseMessage(unregisterResponse.success, messages);
-          viewDriver.handleViewMessage(unregisterResponseMessage);
-          playerNickname = "";
-          currentGame = null;
-        }
-        else {
-          // Not successful
-          String[] messages = {"Unable to unregister. User Information did not match, try again."};
-          UnregisterResponseMessage unregisterResponseMessage = new UnregisterResponseMessage(unregisterResponse.success, messages);
-          viewDriver.handleViewMessage(unregisterResponseMessage);
-        }
+        handleUnregisterNetMessage((UnregisterResponse) message);
         break;
+      // Pass through all responses the are handled by the view
+      case INBOX_RESPONSE:
+      case PROFILE_RESPONSE:
+      case PLAYERS:
+      case ACTIVE_GAMES_RESPONSE:
+        viewDriver.handleNetMessage(message);
+        break;
+      default:
+        System.err.println("Presenter::handleNetMessage:: received invalid message " + message.type);
     }
 
   }
 
+  private boolean currentlyPlayingGame(int gameID){
+    return currentGame != null && currentGame.getGameID() == gameID;
+  }
+
+  /**
+   * Handles a move message from the server
+   * @param message info about a move
+   */
+  private void handleMoveNetMessage(Move message) {
+    // Ignore if not playing the game
+    if (!currentlyPlayingGame(message.gameID)) {
+      return;
+    }
+    // Check if the move message is for the current game
+    if (message.ending) {
+      handleWinningMoveNetMessage(message);
+      networkManager.sendMessage(new SeeResults(message.gameID, currentGame.getColor()));
+
+    }
+
+    // Game is not over
+
+    // Find move info
+    Point moveFrom = new Point(message.move.substring(1, 3));
+    Point moveTo = new Point(message.move.substring(3));
+
+    chadGame.move(moveFrom.toString(), moveTo.toString());
+    viewDriver.handleViewMessage( new MovePieceResponse(getMoveMessage(), chadGame.getBoard()));
+
+  }
+
+
+  /**
+   * Displays the results of a move the opponent used to end the game
+   * @param message the move info
+   */
+  private void handleWinningMoveNetMessage(Move message) {
+    String endingMessage;
+    if (message.draw) {
+      endingMessage = "The game has ended in a draw.";
+    } else {
+      endingMessage = getCurrentPlayer(chadGame.getTurn()) + " has won.";
+    }
+    viewDriver.handleViewMessage(new MovePieceResponse(endingMessage, message.board));
+  }
+
+
+
+  /**
+   * Handles a login response from the server
+   * @param message the results of the login attempt
+   */
+  private void handleLoginResponseNetMessage(LoginResponse message) {
+    // If the login was successful
+    if(message.success) {
+      this.playerNickname = message.nickname;
+    }
+    viewDriver.handleViewMessage(new LoginResponseMessage(message.success, message.nickname));
+  }
+
+  /**
+   * Handles the response from for a registration attempt
+   * @param message the results from a registration attempt
+   */
+  private void handleRegisterResponseNetMessage(RegisterResponse message) {
+    String[] resultsMessage = new String[1];
+    if(message.success) {
+      // Successful Register
+      resultsMessage[0] = "Successfully Registered.";
+    } else {
+      if(message.reason) {
+        // Nickname already taken
+        resultsMessage[0] = "Could not register. Nickname already in use.";
+      } else {
+        // Email already taken
+        resultsMessage[0] = "Could not register. Email already in use.";
+      }
+    }
+
+    RegisterResponseMessage registerResponseMessage = new RegisterResponseMessage(message.success, resultsMessage);
+    viewDriver.handleViewMessage(registerResponseMessage);
+  }
+
+  /**
+   * Sends the results of an unregister attempt
+   * @param message the result of the unregister attempt
+   */
+  private void handleUnregisterNetMessage(UnregisterResponse message) {
+    String[] resultsMessage = new String[1];
+    if(message.success) {
+      // Successfully unregistered
+      resultsMessage[0] = "Successfully Unregistered.";
+      // Remove data on current login
+      playerNickname = "";
+      currentGame = null;
+    }
+    else {
+      // Not successful
+      resultsMessage[0] = "Unable to unregister. User Information did not match, try again.";
+    }
+    viewDriver.handleViewMessage( new UnregisterResponseMessage(message.success, resultsMessage));
+  }
+
+  /**
+   * Gets the player of the current turn's nickname and their color
+   * @return the info about the current turn
+   */
   private String getMoveMessage() {
     return getCurrentPlayer(chadGame.getTurn()) + "'s turn. Playing: " + getPlayerColor(chadGame.getTurn()) + ".";
   }

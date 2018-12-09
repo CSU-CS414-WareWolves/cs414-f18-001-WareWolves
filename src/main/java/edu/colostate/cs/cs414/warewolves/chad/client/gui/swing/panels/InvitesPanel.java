@@ -21,69 +21,131 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
+/**
+ * This panel displays all the player current invites. The invites are stored in two different
+ * tables, one for all the invites the player received and the other for all the invites the player
+ * has sent. From this panel users can accept or reject invites and sent new invites to other
+ * players.
+ */
 public class InvitesPanel extends UpdatableJTableInPanel {
 
+  /**
+   * The column names for the Table of received invites
+   */
   private final String[] receivedColumns = {"IDs", "Invite From", "Date Sent"};
+  /**
+   * The column names for the Table of sent invites
+   */
   private final String[] sentColumns = {"IDs", "Sent To", "Date Sent"};
 
+  /**
+   * The players nickname for filtering sent and received invites
+   */
   private String nickname;
 
-
+  // Swing GUI elements
+  /**
+   * Main panel of the class
+   */
   private JPanel mainPanel;
+  /**
+   * Panel for displaying the two tables
+   */
   private JTabbedPane sentInvites;
+  /**
+   * Table to display the received invites
+   */
   private JTable receivedTable;
-  private JTable sentTable;
-  private JButton acceptInvite;
-  private JButton rejectInvite;
-  private JButton newInvite;
-  private JButton cancelInvite;
+  /**
+   * Model for the receivedTable, it stores the data in the table
+   */
   private DefaultTableModel receivedTableModel;
+  /**
+   * Table to display the sent invites
+   */
+  private JTable sentTable;
+  /**
+   * Model for the sentTable, it stores the data in the table
+   */
   private DefaultTableModel sentTableModel;
+  /**
+   * Button to accept invite
+   */
+  private JButton acceptInvite;
+  /**
+   * Button to reject invite
+   */
+  private JButton rejectInvite;
+  /**
+   * Button to sent new invite
+   */
+  private JButton newInvite;
+  /**
+   * Button to cancel sent invite
+   */
+  private JButton cancelInvite;
 
+  /**
+   * Creates the GUI elements and sets the panels controller for ActionListeners
+   *
+   * @param controller the controller of the panel
+   */
   public InvitesPanel(SwingGUIController controller) {
 
-    $$$setupUI$$$();
+    $$$setupUI$$$(); // Needed  for GUI creation
+    // Setup new invites listener
     newInvite.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
+        // Tell controller to run logic for making new invite
         controller.sendMessage(new InviteMessage(null, null));
       }
     });
+
+    // Setup accept invites listener
     acceptInvite.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
+        // Find the invite ID from the table
         int inviteId = getHiddenID(receivedTable);
         if (inviteId == -1) {
           return;
         }
+        // Sent the accepted invite to the controller
         controller.sendMessage(new InviteMessageResponse(inviteId, true));
       }
     });
+
+    // Setup reject invites listener
     rejectInvite.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-
+        // Find the invite ID from the table
         int inviteId = getHiddenID(receivedTable);
         if (inviteId == -1) {
           return;
         }
+        // Sent the accepted invite to the controller
         controller.sendMessage(new InviteMessageResponse(inviteId, false));
       }
     });
+
+    // Setup cancel sent invites listener
     cancelInvite.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent e) {
-
+        // Find the invite ID from the table
         int inviteId = getHiddenID(sentTable);
         if (inviteId == -1) {
           return;
         }
+        // Verify the user wants to cancel the invite
         int dialogButton = JOptionPane.YES_NO_OPTION;
         int dialogResult = JOptionPane
-                .showConfirmDialog(mainPanel, "Are you sure you want to cancel your invite to "
-                                + sentTableModel.getValueAt(
-                        sentTable.convertRowIndexToModel(sentTable.getSelectedRow()), 1)
-                        , "Warning", dialogButton);
+            .showConfirmDialog(mainPanel, "Are you sure you want to cancel your invite to "
+                    + sentTableModel.getValueAt(
+                sentTable.convertRowIndexToModel(sentTable.getSelectedRow()), 1)
+                , "Warning", dialogButton);
         if (dialogResult == JOptionPane.YES_OPTION) {
           controller.sendMessage(new InviteMessageResponse(inviteId, false));
         }
@@ -93,13 +155,15 @@ public class InvitesPanel extends UpdatableJTableInPanel {
     });
   }
 
+  /**
+   * Takes a InboxResponse and populates the sent and received invites tables
+   *
+   * @param tableInfo the message with the information
+   */
   @Override
   public void updateTable(NetworkMessage tableInfo) {
-
-    if (!(tableInfo instanceof InboxResponse)) {
-      throw new IllegalArgumentException("ActiveGamePanel:: Received message of type "
-              + tableInfo.getClass() + " expected" + InboxResponse.class);
-    }
+    // Check for correct type of message
+    checkValidMessageType(tableInfo, InboxResponse.class, "InvitesPanel");
 
     InboxResponse inboxMessage = (InboxResponse) tableInfo;
 
@@ -107,68 +171,78 @@ public class InvitesPanel extends UpdatableJTableInPanel {
     receivedTableModel.setNumRows(0);
     sentTableModel.setNumRows(0);
 
+    // -1 represents no invites
     if (inboxMessage.inviteIDs[0] == -1) {
       return;
     }
 
+    // Go through all the invites
     for (int i = 0; i < inboxMessage.inviteIDs.length; i++) {
 
+      // If the sender is the player add the invite to sent table
       if (inboxMessage.senders[i].equals(nickname)) {
         sentTableModel.addRow(new Object[]{inboxMessage.inviteIDs[i],
-                inboxMessage.recipients[i], inboxMessage.sendDates[i]});
+            inboxMessage.recipients[i], inboxMessage.sendDates[i]});
       } else {
+        // Add invite to the received table
         receivedTableModel.addRow(new Object[]{inboxMessage.inviteIDs[i],
-                inboxMessage.senders[i], inboxMessage.sendDates[i]});
+            inboxMessage.senders[i], inboxMessage.sendDates[i]});
       }
     }
 
 
   }
 
+  /**
+   * Creates all the elements that the GUI needed custom constructors for
+   */
   private void createUIComponents() {
 
+    /*
+     * Attempts to extract all shared logic for creating tables to base class failed.
+     *
+     * I attempted to make a method that took the tableModel, JTable, and the column names
+     * as parameters and initialize the table. However, the table and the model
+     * were not initialized after the method call. I was able create the table and then
+     * set the settings for the table in a method in the base class
+     */
+
+    // Setup the column names for the received table
     receivedTableModel = new DefaultTableModel(new Object[][]{}, receivedColumns);
+    // Stop the user from editing the column info
     receivedTable = new JTable(receivedTableModel) {
       public boolean isCellEditable(int row, int column) {
         return false;
       }
     };
+    setTableSettings(receivedTable, true);
 
-    receivedTable.setRowSelectionAllowed(true);
-    receivedTable.setColumnSelectionAllowed(false);
-    receivedTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    receivedTable.setAutoCreateRowSorter(true);
-    receivedTable.getTableHeader().setReorderingAllowed(false);
-    TableColumnModel columnControl = receivedTable.getColumnModel();
-    columnControl.removeColumn(columnControl.getColumn(0));
 
+    // Setup the column names for the sent table
     sentTableModel = new DefaultTableModel(new Object[][]{}, sentColumns);
+    // Stop the user from editing the column info
     sentTable = new JTable(sentTableModel) {
       public boolean isCellEditable(int row, int column) {
         return false;
       }
     };
 
-    sentTable.setRowSelectionAllowed(true);
-    sentTable.setColumnSelectionAllowed(false);
-    sentTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    sentTable.setAutoCreateRowSorter(true);
-    sentTable.getTableHeader().setReorderingAllowed(false);
-    columnControl = sentTable.getColumnModel();
-    columnControl.removeColumn(columnControl.getColumn(0));
+    setTableSettings(sentTable, true);
 
   }
 
-
-
+  /**
+   * Sets the nickname of the current player
+   *
+   * @param nickname the players nickname
+   */
   public void setNickname(String nickname) {
     this.nickname = nickname;
   }
 
   /**
-   * Method generated by IntelliJ IDEA GUI Designer
-   * >>> IMPORTANT!! <<<
-   * DO NOT edit this method OR call it in your code!
+   * Method generated by IntelliJ IDEA GUI Designer >>> IMPORTANT!! <<< DO NOT edit this method OR
+   * call it in your code!
    *
    * @noinspection ALL
    */
