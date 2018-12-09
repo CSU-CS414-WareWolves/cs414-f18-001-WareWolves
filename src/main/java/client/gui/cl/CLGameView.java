@@ -48,35 +48,35 @@ public class CLGameView {
     GameBoard gb = new GameBoard(board);
     char row = 'a';
     StringBuilder res = new StringBuilder();
-    for(int i=11; i>=0; --i){
+    for(int i=0; i<=11; ++i){
       res.append(row++).append(" {");
-        for (int j=11; j>=0; --j) {
+        for (int j=0; j<12; ++j) {
           //check for walls, represent with ▣ = "\u25A3"
           if(checkWall(i,j)){
             res.append(" ").append("\u25A3");
           }
           else {
-            res.append(" ").append(pieceToCharacter(gb.getPieceAt(j, i)));
+            res.append(" ").append(pieceToCharacter(gb.getPieceAt(i, j)));
           }
-          if(j==0){
+          if(j==11){
             res.append(" }\n");
           }
         }
     }
-    res.append("  { 1  2 3  4 5 6  7 8 9 10 11 12}");
+    res.append("  { L  K  J  I  H  G  F  E  D  C  B  A}");
     System.out.println(res);
   }
 
   public boolean checkWall(int row, int col){
-    return (row==1 &&(col==2 || col==3 || col==4))
-        || (row==5 &&(col==2 || col==3 || col==4))
-        || (col==1 &&(row==2 || row==3 || row==4))
-        || (col==5 &&(row==2 || row==3 || row==4))
+    return (row==6 &&(col==2 || col==3 || col==4))
+        || (row==10 &&(col==2 || col==3 || col==4))
+        || (col==6 &&(row==2 || row==3 || row==4))
+        || (col==10 &&(row==2 || row==3 || row==4))
 
-        || (row==6 &&(col==7 || col==8 || col==9))
-        || (row==10 &&(col==7 || col==8 || col==9))
-        || (col==6 &&(row==7 || row==8 || row==9))
-        || (col==10 &&(row==7 || row==8 || row==9));
+        || (row==1 &&(col==7 || col==8 || col==9))
+        || (row==5 &&(col==7 || col==8 || col==9))
+        || (col==1 &&(row==7 || row==8 || row==9))
+        || (col==5 &&(row==7 || row==8 || row==9));
   }
 
   /**
@@ -124,7 +124,7 @@ public class CLGameView {
    * Print in-game menu for player's benefit
    */
   public void showInGameMenu(){
-    System.out.println("~[ Type QUIT to leave ]~[ Type RESIGN to forfeit ]~\n");
+    System.out.println("~[ Type EXIT to leave ]~[ Type RESIGN to forfeit ]~\n");
   }
 
   public void showGameover(boolean p) {

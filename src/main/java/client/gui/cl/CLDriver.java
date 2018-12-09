@@ -12,6 +12,7 @@ import client.presenter.network.messages.NetworkMessage;
 import client.presenter.network.messages.Players;
 import client.presenter.network.messages.ProfileResponse;
 import java.security.NoSuchAlgorithmException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -58,11 +59,7 @@ public class CLDriver implements ChadGameDriver {
   public void createAndShowGUI(){
     login.showSplash();
     chadGame = new Game();
-    try {
-      TimeUnit.SECONDS.sleep(1);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
+    delay(1);
     handleTitleScreen();
   }
 
@@ -84,9 +81,12 @@ public class CLDriver implements ChadGameDriver {
             controller.handleViewMessage(handleRegister());
             return;
           case 3:
-            return;
+            System.out.println("[!] Hope to see you soon!");
+            System.exit(0);
           default:
             warningValidOption();
+            delay(1);
+            clearScreen();
         }
       }
     } catch(NoSuchAlgorithmException e) {
@@ -112,6 +112,9 @@ public class CLDriver implements ChadGameDriver {
           controller.handleViewMessage(handleMenu());
         }
         else {
+          System.out.println("[D] GameID selected: "+gameid);
+          System.out.println("    Index: "+index);
+          System.out.println("    Printing at the index above...\n    "+agr.opponents[index]);
           gameInfo = new ActiveGameInfo(gameid, agr.gameBoards[index],
               agr.opponents[index], agr.startDates[index],
               agr.turns[index], agr.color[index], agr.ended[index]);
@@ -282,10 +285,10 @@ public class CLDriver implements ChadGameDriver {
    */
   private ViewMessage handleMenu(){
     clearScreen();
-    menu.showMenu(nickname);
     int option;
     while(true) {
-      option = Integer.parseInt(requestLine());
+      menu.showMenu(nickname);
+      option = requestInt();
       switch (option) {
         case 1:
           //View Active Games
@@ -309,6 +312,7 @@ public class CLDriver implements ChadGameDriver {
           controller.handleViewMessage(new LogoutMessage());
           System.exit(0);
         default:
+          System.err.println("main menu warning");
           warningValidOption();
           clearScreen();
           break;
@@ -346,9 +350,14 @@ public class CLDriver implements ChadGameDriver {
    */
   private int showActiveGames(int[] gameIDs, String[] opponents, boolean[] turns, boolean[] color){
     game.showCurrentGames(gameIDs, opponents, turns, color);
-    gameid = requestInt();
-    for(int i = 0; i < gameIDs.length; i++) {
-      if(gameid == gameIDs[i]) {
+    //get next input, returns -1 if not correct input
+    int temp = requestInt();
+    if(temp == -1) {
+      return temp;
+    }
+    for (int i = 0; i < gameIDs.length; i++) {
+      if (temp == gameIDs[i]) {
+        gameid = temp;
         return i;
       }
     }
@@ -415,7 +424,9 @@ public class CLDriver implements ChadGameDriver {
     if(check) {
       String temp = requestLine();
       String[] info = temp.split(" ");
-
+      if(temp.toUpperCase().contains("EXIT")) {
+        return handleMenu();
+      }
       int id = Integer.parseInt(info[0]);
       boolean response;
       if(info[1].toUpperCase().equals("ACCEPT")) {
@@ -499,7 +510,21 @@ public class CLDriver implements ChadGameDriver {
 
   private int requestInt() {
     keyboard.keys = new Scanner(System.in);
-    return keyboard.keys.nextInt();
+    int ret;
+    try {
+      ret = keyboard.keys.nextInt();
+    } catch (InputMismatchException e) {
+      return -1;
+    }
+    return ret;
+  }
+
+  private void delay(int timeout) {
+    try {
+      TimeUnit.SECONDS.sleep(timeout);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
   }
 
   public class KeyboardThread extends Thread {

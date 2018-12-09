@@ -9,7 +9,7 @@ public class CLMenu {
    */
   public void showMenu(String player){
     StringBuilder res = new StringBuilder();
-    res.append("~ Hello there, "+player+"! ~\n\n");
+    res.append("~~~ Hello there, "+player+"! ~~~\n\n");
     res.append("+++ Main Menu +++\n\n");
     res.append("1.[ Resume  Game ]\n");
     res.append("2.[ View Invites ]\n");
@@ -27,15 +27,17 @@ public class CLMenu {
    * @return true=invites available, false=invites not available
    */
   public boolean viewInvites(int[] ids, String[] dates, String[] players){
-    if(ids.length == 0 || ids == null || ids[0] == -1){
+    if(ids.length == 0 || ids[0] == -1){
       System.out.println("No invites found!\nSend a game invite from the main menu!");
       return false;
     } else {
       StringBuilder res = new StringBuilder();
       res.append("+++ Inbox +++\n");
-      res.append("Enter as: \"GameID accept/reject\"\n\n");
+      res.append("~ Enter as: \"GameID accept/reject\", or exit to leave ~\n\n");
       for (int i = 0; i < ids.length; i++) {
-        res.append("[" + ids[i] + "]: "+ dates[i] + " - " + players[i] + " has invited you to a game!\n");
+        res.append("[").append(ids[i]).append("]: ");
+        res.append(dates[i]).append(" - ");
+        res.append(players[i]).append(" has invited you to a game!\n");
       }
       System.out.println(res);
       return true;
@@ -56,13 +58,7 @@ public class CLMenu {
     StringBuilder res = new StringBuilder();
     res.append("+++ Active Players +++\n");
     for(int i=0; i<players.length; i++) {
-      res.append(players[i]);
-      if((i+1)%3 == 0) {
-        res.append(" \n");
-      }
-      else {
-        res.append("  |  ");
-      }
+      res.append(" - ").append(players[i]).append("\n");
     }
     res.append("\n");
     System.out.println(res);
