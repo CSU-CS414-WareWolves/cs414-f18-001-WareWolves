@@ -489,7 +489,7 @@ public class CLDriver implements ChadGameDriver {
    * Prints title screen warning about bugs
    */
   private void warningBugs() {
-    System.err.println("[!]  ~  WARNING  ~  [!]");
+    System.err.println("[!!!]  ~  WARNING  ~  [!!!]");
     delay();
     System.err.println("- Due to some unresolved bugs, the CL interface is unable to resume games");
     System.err.println("- All other menu functions should be normal");
