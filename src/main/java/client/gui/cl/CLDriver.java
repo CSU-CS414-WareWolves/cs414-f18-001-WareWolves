@@ -59,7 +59,7 @@ public class CLDriver implements ChadGameDriver {
   public void createAndShowGUI(){
     login.showSplash();
     chadGame = new Game();
-    delay(1);
+    delay();
     handleTitleScreen();
   }
 
@@ -85,7 +85,7 @@ public class CLDriver implements ChadGameDriver {
             System.exit(0);
           default:
             warningValidOption();
-            delay(1);
+            delay();
             clearScreen();
         }
       }
@@ -284,7 +284,6 @@ public class CLDriver implements ChadGameDriver {
    * @return a ViewMessage corresponding to the option chosen
    */
   private ViewMessage handleMenu(){
-    clearScreen();
     int option;
     while(true) {
       menu.showMenu(nickname);
@@ -312,8 +311,8 @@ public class CLDriver implements ChadGameDriver {
           controller.handleViewMessage(new LogoutMessage());
           System.exit(0);
         default:
-          System.err.println("main menu warning");
           warningValidOption();
+          delay();
           clearScreen();
           break;
       }
@@ -437,6 +436,7 @@ public class CLDriver implements ChadGameDriver {
       }
       else {
         warningValidOption();
+        delay();
         return handleMenu();
       }
 
@@ -519,9 +519,9 @@ public class CLDriver implements ChadGameDriver {
     return ret;
   }
 
-  private void delay(int timeout) {
+  private void delay() {
     try {
-      TimeUnit.SECONDS.sleep(timeout);
+      TimeUnit.SECONDS.sleep(1);
     } catch (InterruptedException e) {
       e.printStackTrace();
     }

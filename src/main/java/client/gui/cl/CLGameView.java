@@ -23,7 +23,7 @@ public class CLGameView {
    * @param ids list of ids of the active games
    * @param players list of nicknames the player has an active game with
    */
-  public void showCurrentGames(int[] ids, String[] players, boolean[] turns, boolean[] color){
+  void showCurrentGames(int[] ids, String[] players, boolean[] turns, boolean[] color){
     //Print the list in a nice fashion
     StringBuilder res = new StringBuilder();
 
@@ -44,7 +44,7 @@ public class CLGameView {
    * Prints the current state of the board
    * @param board a String representation from a GameBoard instance
    */
-  public void showGameBoard(String board) {
+  void showGameBoard(String board) {
     GameBoard gb = new GameBoard(board);
     char row = 'a';
     StringBuilder res = new StringBuilder();
@@ -63,11 +63,11 @@ public class CLGameView {
           }
         }
     }
-    res.append("  { L  K  J  I  H  G  F  E  D  C  B  A}");
+    res.append("  { L K J I H G F E D C B A}");
     System.out.println(res);
   }
 
-  public boolean checkWall(int row, int col){
+  boolean checkWall(int row, int col){
     return (row==6 &&(col==2 || col==3 || col==4))
         || (row==10 &&(col==2 || col==3 || col==4))
         || (col==6 &&(row==2 || row==3 || row==4))
@@ -84,7 +84,7 @@ public class CLGameView {
    * @param p An instance of a Piece
    * @return ASCII representation of Piece
    */
-  public String pieceToCharacter(Piece p){
+  String pieceToCharacter(Piece p){
     if (p == null)
       return "\u2610";
     if (p.getClass() == Rook.class){
@@ -102,9 +102,8 @@ public class CLGameView {
   /**
    * Prints the valid moves for the current player
    * @param list A collection of Points
-   * @return void
    */
-  public void showValidMoves(String[] list){
+  void showValidMoves(String[] list){
     //Print the list in a nice fashion
     StringBuilder res = new StringBuilder();
 
@@ -116,14 +115,14 @@ public class CLGameView {
     System.out.println(res);
   }
 
-  public String playerFromBool(boolean p) {
+  private String playerFromBool(boolean p) {
     return p ? "white" : "black";
   }
 
   /**
    * Print in-game menu for player's benefit
    */
-  public void showInGameMenu(){
+  void showInGameMenu(){
     System.out.println("~[ Type EXIT to leave ]~[ Type RESIGN to forfeit ]~\n");
   }
 
