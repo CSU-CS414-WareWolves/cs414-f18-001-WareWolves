@@ -34,16 +34,6 @@ class CLDriverTest {
   }
 
   @Test
-  void handleNetMessage() {
-
-  }
-
-  @Test
-  void handleViewMessage() {
-
-  }
-
-  @Test
   void handleLogin() {
     try {
       driver.setKeyboard("test1\ntest1");

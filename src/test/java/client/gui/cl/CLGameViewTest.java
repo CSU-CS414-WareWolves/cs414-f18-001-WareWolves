@@ -14,7 +14,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 class CLGameViewTest {
 
   private CLGameView game;
-  private String default_gb = "rdCreDRiHRjIrcCkdDreERhHKiIRjJrcDrdERhIRiJrcERhJreCRjH";
   // Piece representations
   private static final String WKING = "\u2654";
   private static final String BKING = "\u265A";
@@ -41,6 +40,7 @@ class CLGameViewTest {
   @Test
   void showGameBoard() {
     try {
+      String default_gb = "rdCreDRiHRjIrcCkdDreERhHKiIRjJrcDrdERhIRiJrcERhJreCRjH";
       game.showGameBoard(default_gb);
     } catch (Exception e) {
       fail("");
