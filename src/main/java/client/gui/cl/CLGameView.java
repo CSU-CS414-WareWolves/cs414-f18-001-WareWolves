@@ -48,7 +48,7 @@ public class CLGameView {
     GameBoard gb = new GameBoard(board);
     char row = 'a';
     StringBuilder res = new StringBuilder();
-    for(int i=0; i<=11; ++i){
+    for(int i=0; i<12; ++i){
       res.append(row++).append(" {");
         for (int j=0; j<12; ++j) {
           //check for walls, represent with ▣ = "\u25A3"
@@ -56,14 +56,14 @@ public class CLGameView {
             res.append(" ").append("\u25A3");
           }
           else {
-            res.append(" ").append(pieceToCharacter(gb.getPieceAt(i, j)));
+            res.append(" ").append(pieceToCharacter(gb.getPieceAt(j, i)));
           }
           if(j==11){
             res.append(" }\n");
           }
         }
     }
-    res.append("  { L K J I H G F E D C B A}");
+    res.append("  { L K  J I  H G  F E D  C B  A }");
     System.out.println(res);
   }
 
@@ -107,8 +107,9 @@ public class CLGameView {
     //Print the list in a nice fashion
     StringBuilder res = new StringBuilder();
 
-    for(int i=0; i<list.length; i++){
-      res.append(list[i].toString()).append(", ");
+    res.append("~ Valid moves for piece: ");
+    for (String move : list) {
+      res.append(move).append(", ");
     }
     res.append("\n");
 

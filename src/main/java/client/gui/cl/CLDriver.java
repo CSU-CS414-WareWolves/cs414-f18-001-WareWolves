@@ -112,9 +112,6 @@ public class CLDriver implements ChadGameDriver {
           controller.handleViewMessage(handleMenu());
         }
         else {
-          System.out.println("[D] GameID selected: "+gameid);
-          System.out.println("    Index: "+index);
-          System.out.println("    Printing at the index above...\n    "+agr.opponents[index]);
           gameInfo = new ActiveGameInfo(gameid, agr.gameBoards[index],
               agr.opponents[index], agr.startDates[index],
               agr.turns[index], agr.color[index], agr.ended[index]);
@@ -386,6 +383,9 @@ public class CLDriver implements ChadGameDriver {
       System.out.println("~ Select a piece (e.g. \"1a\"): ");
       while(from.equals("")) {
         from = requestLine();
+        if(from.length() != 2) {
+          from = "";
+        }
       }
       //check for exit or resignation
       if(from.toUpperCase().equals("EXIT")) {
@@ -399,15 +399,19 @@ public class CLDriver implements ChadGameDriver {
       String[] moves = stringToArray(chadGame.validMoves(from));
       game.showValidMoves(moves);
 
-      System.out.println("[!] Type \"c\" to cancel piece selection");
+      System.out.println("[!] Type \"C\" to cancel piece selection");
       System.out.println("~ Select space to move to (e.g. \"1a\"): ");
       to = requestLine();
-      if (!to.equals("c")) {
+      if (!to.toUpperCase().equals("C")) {
         return new MovePieceMessage(new Point(from), new Point(to));
       }
+      clearScreen();
       showGame();
+      from = "";
+      to = "";
     }
 
+    clearScreen();
     return handleMenu();
   }
 
@@ -479,11 +483,17 @@ public class CLDriver implements ChadGameDriver {
   }
 
   /**
-   * Parses valid moves String to array
-   * @param s String value
+   * Parses valid moves String to array, splits at every two characters
+   * @param moves String value
    */
-  private String[] stringToArray(String s) {
-    return s.split("");
+  private String[] stringToArray(String moves) {
+    String[] temps = new String[(moves.length()/2)];
+    int index = 0;
+    for(int i = 0; i < moves.length(); i = i+2) {
+      System.out.println(i +"&"+ i+1);
+      temps[index++] = Integer.toString(moves.charAt(i) + moves.charAt(i+1));
+    }
+    return temps;
   }
 
   /**
