@@ -1,6 +1,4 @@
-package client.gui.cl;
-
-import client.gui.LoginView;
+package edu.colostate.cs.cs414.warewolves.chad.client.gui.cl;
 
 public class CLLogin {
   //
