@@ -3,10 +3,7 @@ package client.gui.cl;
 import static org.junit.jupiter.api.Assertions.*;
 
 import client.presenter.ChadPresenter;
-import client.presenter.network.messages.ActiveGameResponse;
-import java.io.ByteArrayInputStream;
 import java.security.NoSuchAlgorithmException;
-import java.util.Scanner;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,10 +11,6 @@ import org.junit.jupiter.api.Test;
 class CLDriverTest {
 
   private CLDriver driver;
-
-  private CLLogin login;
-  private CLMenu menu;
-  private CLGameView game;
 
   @BeforeEach
   void setUp(){
@@ -105,12 +98,4 @@ class CLDriverTest {
     }
   }
 
-  /**
-   * Set the input stream for automatic keyboard input
-   * @param input the String that will be set in the input stream
-   */
-  private void setMyIn(String input) {
-    ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
-    System.setIn(in);
-  }
 }

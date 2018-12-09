@@ -542,27 +542,6 @@ public class CLDriver implements ChadGameDriver {
   }
 
   /**
-   * TESTING: gets CLLogin instance
-   */
-  public CLLogin getLogin() {
-    return login;
-  }
-
-  /**
-   * TESTING: gets CLMenu instance
-   */
-  public CLMenu getMenu() {
-    return menu;
-  }
-
-  /**
-   * TESTING: gets CLGameView instance
-   */
-  public CLGameView getGame() {
-    return game;
-  }
-
-  /**
    * TESTING: gets current game's id
    */
   public String getNickname() {
@@ -574,13 +553,6 @@ public class CLDriver implements ChadGameDriver {
    */
   public ActiveGameInfo getGameInfo() {
     return gameInfo;
-  }
-
-  /**
-   * TESTING: gets Game instance
-   */
-  public Game getChadGame() {
-    return chadGame;
   }
 
   /**
@@ -636,7 +608,7 @@ public class CLDriver implements ChadGameDriver {
     public void run() {
     }
 
-    public void setMyIn(String input) {
+    void setMyIn(String input) {
       if(!input.equals("")) {
         ByteArrayInputStream in = new ByteArrayInputStream(input.getBytes());
         keys = new Scanner(in);
@@ -645,8 +617,5 @@ public class CLDriver implements ChadGameDriver {
         keys = new Scanner(System.in);
       }
     }
-  }
-
-  public static void main(String[] args) {
   }
 }
