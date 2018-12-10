@@ -59,7 +59,7 @@ public class CLDriver implements ChadGameDriver {
   public void createAndShowGUI(){
     login.showSplash();
     chadGame = new Game();
-    warningBugs();
+    //warningBugs();
     delay();
     handleTitleScreen();
   }
