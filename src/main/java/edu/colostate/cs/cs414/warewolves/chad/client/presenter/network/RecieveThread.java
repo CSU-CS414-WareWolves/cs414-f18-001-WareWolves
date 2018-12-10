@@ -55,11 +55,11 @@ public class RecieveThread extends Thread{
         //System.out.println(sock.getRemoteSocketAddress().toString());
 
         if(din.available() != 0){
-          System.out.println("Data InputStream: " + din.available());
+          //System.out.println("Data InputStream: " + din.available());
           byte[] bytes = new byte[10000];
           din.read(bytes);
           String msg = new String(bytes).trim();
-          System.out.println(msg);
+          //System.out.println(msg);
           parseMessage(msg);
         }
 

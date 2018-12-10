@@ -7,14 +7,14 @@ import edu.colostate.cs.cs414.warewolves.chad.client.game.pieces.*;
 public class CLGameView {
 
   // Piece representations
-  private static final String WKING = "\u2654";
+  private static final String WKING =  "\u2654";
   private static final String WQUEEN = "\u2655";
-  private static final String WROOK = "\u2656";
-  private static final String BKING = "\u265A";
+  private static final String WROOK =  "\u2656";
+  private static final String BKING =  "\u265A";
   private static final String BQUEEN = "\u265B";
-  private static final String BROOK = "\u265C";
-  private static final String TILE = "\u2610";
-  private static final String WALL = "\u25A3";
+  private static final String BROOK =  "\u265C";
+  private static final String TILE =   "\u2610";
+  private static final String WALL =   "\u25A3";
 
   /**
    * Prints all current games of the user
@@ -47,13 +47,13 @@ public class CLGameView {
     System.out.println(gb);
 
     String[][] newBoard = new String[12][12];
-    for(int row = 11; row >= 0; row--) {
-      for(int col = 11; col >= 0; col--) {
+    for(int row = 0; row < 12; row++) {
+      for(int col = 0; col < 12; col++) {
         if(isWall(row, col)){
           newBoard[row][col] = WALL + " ";
         }
         else {
-          Piece pc = gb.getPieceAt(row,col);
+          Piece pc = gb.getPieceAt(11-row,col);
           if(pc == null) {
             newBoard[row][col] = TILE + " ";
           }
@@ -77,13 +77,13 @@ public class CLGameView {
     res.append("\n~[Type EXIT to leave]~[Type RESIGN to forfeit]~\n");
     int i=0;
     for(String[] row : array) {
-      res.append(i++).append("       ").append(rowLetter--).append(" {");
+      res.append("       ").append(rowLetter--).append(" { ");
       for(String p : row) {
         res.append(p);
       }
       res.append("}\n");
     }
-    res.append("         { A B C D  E F  G H I  J K  L}\n");
+    res.append("         { A B C D E F G H I J K L }\n");
     System.out.println(res);
   }
 

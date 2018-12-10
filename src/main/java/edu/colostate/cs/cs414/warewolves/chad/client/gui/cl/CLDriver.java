@@ -59,7 +59,7 @@ public class CLDriver implements ChadGameDriver {
   public void createAndShowGUI(){
     login.showSplash();
     chadGame = new Game();
-    warningBugs();
+    //warningBugs();
     delay();
     handleTitleScreen();
   }
@@ -183,7 +183,7 @@ public class CLDriver implements ChadGameDriver {
           }
         }
         else {
-          game.showGameBoard(mpr.gameBoard);
+          //game.showGameBoard(mpr.gameBoard);
           controller.handleViewMessage(handleMenu());
         }
         break;
@@ -241,13 +241,16 @@ public class CLDriver implements ChadGameDriver {
    * @return a LoginMessage with the user's input
    */
   LoginMessage handleLogin() throws NoSuchAlgorithmException {
-    String email;
-    String pass;
+    String email = "";
+    String pass = "";
 
     System.out.println("Enter your e-mail:");
-    email = requestLine();
+    while(email.equals("")) {
+      email = requestLine();
+    }
     System.out.println("Enter your password:");
-    pass = requestLine();
+    while (pass.equals(""))
+      pass = requestLine();
 
     return new LoginMessage(email, pass);
   }
@@ -259,7 +262,7 @@ public class CLDriver implements ChadGameDriver {
    */
   RegisterMessage handleRegister() throws NoSuchAlgorithmException {
     String email = "";
-    String pass;
+    String pass = "";
     String nick = "";
 
     System.out.println("Please enter a valid e-mail:");
@@ -271,7 +274,8 @@ public class CLDriver implements ChadGameDriver {
       nick = requestLine();
     }
     System.out.println("Enter a strong password:");
-    pass = requestLine();
+    while (pass.equals(""))
+      pass = requestLine();
 
     nickname = nick;
     return new RegisterMessage(email, pass, nick);
@@ -323,13 +327,15 @@ public class CLDriver implements ChadGameDriver {
    */
   UnregisterMessage handleUnregister() {
     try {
-      String email;
-      String pass;
+      String email = "";
+      String pass = "";
       menu.unregisterUser();
       System.out.println("[!] E-mail:");
-      email = requestLine();
+      while (email.equals(""))
+        email = requestLine();
       System.out.println("[!] Password:");
-      pass = requestLine();
+      while(pass.equals(""))
+        pass = requestLine();
       return new UnregisterMessage(email, pass, nickname);
 
     } catch(NoSuchAlgorithmException e) {
@@ -405,7 +411,9 @@ public class CLDriver implements ChadGameDriver {
 
       System.out.println("[!] Type \"C\" to cancel piece selection");
       System.out.println("~ Select space to move to (e.g. \"bE\"): ");
-      String to = requestLine();
+      String to = "";
+      while (to.equals(""))
+        to = requestLine();
 
       if (!to.toUpperCase().equals("C")) {
         return new MovePieceMessage(new Point(from), new Point(to));
@@ -429,7 +437,9 @@ public class CLDriver implements ChadGameDriver {
   private ViewMessage handleInbox(int[] ids, String[] dates, String[] senders){
     boolean check = menu.viewInvites(ids, dates, senders);
     if(check) {
-      String temp = requestLine();
+      String temp = "";
+      while (temp.equals(""))
+        temp = requestLine();
       String[] info = temp.split(" ");
       if(temp.toUpperCase().contains("EXIT")) {
         return handleMenu();
@@ -460,9 +470,10 @@ public class CLDriver implements ChadGameDriver {
    * @return a MenuMessage of type SEND_INVITE with a String array of nicknames||emails(?)
    */
   private InviteMessage handleOutbox() {
-    String info;
+    String info = "";
     menu.requestUsername();
-    info = requestLine();
+    while (info.equals(""))
+      info = requestLine();
     System.out.println("Invite will be sent to: " + info);
     return new InviteMessage(nickname, info);
   }
@@ -470,7 +481,9 @@ public class CLDriver implements ChadGameDriver {
   private ViewMessage handleProfile() {
     menu.showPlayers(activePlayers);
     menu.requestUsername();
-    String nick = requestLine();
+    String nick = "";
+    while (nick.equals(""))
+      nick = requestLine();
     if(nick.toUpperCase().equals("EXIT")){
       return handleMenu();
     }
