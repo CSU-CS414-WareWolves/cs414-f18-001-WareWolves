@@ -81,7 +81,7 @@ public class ChadPresenter implements ChadGameDriver{
    */
   public void handleViewMessage(ViewMessage message) {
 
-    System.out.println(message.messageType);
+    //System.out.println(message.messageType);
     switch (message.messageType){
       case REGISTER:
         handleViewRegister((RegisterMessage) message);
@@ -302,7 +302,7 @@ public class ChadPresenter implements ChadGameDriver{
    * @param message the message to process
    */
   public void handleNetMessage(NetworkMessage message){
-    System.out.println("Presenter::handleNetMessage:: " + message.type);
+    //System.out.println("Presenter::handleNetMessage:: " + message.type);
     switch (message.type){
       case LOGIN_RESPONSE:
         handleLoginResponseNetMessage((LoginResponse) message);
