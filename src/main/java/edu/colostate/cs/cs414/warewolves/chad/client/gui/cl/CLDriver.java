@@ -241,13 +241,16 @@ public class CLDriver implements ChadGameDriver {
    * @return a LoginMessage with the user's input
    */
   LoginMessage handleLogin() throws NoSuchAlgorithmException {
-    String email;
-    String pass;
+    String email = "";
+    String pass = "";
 
     System.out.println("Enter your e-mail:");
-    email = requestLine();
+    while(email.equals("")) {
+      email = requestLine();
+    }
     System.out.println("Enter your password:");
-    pass = requestLine();
+    while (pass.equals(""))
+      pass = requestLine();
 
     return new LoginMessage(email, pass);
   }
