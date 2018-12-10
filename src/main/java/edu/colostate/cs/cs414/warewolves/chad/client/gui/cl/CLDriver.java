@@ -473,7 +473,9 @@ public class CLDriver implements ChadGameDriver {
   private ViewMessage handleProfile() {
     menu.showPlayers(activePlayers);
     menu.requestUsername();
-    String nick = requestLine();
+    String nick = "";
+    while (nick.equals(""))
+      nick = requestLine();
     if(nick.toUpperCase().equals("EXIT")){
       return handleMenu();
     }

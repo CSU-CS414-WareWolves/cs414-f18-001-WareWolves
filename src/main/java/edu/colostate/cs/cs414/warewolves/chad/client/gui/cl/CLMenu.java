@@ -71,12 +71,14 @@ public class CLMenu {
   public void showStats(String player, String[] white, String[] black, boolean[] results){
     //This is the format that it will be printed as
     StringBuilder res = new StringBuilder();
+    String format = "|%1$-20s|%2$-20s|%3$-20s|\n";
     res.append("\n\n+++ "+ player + "'s Profile +++\n\n");
-    res.append("|   W player   |   B player   |   Result  |\n");
+    res.append(String.format(format, "White player","Black player","Winner"));
     for(int i = 0; i<white.length; i++) {
-      res.append(white[i]).append(" :: ");
-      res.append(black[i]).append(" :: ");
-      res.append(playerFromBool(results[i])).append("\n");
+      res.append(String.format(format, white[i], black[i], playerFromBool(results[i])));
+      //res.append(white[i]).append(" :: ");
+      //res.append(black[i]).append(" :: ");
+      //res.append(playerFromBool(results[i])).append("\n");
     }
     //TODO: W/L ratio calc
     System.out.println(res);
